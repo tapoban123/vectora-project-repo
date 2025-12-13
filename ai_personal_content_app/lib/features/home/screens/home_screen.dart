@@ -1,3 +1,4 @@
+import 'package:ai_personal_content_app/core/common/widgets/custom_appbar.dart';
 import 'package:ai_personal_content_app/core/theme/app_colors.dart';
 import 'package:ai_personal_content_app/core/utils/utils.dart';
 import 'package:ai_personal_content_app/features/home/widgets/item_card.dart';
@@ -15,18 +16,12 @@ class HomeScreen extends StatelessWidget {
     return AnnotatedRegion<SystemUiOverlayStyle>(
       value: commonSystemUiOverlayStyle,
       child: Scaffold(
-        appBar: AppBar(
-          title: Text(
-            "Home",
-            style: TextStyle(
-              color: Colors.white,
-              fontVariations: [FontVariation.weight(600)],
-            ),
-          ),
-          centerTitle: true,
-          leading: Icon(Icons.person, color: Colors.white),
-          actionsPadding: EdgeInsets.all(12.w),
+        appBar: CustomAppbar(
+          title: "Home",
           actions: [Icon(Icons.local_library, color: Colors.white)],
+          onLeadingTap: () {
+            context.push(RouteNames.userProfile);
+          },
         ),
         floatingActionButton: FloatingActionButton(
           onPressed: () {},
