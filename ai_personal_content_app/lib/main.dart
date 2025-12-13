@@ -30,7 +30,7 @@ class MyApp extends StatelessWidget {
             displayColor: Colors.white,
             bodyColor: Colors.white,
           ),
-          appBarTheme: AppBarTheme(
+          appBarTheme: AppBarTheme.of(context).copyWith(
             backgroundColor: AppColors.backgroundColor,
             elevation: 0,
             surfaceTintColor: AppColors.backgroundColor,

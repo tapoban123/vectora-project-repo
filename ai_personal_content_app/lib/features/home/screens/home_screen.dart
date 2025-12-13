@@ -1,9 +1,11 @@
 import 'package:ai_personal_content_app/core/theme/app_colors.dart';
 import 'package:ai_personal_content_app/core/utils/utils.dart';
+import 'package:ai_personal_content_app/features/home/widgets/item_card.dart';
+import 'package:ai_personal_content_app/router.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:objectbox/objectbox.dart';
+import 'package:go_router/go_router.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
@@ -79,12 +81,13 @@ class HomeScreen extends StatelessWidget {
                   ),
                   SizedBox(
                     height: 88.h,
-                    child: ListView.separated(
+                    child: ListView.builder(
                       itemCount: 20,
                       scrollDirection: Axis.horizontal,
-                      itemBuilder: (context, index) => _PinnedItemCard(),
-                      separatorBuilder: (context, index) =>
-                          SizedBox(width: 12.w),
+                      itemBuilder: (context, index) => Padding(
+                        padding: EdgeInsets.only(right: 12.w),
+                        child: _PinnedItemCard(),
+                      ),
                     ),
                   ),
                 ],
@@ -113,40 +116,7 @@ class HomeScreen extends StatelessWidget {
                           mainAxisSpacing: 14.w,
                           childAspectRatio: 0.8,
                         ),
-                        itemBuilder: (context, index) => Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Expanded(
-                              child: Container(
-                                decoration: BoxDecoration(
-                                  image: DecorationImage(
-                                    image: NetworkImage(
-                                      "https://picsum.photos/seed/picsum/200/300",
-                                    ),
-                                    fit: BoxFit.cover,
-                                  ),
-                                  borderRadius: BorderRadius.circular(12.r),
-                                ),
-                              ),
-                            ),
-                            Text(
-                              "Project Plan.pdf",
-                              style: TextStyle(
-                                fontVariations: [FontVariation.weight(600)],
-                                fontSize: 16.sp,
-                              ),
-                              overflow: TextOverflow.ellipsis,
-                            ),
-                            Text(
-                              "PDF",
-                              style: TextStyle(
-                                fontVariations: [FontVariation.weight(400)],
-                                fontSize: 14.sp,
-                                color: AppColors.inactiveColor,
-                              ),
-                            ),
-                          ],
-                        ),
+                        itemBuilder: (context, index) => ItemCard(),
                       ),
                     ),
                   ],
@@ -165,51 +135,56 @@ class _PinnedItemCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      width: 160.w,
-      padding: EdgeInsets.all(12.w),
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(12.r),
-        color: AppColors.blueGreyColor,
-      ),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            spacing: 10.w,
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Container(
-                padding: EdgeInsets.all(4.w),
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(8.r),
-                  color: AppColors.redColor.withValues(alpha: 0.2),
+    return GestureDetector(
+      onTap: () {
+        context.push(RouteNames.viewItemOptions);
+      },
+      child: Container(
+        width: 160.w,
+        padding: EdgeInsets.all(12.w),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(12.r),
+          color: AppColors.blueGreyColor,
+        ),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              spacing: 10.w,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Container(
+                  padding: EdgeInsets.all(4.w),
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(8.r),
+                    color: AppColors.redColor.withValues(alpha: 0.2),
+                  ),
+                  child: Icon(
+                    Icons.picture_as_pdf_outlined,
+                    color: AppColors.redColor,
+                  ),
                 ),
-                child: Icon(
-                  Icons.picture_as_pdf_outlined,
-                  color: AppColors.redColor,
+                Text(
+                  "PDF",
+                  style: TextStyle(
+                    fontSize: 14.sp,
+                    fontVariations: [FontVariation.weight(500)],
+                    color: AppColors.inactiveColor,
+                  ),
                 ),
-              ),
-              Text(
-                "PDF",
-                style: TextStyle(
-                  fontSize: 14.sp,
-                  fontVariations: [FontVariation.weight(500)],
-                  color: AppColors.inactiveColor,
-                ),
-              ),
-            ],
-          ),
-          Text(
-            "Marketing Strategy 2025.pdf",
-            style: TextStyle(
-              fontSize: 16.sp,
-              fontVariations: [FontVariation.weight(600)],
+              ],
             ),
-            overflow: TextOverflow.ellipsis,
-          ),
-        ],
+            Text(
+              "Marketing Strategy 2025.pdf",
+              style: TextStyle(
+                fontSize: 16.sp,
+                fontVariations: [FontVariation.weight(600)],
+              ),
+              overflow: TextOverflow.ellipsis,
+            ),
+          ],
+        ),
       ),
     );
   }
