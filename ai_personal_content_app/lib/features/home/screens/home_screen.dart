@@ -3,6 +3,7 @@ import 'package:ai_personal_content_app/core/utils/utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:objectbox/objectbox.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
@@ -35,27 +36,30 @@ class HomeScreen extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             18.verticalSpace,
-            Container(
-              height: 48.w,
-              padding: EdgeInsets.all(12.w),
-              margin: EdgeInsets.symmetric(horizontal: 12.w),
-              decoration: BoxDecoration(
-                color: AppColors.blueGreyColor,
-                borderRadius: BorderRadius.circular(14.r),
-              ),
-              child: Row(
-                spacing: 8.w,
-                children: [
-                  Icon(Icons.search_rounded, color: AppColors.inactiveColor),
-                  Text(
-                    "Search images, docs and notes...",
-                    style: TextStyle(
-                      color: AppColors.inactiveColor,
-                      fontSize: 16.sp,
-                      fontVariations: [FontVariation.weight(400)],
+            GestureDetector(
+              onTap: () {},
+              child: Container(
+                height: 48.w,
+                padding: EdgeInsets.all(12.w),
+                margin: EdgeInsets.symmetric(horizontal: 12.w),
+                decoration: BoxDecoration(
+                  color: AppColors.blueGreyColor,
+                  borderRadius: BorderRadius.circular(14.r),
+                ),
+                child: Row(
+                  spacing: 8.w,
+                  children: [
+                    Icon(Icons.search_rounded, color: AppColors.inactiveColor),
+                    Text(
+                      "Search images, docs and notes...",
+                      style: TextStyle(
+                        color: AppColors.inactiveColor,
+                        fontSize: 16.sp,
+                        fontVariations: [FontVariation.weight(400)],
+                      ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
             ),
             24.verticalSpace,
@@ -87,18 +91,66 @@ class HomeScreen extends StatelessWidget {
               ),
             ),
             24.verticalSpace,
-            Padding(
-              padding: EdgeInsets.symmetric(horizontal: 12.w),
-              child: Column(
-                children: [
-                  Text(
-                    "Recent",
-                    style: TextStyle(
-                      fontSize: 22.sp,
-                      fontVariations: [FontVariation.weight(700)],
+            Expanded(
+              child: Padding(
+                padding: EdgeInsets.symmetric(horizontal: 12.w),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      "Recent",
+                      style: TextStyle(
+                        fontSize: 22.sp,
+                        fontVariations: [FontVariation.weight(700)],
+                      ),
                     ),
-                  ),
-                ],
+                    Expanded(
+                      child: GridView.builder(
+                        itemCount: 4,
+                        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                          crossAxisCount: 2,
+                          crossAxisSpacing: 14.w,
+                          mainAxisSpacing: 14.w,
+                          childAspectRatio: 0.8,
+                        ),
+                        itemBuilder: (context, index) => Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Expanded(
+                              child: Container(
+                                decoration: BoxDecoration(
+                                  image: DecorationImage(
+                                    image: NetworkImage(
+                                      "https://picsum.photos/seed/picsum/200/300",
+                                    ),
+                                    fit: BoxFit.cover,
+                                  ),
+                                  borderRadius: BorderRadius.circular(12.r),
+                                ),
+                              ),
+                            ),
+                            Text(
+                              "Project Plan.pdf",
+                              style: TextStyle(
+                                fontVariations: [FontVariation.weight(600)],
+                                fontSize: 16.sp,
+                              ),
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                            Text(
+                              "PDF",
+                              style: TextStyle(
+                                fontVariations: [FontVariation.weight(400)],
+                                fontSize: 14.sp,
+                                color: AppColors.inactiveColor,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
               ),
             ),
           ],
