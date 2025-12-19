@@ -19,6 +19,7 @@ class HomeScreen extends StatelessWidget {
         appBar: CustomAppbar(
           title: "Home",
           actions: [Icon(Icons.local_library, color: Colors.white)],
+          leading: Icon(Icons.account_circle),
           onLeadingTap: () {
             context.push(RouteNames.userProfile);
           },
