@@ -1,28 +1,47 @@
 import 'dart:io';
+import 'package:path/path.dart' as p;
 
-enum FileType { IMAGE, PDF, NOTE, UNKNOWN }
+enum ContentFileType { IMAGE, PDF, NOTE, UNKNOWN }
 
 class PreviewFileModel {
   final File file;
+  final String name;
+  final int sizeInBytes;
   final String extension;
-  FileType fileType;
+  final ContentFileType fileType;
 
-  PreviewFileModel({
+  PreviewFileModel._({
     required this.file,
+    required this.name,
+    required this.sizeInBytes,
     required this.extension,
-    this.fileType = FileType.UNKNOWN,
+    required this.fileType,
   });
 
-  FileType detectFileType() {
-    if (["jpg", "png", "jpeg"].contains(extension.toLowerCase())) {
-      fileType = FileType.IMAGE;
-    } else if (["pdf"].contains(extension.toLowerCase())) {
-      fileType = FileType.PDF;
-    } else if (["json"].contains(extension.toLowerCase())) {
-      fileType = FileType.NOTE;
-    } else {
-      return FileType.UNKNOWN;
+  factory PreviewFileModel.fromFile({required File file}) {
+    final ext = p.extension(file.path).substring(1);
+
+    return PreviewFileModel._(
+      file: file,
+      name: p.basename(file.path),
+      sizeInBytes: file.lengthSync(),
+      extension: ext.toUpperCase(),
+      fileType: _detectFileType(ext),
+    );
+  }
+
+  static ContentFileType _detectFileType(String ext) {
+    switch (ext) {
+      case 'jpg':
+      case 'jpeg':
+      case 'png':
+        return ContentFileType.IMAGE;
+      case 'pdf':
+        return ContentFileType.PDF;
+      case 'json':
+        return ContentFileType.NOTE;
+      default:
+        return ContentFileType.UNKNOWN;
     }
-    return fileType;
   }
 }

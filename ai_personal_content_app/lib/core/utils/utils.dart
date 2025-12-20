@@ -52,6 +52,10 @@ void showSnackBarMessage(
   );
 }
 
+String bytesToMegabytes(int bytes) {
+  return (bytes / 1_000_000).toStringAsFixed(2);
+}
+
 double getScreenWidth(BuildContext context) {
   return MediaQuery.sizeOf(context).width;
 }

@@ -11,6 +11,7 @@ class AppColors {
   static const Color greyColor = Color(0xFF1F2937);
   static const Color inactiveColor = Color(0xFF92A4C9);
   static const Color lightGreyColor = Color(0xFF94A3B8);
+  static const Color lightBlueGreyColor = Color(0xFF334155);
   static const Color metalColor = Color(0xFF1C2331);
   static const Color redColor = Color(0xFFF87171);
   static const Color deepRedColor = Color(0xFFFF453A);

@@ -5,9 +5,8 @@ import 'package:cunning_document_scanner/cunning_document_scanner.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:path/path.dart' as p;
 
-class NewContentsCubit extends Cubit<List> {
+class NewContentsCubit extends Cubit<List<PreviewFileModel>> {
   NewContentsCubit() : super([]);
 
   final List<PreviewFileModel> _newData = [];
@@ -18,7 +17,7 @@ class NewContentsCubit extends Cubit<List> {
 
     if (image != null) {
       final imageFile = File(image.path);
-      _newData.add(imageFile);
+      _newData.add(PreviewFileModel.fromFile(file: imageFile));
       emit(List.unmodifiable(_newData));
     }
   }
@@ -29,7 +28,9 @@ class NewContentsCubit extends Cubit<List> {
     );
 
     if (imagesPath != null) {
-      final files = imagesPath.map((path) => File(path)).toList();
+      final files = imagesPath
+          .map((path) => PreviewFileModel.fromFile(file: File(path)))
+          .toList();
       _newData.addAll(files);
       emit(List.unmodifiable(_newData));
     }
@@ -38,14 +39,30 @@ class NewContentsCubit extends Cubit<List> {
   void uploadFiles() async {
     FilePickerResult? result = await FilePicker.platform.pickFiles(
       allowMultiple: true,
+      type: FileType.custom,
+      allowedExtensions: ["pdf", "svg", "jpg", "jpeg"],
     );
 
     if (result != null) {
-      List<File> files = result.paths.map((path) => File(path!)).toList();
+      List<PreviewFileModel> files = result.paths
+          .map((path) => PreviewFileModel.fromFile(file: File(path!)))
+          .toList();
       _newData.addAll(files);
       emit(List.unmodifiable(_newData));
     }
   }
 
   void createOrPasteNotes() async {}
+
+  void removeContent(int index) {
+    _newData.removeAt(index);
+    emit(List.unmodifiable(_newData));
+  }
+
+ @override
+  Future<void> close() {
+   _newData.clear();
+   emit(List.unmodifiable(_newData));
+   return super.close();
+  }
 }
