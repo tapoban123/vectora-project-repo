@@ -52,17 +52,20 @@ class NewContentsCubit extends Cubit<List<PreviewFileModel>> {
     }
   }
 
-  void createOrPasteNotes() async {}
+  void createOrPasteNotes(File notesJson) async {
+    _newData.add(PreviewFileModel.fromFile(file: notesJson));
+    emit(List.unmodifiable(_newData));
+  }
 
   void removeContent(int index) {
     _newData.removeAt(index);
     emit(List.unmodifiable(_newData));
   }
 
- @override
+  @override
   Future<void> close() {
-   _newData.clear();
-   emit(List.unmodifiable(_newData));
-   return super.close();
+    _newData.clear();
+    emit(List.unmodifiable(_newData));
+    return super.close();
   }
 }

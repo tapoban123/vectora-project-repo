@@ -6,7 +6,9 @@ import 'package:ai_personal_content_app/router.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_quill/flutter_quill.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 
 void main() {
   runApp(const MyApp());
@@ -27,6 +29,12 @@ class MyApp extends StatelessWidget {
         child: MaterialApp.router(
           title: "AI Personal Content Universe",
           debugShowCheckedModeBanner: false,
+          localizationsDelegates: const [
+            GlobalMaterialLocalizations.delegate,
+            GlobalCupertinoLocalizations.delegate,
+            GlobalWidgetsLocalizations.delegate,
+            FlutterQuillLocalizations.delegate,
+          ],
           theme: ThemeData.dark(useMaterial3: true).copyWith(
             scaffoldBackgroundColor: AppColors.backgroundColor,
             textTheme: TextTheme.of(context).apply(

@@ -1,8 +1,10 @@
 import 'package:ai_personal_content_app/core/common/widgets/custom_appbar.dart';
+import 'package:ai_personal_content_app/core/common/widgets/custom_button.dart';
 import 'package:ai_personal_content_app/core/theme/app_colors.dart';
 import 'package:ai_personal_content_app/core/utils/utils.dart';
 import 'package:ai_personal_content_app/features/home/controllers/new_contents_bloc/new_contents_cubit.dart';
 import 'package:ai_personal_content_app/features/home/models/preview_file_model.dart';
+import 'package:ai_personal_content_app/router.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -66,7 +68,7 @@ class AddNewContentScreen extends StatelessWidget {
                   title: "Create/Paste notes",
                   icon: Icons.paste_outlined,
                   onTap: () {
-                    addNewContentCubit.createOrPasteNotes();
+                    context.push(RouteNames.createOrPasteNote);
                   },
                 ),
                 50.verticalSpace,
@@ -84,147 +86,17 @@ class AddNewContentScreen extends StatelessWidget {
                             itemBuilder: (context, index) {
                               final file = state[index];
 
-                              return Container(
-                                padding: EdgeInsets.all(9.w),
-                                margin: EdgeInsets.only(bottom: 12.w),
-                                decoration: BoxDecoration(
-                                  color: AppColors.metalColor,
-                                  borderRadius: BorderRadius.circular(8.r),
-                                ),
-                                child: Row(
-                                  spacing: 12.w,
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Container(
-                                      height: 80.h,
-                                      width: 64.w,
-                                      decoration: BoxDecoration(
-                                        color: AppColors.inactiveColor
-                                            .withValues(alpha: 0.15),
-                                        borderRadius: BorderRadius.circular(
-                                          6.r,
-                                        ),
-                                        image:
-                                            file.fileType ==
-                                                ContentFileType.IMAGE
-                                            ? DecorationImage(
-                                                image: FileImage(file.file),
-                                                fit: BoxFit.cover,
-                                              )
-                                            : null,
-                                      ),
-                                      child:
-                                          [
-                                            ContentFileType.PDF,
-                                            ContentFileType.UNKNOWN,
-                                          ].contains(file.fileType)
-                                          ? Icon(
-                                              Icons.insert_drive_file,
-                                              color: AppColors.inactiveColor,
-                                              size: 60.w,
-                                            )
-                                          : null,
-                                    ),
-                                    Expanded(
-                                      child: Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.start,
-                                        children: [
-                                          Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.spaceBetween,
-                                            children: [
-                                              SizedBox(
-                                                width:
-                                                    getScreenWidth(context) *
-                                                    0.55,
-                                                child: Text(
-                                                  file.name,
-                                                  style: TextStyle(
-                                                    fontSize: 16.sp,
-                                                    color: Colors.white,
-                                                    fontVariations: [
-                                                      FontVariation.weight(600),
-                                                    ],
-                                                  ),
-                                                  overflow:
-                                                      TextOverflow.ellipsis,
-                                                ),
-                                              ),
-                                              IconButton(
-                                                onPressed: () {
-                                                  context
-                                                      .read<NewContentsCubit>()
-                                                      .removeContent(index);
-                                                },
-                                                style: IconButton.styleFrom(
-                                                  backgroundColor: AppColors
-                                                      .lightBlueGreyColor,
-                                                  minimumSize: Size.fromRadius(
-                                                    0,
-                                                  ),
-                                                  padding: EdgeInsets.all(4.r),
-                                                  tapTargetSize:
-                                                      MaterialTapTargetSize
-                                                          .shrinkWrap,
-                                                ),
-                                                icon: Icon(
-                                                  Icons.close,
-                                                  color:
-                                                      AppColors.lightGreyColor,
-                                                  size: 18.w,
-                                                ),
-                                              ),
-                                            ],
-                                          ),
-                                          Text(
-                                            "${bytesToMegabytes(file.sizeInBytes)} MB - Uploaded",
-                                            style: TextStyle(
-                                              fontSize: 14.sp,
-                                              color: AppColors.inactiveColor,
-                                              height: 1.8,
-                                              fontVariations: [
-                                                FontVariation.weight(400),
-                                              ],
-                                            ),
-                                          ),
-                                          10.verticalSpace,
-                                          SizedBox(
-                                            width:
-                                                getScreenWidth(context) * 0.5,
-                                            child: LinearProgressIndicator(
-                                              color: AppColors.blueColor,
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                  ],
-                                ),
+                              return _NewContentWidget(
+                                file: file,
+                                index: index,
                               );
                             },
                           ),
                           Positioned(
                             bottom: 0,
-                            child: ElevatedButton(
-                              onPressed: () {},
-                              style: ElevatedButton.styleFrom(
-                                backgroundColor: AppColors.blueColor,
-                                minimumSize: Size(double.infinity, 50.h),
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(12.r),
-                                ),
-                              ),
-                              child: Text(
-                                "Add to library",
-                                style: TextStyle(
-                                  fontSize: 18.sp,
-                                  color: Colors.white,
-                                  fontVariations: [FontVariation.weight(700)],
-                                ),
-                              ),
+                            child: CustomAppButton(
+                              buttonText: "Add to library",
+                              onTap: () {},
                             ),
                           ),
                         ],
@@ -294,6 +166,117 @@ class _AddContentOptionButton extends StatelessWidget {
             Icons.arrow_forward_ios_outlined,
             size: 14.w,
             color: AppColors.lightGreyColor,
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _NewContentWidget extends StatelessWidget {
+  final PreviewFileModel file;
+  final int index;
+
+  const _NewContentWidget({super.key, required this.file, required this.index});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: EdgeInsets.all(9.w),
+      margin: EdgeInsets.only(bottom: 12.w),
+      decoration: BoxDecoration(
+        color: AppColors.metalColor,
+        borderRadius: BorderRadius.circular(8.r),
+      ),
+      child: Row(
+        spacing: 12.w,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Container(
+            height: 80.h,
+            width: 64.w,
+            decoration: BoxDecoration(
+              color: AppColors.inactiveColor.withValues(alpha: 0.15),
+              borderRadius: BorderRadius.circular(6.r),
+              image: file.fileType == ContentFileType.IMAGE
+                  ? DecorationImage(
+                      image: FileImage(file.file),
+                      fit: BoxFit.cover,
+                    )
+                  : null,
+            ),
+            child:
+                [
+                  ContentFileType.PDF,
+                  ContentFileType.UNKNOWN,
+                ].contains(file.fileType)
+                ? Icon(
+                    Icons.insert_drive_file,
+                    color: AppColors.inactiveColor,
+                    size: 60.w,
+                  )
+                : file.fileType == ContentFileType.NOTE
+                ? Icon(
+                    Icons.edit_note_outlined,
+                    color: AppColors.inactiveColor,
+                    size: 60.w,
+                  )
+                : null,
+          ),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    SizedBox(
+                      width: getScreenWidth(context) * 0.55,
+                      child: Text(
+                        file.name,
+                        style: TextStyle(
+                          fontSize: 16.sp,
+                          color: Colors.white,
+                          fontVariations: [FontVariation.weight(600)],
+                        ),
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                    ),
+                    IconButton(
+                      onPressed: () {
+                        context.read<NewContentsCubit>().removeContent(index);
+                      },
+                      style: IconButton.styleFrom(
+                        backgroundColor: AppColors.lightBlueGreyColor,
+                        minimumSize: Size.fromRadius(0),
+                        padding: EdgeInsets.all(4.r),
+                        tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                      ),
+                      icon: Icon(
+                        Icons.close,
+                        color: AppColors.lightGreyColor,
+                        size: 18.w,
+                      ),
+                    ),
+                  ],
+                ),
+                Text(
+                  "${bytesToMegabytes(file.sizeInBytes)} MB - Uploaded",
+                  style: TextStyle(
+                    fontSize: 14.sp,
+                    color: AppColors.inactiveColor,
+                    height: 1.8,
+                    fontVariations: [FontVariation.weight(400)],
+                  ),
+                ),
+                10.verticalSpace,
+                SizedBox(
+                  width: getScreenWidth(context) * 0.5,
+                  child: LinearProgressIndicator(color: AppColors.blueColor),
+                ),
+              ],
+            ),
           ),
         ],
       ),

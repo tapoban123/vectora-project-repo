@@ -51,6 +51,7 @@ dependencies:
   image_picker: ^1.2.1
   flutter_quill: ^11.5.0
   cunning_document_scanner: ^1.4.0
+  uuid: ^4.5.2
 
 dev_dependencies:
   flutter_test:
