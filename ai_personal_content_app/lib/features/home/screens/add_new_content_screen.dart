@@ -1,3 +1,4 @@
+import 'package:ai_personal_content_app/core/common/functions.dart';
 import 'package:ai_personal_content_app/core/common/widgets/custom_appbar.dart';
 import 'package:ai_personal_content_app/core/common/widgets/custom_button.dart';
 import 'package:ai_personal_content_app/core/theme/app_colors.dart';
@@ -14,7 +15,7 @@ class AddNewContentScreen extends StatelessWidget {
   const AddNewContentScreen({super.key});
 
   void _clearContentsAndPopScreen(BuildContext context) {
-    context.read<NewContentsCubit>().close();
+    context.read<NewContentsCubit>().clear();
     context.pop();
   }
 
@@ -85,7 +86,7 @@ class AddNewContentScreen extends StatelessWidget {
                             itemCount: state.length,
                             itemBuilder: (context, index) {
                               final file = state[index];
-                                      
+
                               return _NewContentWidget(
                                 file: file,
                                 index: index,
@@ -205,23 +206,7 @@ class _NewContentWidget extends StatelessWidget {
                     )
                   : null,
             ),
-            child:
-                [
-                  ContentFileType.PDF,
-                  ContentFileType.UNKNOWN,
-                ].contains(file.fileType)
-                ? Icon(
-                    Icons.insert_drive_file,
-                    color: AppColors.inactiveColor,
-                    size: 60.w,
-                  )
-                : file.fileType == ContentFileType.NOTE
-                ? Icon(
-                    Icons.edit_note_outlined,
-                    color: AppColors.inactiveColor,
-                    size: 60.w,
-                  )
-                : null,
+            child: getContentIcon(fileType: file.fileType, iconSize: 60.w),
           ),
           Expanded(
             child: Column(

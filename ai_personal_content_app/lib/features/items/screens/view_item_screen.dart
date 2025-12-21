@@ -7,7 +7,6 @@ import 'package:intl/intl.dart';
 
 class ViewItemScreen extends StatelessWidget {
   const ViewItemScreen({super.key});
-  //
   // void _showFoodSearchBottomSheet(BuildContext parentContext) {
   //
   //   _scaffoldKey.currentState?.showBottomSheet(enableDrag: false, (

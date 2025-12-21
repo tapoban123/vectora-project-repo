@@ -62,10 +62,8 @@ class NewContentsCubit extends Cubit<List<PreviewFileModel>> {
     emit(List.unmodifiable(_newData));
   }
 
-  @override
-  Future<void> close() {
+  void clear() {
     _newData.clear();
     emit(List.unmodifiable(_newData));
-    return super.close();
   }
 }
