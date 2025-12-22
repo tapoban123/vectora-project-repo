@@ -1,3 +1,4 @@
+import 'package:ai_personal_content_app/core/common/constants.dart';
 import 'package:ai_personal_content_app/core/theme/app_colors.dart';
 import 'package:ai_personal_content_app/core/theme/app_svgs.dart';
 import 'package:ai_personal_content_app/core/utils/utils.dart';
@@ -109,7 +110,7 @@ class _ViewItemScreenState extends State<ViewItemScreen> {
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(12.r),
                   image: DecorationImage(
-                    image: NetworkImage("https://picsum.photos/200/300"),
+                    image: NetworkImage(RANDOM_IMAGE_URL),
                     fit: BoxFit.cover,
                   ),
                 ),
