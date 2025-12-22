@@ -18,8 +18,15 @@ class HomeScreen extends StatelessWidget {
       child: Scaffold(
         appBar: CustomAppbar(
           title: "Home",
-          actions: [Icon(Icons.local_library, color: Colors.white)],
-          leading: Icon(Icons.account_circle,color: Colors.white,),
+          actions: [
+            GestureDetector(
+              onTap: () {
+                context.push(RouteNames.contentLibrary);
+              },
+              child: Icon(Icons.local_library, color: Colors.white),
+            ),
+          ],
+          leading: Icon(Icons.account_circle, color: Colors.white),
           onLeadingTap: () {
             context.push(RouteNames.userProfile);
           },
@@ -42,14 +49,20 @@ class HomeScreen extends StatelessWidget {
                 onPressed: () {},
                 style: ElevatedButton.styleFrom(
                   minimumSize: Size(double.infinity, 52.h),
-                    backgroundColor: AppColors.blueGreyColor,
-                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14.r)),
+                  backgroundColor: AppColors.blueGreyColor,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(14.r),
+                  ),
                   padding: EdgeInsets.symmetric(horizontal: 12.w),
                 ),
                 child: Row(
                   spacing: 8.w,
                   children: [
-                    Icon(Icons.search_rounded, color: AppColors.inactiveColor,size: 24.w,),
+                    Icon(
+                      Icons.search_rounded,
+                      color: AppColors.inactiveColor,
+                      size: 24.w,
+                    ),
                     Text(
                       "Search images, docs and notes...",
                       style: TextStyle(
