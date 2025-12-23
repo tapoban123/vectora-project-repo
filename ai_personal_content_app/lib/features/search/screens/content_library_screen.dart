@@ -1,5 +1,6 @@
 import 'package:ai_personal_content_app/core/common/constants.dart';
 import 'package:ai_personal_content_app/core/common/widgets/custom_appbar.dart';
+import 'package:ai_personal_content_app/core/common/widgets/custom_button.dart';
 import 'package:ai_personal_content_app/core/theme/app_colors.dart';
 import 'package:ai_personal_content_app/core/utils/utils.dart';
 import 'package:ai_personal_content_app/router.dart';
@@ -19,6 +20,15 @@ class ContentLibraryScreen extends StatefulWidget {
 class _ContentLibraryScreenState extends State<ContentLibraryScreen> {
   late final ValueNotifier<_LayoutType> _layoutTypeNotifier;
   late final GlobalKey<ScaffoldState> _scaffoldKey;
+  final sortOptions = [
+    (title: "Recently Added", status: true),
+    (title: "Oldest First", status: false),
+    (title: "Recently Updated", status: false),
+    (title: "Name (A-Z)", status: false),
+    (title: "Name (Z-A)", status: false),
+    (title: "File Size (Largest First)", status: false),
+    (title: "File Size (Smallest First)", status: false),
+  ];
 
   @override
   void initState() {
@@ -63,24 +73,7 @@ class _ContentLibraryScreenState extends State<ContentLibraryScreen> {
                     ],
                   ),
                   onTap: () {
-                    _scaffoldKey.currentState?.showBottomSheet(
-                      (context) => AnimatedContainer(
-                        duration: Duration(milliseconds: 300),
-                        curve: Curves.easeOut,
-                        height: getScreenHeight(context) * 0.5,
-                        width: double.infinity,
-                        padding: EdgeInsets.symmetric(
-                          horizontal: 16.w,
-                          vertical: 14.w,
-                        ),
-                        decoration: BoxDecoration(
-                          color: AppColors.deepBlueColor,
-                          borderRadius: BorderRadius.vertical(
-                            top: Radius.circular(20),
-                          ),
-                        ),
-                      ),
-                    );
+                    _showSortOptionsSheet(context);
                   },
                 ),
                 _filterAndSortButton(
@@ -89,7 +82,9 @@ class _ContentLibraryScreenState extends State<ContentLibraryScreen> {
                     color: AppColors.offWhiteColor,
                     size: 22.w,
                   ),
-                  onTap: () {},
+                  onTap: () {
+                    _showFilterOptionsSheet(context);
+                  },
                 ),
                 Expanded(
                   child: Container(
@@ -201,6 +196,229 @@ class _ContentLibraryScreenState extends State<ContentLibraryScreen> {
           },
         );
       },
+    );
+  }
+
+  void _showSortOptionsSheet(BuildContext context) {
+    _scaffoldKey.currentState?.showBottomSheet(
+      (context) => TapRegion(
+        onTapOutside: (event) {
+          context.pop();
+        },
+        child: AnimatedContainer(
+          duration: Duration(milliseconds: 300),
+          curve: Curves.easeOut,
+          width: double.infinity,
+          decoration: BoxDecoration(
+            color: AppColors.deepBlueColor,
+            borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+          ),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              _headerRow("Sort Options", "SORT BY"),
+              Padding(
+                padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 14.w),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Column(
+                      children: List.generate(
+                        sortOptions.length,
+                        (index) => ListTile(
+                          contentPadding: EdgeInsets.zero,
+                          minTileHeight: 50.h,
+                          onTap: () {},
+                          title: Text(
+                            sortOptions[index].title,
+                            style: TextStyle(
+                              color: AppColors.offWhiteColor,
+                              fontVariations: [FontVariation.weight(500)],
+                            ),
+                          ),
+                          trailing: Container(
+                            height: 17.w,
+                            width: 17.w,
+                            padding: EdgeInsets.all(3.5.w),
+                            decoration: BoxDecoration(
+                              shape: BoxShape.circle,
+                              border: Border.all(
+                                color: sortOptions[index].status
+                                    ? AppColors.blueColor
+                                    : AppColors.lightBlueGreyColor,
+                              ),
+                            ),
+                            child: sortOptions[index].status
+                                ? Expanded(
+                                    child: Container(
+                                      decoration: BoxDecoration(
+                                        shape: BoxShape.circle,
+                                        color: AppColors.blueColor,
+                                      ),
+                                    ),
+                                  )
+                                : null,
+                          ),
+                        ),
+                      ),
+                    ),
+                    30.verticalSpace,
+                    CustomAppButton(
+                      buttonText: "Apply",
+                      minimumSize: Size(double.infinity, 54.h),
+                      fontSize: 15.sp,
+                      onTap: () {},
+                    ),
+                    10.verticalSpace,
+                    TextButton(
+                      onPressed: () {},
+                      style: TextButton.styleFrom(
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(8.r),
+                        ),
+                        overlayColor: AppColors.inactiveColor,
+                        minimumSize: Size(double.infinity, 48.h),
+                      ),
+                      child: Text(
+                        "Clear Sort",
+                        style: TextStyle(
+                          fontSize: 14.sp,
+                          color: AppColors.lightGreyColor,
+                          fontVariations: [FontVariation.weight(600)],
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  void _showFilterOptionsSheet(BuildContext context) {
+    _scaffoldKey.currentState?.showBottomSheet(
+      (context) => AnimatedContainer(
+        duration: Duration(milliseconds: 300),
+        curve: Curves.easeOut,
+        width: double.infinity,
+        decoration: BoxDecoration(
+          color: AppColors.deepBlueColor,
+          borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+        ),
+        child: TapRegion(
+          onTapOutside: (event) {
+            context.pop();
+          },
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [_headerRow("Filter Options", "FILTER"),
+              12.verticalSpace,
+              Padding(
+                padding: EdgeInsets.symmetric(horizontal: 16.w),
+                child: Column(
+                  children: [
+                    Text(
+                      "File Type",
+                      style: TextStyle(
+                        fontSize: 14.sp,
+                        color: Colors.white,
+                        fontVariations: [FontVariation.weight(600)],
+                      ),
+                    ),
+                    10.verticalSpace,
+                    Card(
+                      color: AppColors.blueColor,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(50.r),
+                      ),
+                      child: Padding(
+                        padding: EdgeInsets.symmetric(
+                          horizontal: 15.w,
+                          vertical: 8.w,
+                        ),
+                        child: Text(
+                          "PDF",
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 15.sp,
+                            fontVariations: [FontVariation.weight(600)],
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _headerRow(String text, String subHeaderText) {
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        14.verticalSpace,
+        Align(
+          alignment: Alignment.center,
+          child: Container(
+            height: 5.h,
+            width: 50.w,
+            decoration: BoxDecoration(color: AppColors.lightBlueGreyColor),
+          ),
+        ),
+        Padding(
+          padding: EdgeInsets.symmetric(vertical: 14.w, horizontal: 16.w),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                text,
+                style: TextStyle(
+                  fontSize: 16.sp,
+                  color: Colors.white,
+                  fontVariations: [FontVariation.weight(800)],
+                ),
+              ),
+              IconButton(
+                onPressed: () {
+                  context.pop();
+                },
+                style: IconButton.styleFrom(
+                  backgroundColor: AppColors.greyColor,
+                  padding: EdgeInsets.all(5.w),
+                  minimumSize: Size.zero,
+                ),
+                icon: Icon(
+                  Icons.close,
+                  color: AppColors.lightGreyColor,
+                  size: 20.w,
+                ),
+              ),
+            ],
+          ),
+        ),
+        Divider(),
+        10.verticalSpace,
+        Padding(
+          padding: EdgeInsets.symmetric(horizontal: 16.w),
+          child: Text(
+            subHeaderText,
+            style: TextStyle(
+              fontSize: 12.sp,
+              fontVariations: [FontVariation.weight(900)],
+              color: AppColors.lightGreyColor.withValues(alpha: 0.5),
+            ),
+          ),
+        ),
+      ],
     );
   }
 }

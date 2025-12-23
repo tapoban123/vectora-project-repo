@@ -1,4 +1,5 @@
 import 'package:ai_personal_content_app/core/common/constants.dart';
+import 'package:ai_personal_content_app/core/common/widgets/custom_appbar.dart';
 import 'package:ai_personal_content_app/core/theme/app_colors.dart';
 import 'package:ai_personal_content_app/core/theme/app_svgs.dart';
 import 'package:ai_personal_content_app/core/utils/utils.dart';
@@ -63,14 +64,9 @@ class _ViewItemScreenState extends State<ViewItemScreen> {
           );
         },
       ),
-      (icon: Icons.manage_search, color: null, label: "Search", onTap: () {}),
+      // (icon: Icons.manage_search, color: null, label: "Search", onTap: () {}),
       (icon: Icons.push_pin_outlined, color: null, label: "Pin", onTap: () {}),
-      (
-        icon: Icons.cloud_upload_outlined,
-        color: null,
-        label: "Upload",
-        onTap: () {},
-      ),
+      // (icon: Icons.share, color: null, label: "Share", onTap: () {}),
       (
         icon: Icons.delete_outline,
         color: AppColors.deepRedColor,
@@ -81,21 +77,24 @@ class _ViewItemScreenState extends State<ViewItemScreen> {
 
     return Scaffold(
       key: _scaffoldKey,
-      appBar: AppBar(
+      appBar: CustomAppbar(
         leading: GestureDetector(
           onTap: () {
             context.pop();
           },
           child: Icon(Icons.arrow_back_ios, color: Colors.white),
         ),
-        title: Text(
-          "Project Plan.pdf",
-          style: TextStyle(
-            color: Colors.white,
-            fontVariations: [FontVariation.weight(600)],
+        title: "Project Plan.pdf",
+        actions: [
+          IconButton(
+            onPressed: () {},
+            style: IconButton.styleFrom(
+              tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+              padding: EdgeInsets.zero,
+            ),
+            icon: Icon(Icons.share, color: Colors.white),
           ),
-        ),
-        centerTitle: true,
+        ],
       ),
       body: Padding(
         padding: EdgeInsets.symmetric(

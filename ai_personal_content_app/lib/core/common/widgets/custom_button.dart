@@ -6,6 +6,8 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 class CustomAppButton extends StatelessWidget {
   final String buttonText;
   final double? height;
+  final double? fontSize;
+  final Size? minimumSize;
   final VoidCallback onTap;
 
   const CustomAppButton({
@@ -13,6 +15,8 @@ class CustomAppButton extends StatelessWidget {
     required this.buttonText,
     required this.onTap,
     this.height,
+    this.fontSize,
+    this.minimumSize,
   });
 
   @override
@@ -21,7 +25,10 @@ class CustomAppButton extends StatelessWidget {
       onPressed: onTap,
       style: ElevatedButton.styleFrom(
         backgroundColor: AppColors.blueColor,
-        fixedSize: Size(getScreenWidth(context) * 0.85, height ?? 50.h),
+        fixedSize: minimumSize != null
+            ? Size(getScreenWidth(context) * 0.85, height ?? 50.h)
+            : null,
+        minimumSize: minimumSize,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(12.r),
         ),
@@ -29,7 +36,7 @@ class CustomAppButton extends StatelessWidget {
       child: Text(
         buttonText,
         style: TextStyle(
-          fontSize: 18.sp,
+          fontSize: fontSize ?? 18.sp,
           color: Colors.white,
           fontVariations: [FontVariation.weight(700)],
         ),

@@ -48,6 +48,9 @@ class MyApp extends StatelessWidget {
               surfaceTintColor: AppColors.backgroundColor,
               shadowColor: AppColors.backgroundColor,
             ),
+            iconButtonTheme: IconButtonThemeData(
+              style: IconButton.styleFrom(tapTargetSize: MaterialTapTargetSize.shrinkWrap),
+            ),
           ),
           routerConfig: router,
         ),
