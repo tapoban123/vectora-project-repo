@@ -46,7 +46,9 @@ class HomeScreen extends StatelessWidget {
             Padding(
               padding: EdgeInsets.symmetric(horizontal: 12.w),
               child: ElevatedButton(
-                onPressed: () {},
+                onPressed: () {
+                  context.push(RouteNames.searchContent);
+                },
                 style: ElevatedButton.styleFrom(
                   minimumSize: Size(double.infinity, 52.h),
                   backgroundColor: AppColors.blueGreyColor,
