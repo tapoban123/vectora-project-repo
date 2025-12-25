@@ -390,7 +390,7 @@ class _ChatBottomSheetContentState extends State<_ChatBottomSheetContent> {
                 textAlign: TextAlign.center,
               ),
             ),
-            Divider(),
+            Divider(color: AppColors.borderColor,),
             Expanded(
               child: ListView.separated(
                 itemCount: 50,

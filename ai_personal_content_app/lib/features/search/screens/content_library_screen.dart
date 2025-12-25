@@ -481,7 +481,7 @@ class _ContentLibraryScreenState extends State<ContentLibraryScreen> {
             ],
           ),
         ),
-        Divider(),
+        Divider(color: AppColors.borderColor),
         10.verticalSpace,
         Padding(
           padding: EdgeInsets.symmetric(horizontal: 16.w),

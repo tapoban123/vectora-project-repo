@@ -1,7 +1,6 @@
 import 'dart:io';
+import 'package:ai_personal_content_app/core/common/constants.dart';
 import 'package:path/path.dart' as p;
-
-enum ContentFileType { IMAGE, PDF, NOTE, UNKNOWN }
 
 class PreviewFileModel {
   final File file;

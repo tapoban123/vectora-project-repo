@@ -18,5 +18,6 @@ class AppColors {
   static const Color darkMetalColor = Color(0xFF101622);
   static const Color redColor = Color(0xFFF87171);
   static const Color deepRedColor = Color(0xFFFF453A);
+  static const Color violetColor = Color(0xFFc084fc);
   static Color borderColor = Colors.white.withValues(alpha: 0.1);
 }

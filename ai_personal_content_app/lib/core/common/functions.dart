@@ -1,5 +1,5 @@
+import 'package:ai_personal_content_app/core/common/constants.dart';
 import 'package:ai_personal_content_app/core/theme/app_colors.dart';
-import 'package:ai_personal_content_app/features/home/models/preview_file_model.dart';
 import 'package:flutter/material.dart';
 
 Widget getContentIcon({
