@@ -1,5 +1,4 @@
 import requests
-import json
 
 from src.core.api_constants import VOYAGE_API_SECRET, VOYAGE_EMBEDDING_API_URL
 
@@ -27,6 +26,6 @@ def generate_embeddings():
     response = requests.post(
         url=VOYAGE_EMBEDDING_API_URL,
         headers=headers,
-        data=json.dumps(body)
+        json=body
     )
     return response.json()
