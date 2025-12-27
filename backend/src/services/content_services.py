@@ -1,31 +1,39 @@
-import requests
+from io import BytesIO
+from fastapi import UploadFile
+import voyageai
+from PIL import Image
+import cohere
 
-from src.core.api_constants import VOYAGE_API_SECRET, VOYAGE_EMBEDDING_API_URL
+from src.core.constants import VOYAGE_API_SECRET, IMAGE_EMBEDDING_MODEL, COHERE_API_KEY
+
+voyage_client = voyageai.Client(api_key=VOYAGE_API_SECRET)
+co = cohere.ClientV2(api_key=COHERE_API_KEY)
 
 
-def generate_embeddings():
-    headers = {"Authorization": f"Bearer {VOYAGE_API_SECRET}", "content-type": "application/json"}
-    body = {
-        "inputs": [
-            {
-                "content": [
-                    {
-                        "type": "text",
-                        "text": "This is a banana."
-                    },
-                    {
-                        "type": "image_url",
-                        "image_url": "https://raw.githubusercontent.com/voyage-ai/voyage-multimodal-3/refs/heads/main/images/banana.jpg"
-                    },
-                ]
-            }
-        ],
-        "model": "voyage-multimodal-3.5"
-    }
+async def generate_image_embeddings(image: UploadFile):
+    image_contents = await image.read()
+    img = Image.open(BytesIO(image_contents)).convert("RGB")
+    inputs = [
+        [img]
+    ]
+    result = voyage_client.multimodal_embed(inputs, model=IMAGE_EMBEDDING_MODEL)
+    return result
 
-    response = requests.post(
-        url=VOYAGE_EMBEDDING_API_URL,
-        headers=headers,
-        json=body
+
+def generate_text_embeddings(text: str):
+    text_inputs = [
+        {
+            "content": [
+                {"type": "text", "text": text},
+            ]
+        },
+    ]
+
+    response = co.embed(
+        inputs=text_inputs,
+        model="embed-v4.0",
+        input_type="classification",
+        embedding_types=["float"],
+        output_dimension=1024
     )
-    return response.json()
+    return response
