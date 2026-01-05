@@ -1,3 +1,4 @@
+import 'package:ai_personal_content_app/core/common/models/nearest_embedding_contents_model.dart';
 import 'package:ai_personal_content_app/features/search/entities/content_embeddings_entity.dart';
 import 'package:ai_personal_content_app/main.dart';
 import 'package:ai_personal_content_app/objectbox.g.dart';
@@ -15,7 +16,9 @@ class EmbeddingsLocalStorageService {
     _embeddingsBox.getAll();
   }
 
-  List<ObjectWithScore> fetchNearestEmbeddings(List<double> queryEmbedding) {
+  List<NearestEmbeddingContentsModel> fetchNearestEmbeddings(
+    List<double> queryEmbedding,
+  ) {
     final query = _embeddingsBox
         .query(
           ContentEmbeddingsEntity_.contentVectors.nearestNeighborsF32(
@@ -27,6 +30,13 @@ class EmbeddingsLocalStorageService {
     final results = query.findWithScores();
     query.close();
 
-    return results;
+    return results
+        .map(
+          (e) => NearestEmbeddingContentsModel(
+            cid: e.object.contentId,
+            score: e.score,
+          ),
+        )
+        .toList();
   }
 }
