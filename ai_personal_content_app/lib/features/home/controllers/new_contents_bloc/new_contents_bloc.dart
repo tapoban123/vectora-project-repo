@@ -1,13 +1,14 @@
 import 'dart:convert';
-import 'dart:developer';
 import 'dart:io';
 
 import 'package:ai_personal_content_app/core/common/constants.dart';
 import 'package:ai_personal_content_app/core/common/services/embedding_generation_service.dart';
+import 'package:ai_personal_content_app/core/common/services/embeddings_storage_service.dart';
 import 'package:ai_personal_content_app/features/home/controllers/new_contents_bloc/new_contents_events.dart';
 import 'package:ai_personal_content_app/features/home/controllers/new_contents_bloc/new_contents_states.dart';
 import 'package:ai_personal_content_app/features/home/models/content_embedding_response_model.dart';
 import 'package:ai_personal_content_app/features/home/models/preview_file_model.dart';
+import 'package:ai_personal_content_app/features/search/entities/content_embeddings_entity.dart';
 import 'package:cunning_document_scanner/cunning_document_scanner.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -16,10 +17,13 @@ import 'package:image_picker/image_picker.dart';
 
 class NewContentsBloc extends Bloc<NewContentsEvents, NewContentsStates> {
   final EmbeddingGenerationService _embeddingGenerationService;
+  final EmbeddingsLocalStorageService _embeddingsLocalStorageService;
 
   NewContentsBloc({
     required EmbeddingGenerationService embeddingGenerationService,
+    required EmbeddingsLocalStorageService embeddingsLocalStorageService,
   }) : _embeddingGenerationService = embeddingGenerationService,
+       _embeddingsLocalStorageService = embeddingsLocalStorageService,
        super(NewContentsStates.initial()) {
     on<CaptureImageEvent>(_captureImage);
     on<ScanDocumentsEvent>(_scanDocuments);
@@ -97,7 +101,18 @@ class NewContentsBloc extends Bloc<NewContentsEvents, NewContentsStates> {
       (content) => _generateEachContentEmbedding(content: content, emit: emit),
     );
 
-    final List<ContentEmbeddingResponseModel?> embeddings = await Future.wait(embeddingFutures);
+    final List<ContentEmbeddingResponseModel?> embeddings = await Future.wait(
+      embeddingFutures,
+    );
+
+    _embeddingsLocalStorageService.insertEmbeddings(
+      embeddings.nonNulls.map((e) {
+        return ContentEmbeddingsEntity(
+          contentId: e.cid,
+          contentVectors: e.embeddings,
+        );
+      }).toList(),
+    );
   }
 
   Future<ContentEmbeddingResponseModel?> _generateEachContentEmbedding({
