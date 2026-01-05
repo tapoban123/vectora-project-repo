@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:developer';
 import 'dart:io';
 
 import 'package:ai_personal_content_app/core/common/constants.dart';
@@ -9,6 +10,8 @@ import 'package:ai_personal_content_app/features/home/controllers/new_contents_b
 import 'package:ai_personal_content_app/features/home/models/content_embedding_response_model.dart';
 import 'package:ai_personal_content_app/features/home/models/preview_file_model.dart';
 import 'package:ai_personal_content_app/features/search/entities/content_embeddings_entity.dart';
+import 'package:ai_personal_content_app/features/search/entities/contents_entity.dart';
+import 'package:ai_personal_content_app/features/search/services/contents_local_storage_service.dart';
 import 'package:cunning_document_scanner/cunning_document_scanner.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -18,12 +21,15 @@ import 'package:image_picker/image_picker.dart';
 class NewContentsBloc extends Bloc<NewContentsEvents, NewContentsStates> {
   final EmbeddingGenerationService _embeddingGenerationService;
   final EmbeddingsLocalStorageService _embeddingsLocalStorageService;
+  final ContentsLocalStorageService _contentsLocalStorageService;
 
   NewContentsBloc({
     required EmbeddingGenerationService embeddingGenerationService,
     required EmbeddingsLocalStorageService embeddingsLocalStorageService,
+    required ContentsLocalStorageService contentsLocalStorageService,
   }) : _embeddingGenerationService = embeddingGenerationService,
        _embeddingsLocalStorageService = embeddingsLocalStorageService,
+       _contentsLocalStorageService = contentsLocalStorageService,
        super(NewContentsStates.initial()) {
     on<CaptureImageEvent>(_captureImage);
     on<ScanDocumentsEvent>(_scanDocuments);
@@ -97,22 +103,54 @@ class NewContentsBloc extends Bloc<NewContentsEvents, NewContentsStates> {
     GenerateEmbeddingsForAllEvent event,
     Emitter emit,
   ) async {
-    final embeddingFutures = _newData.map(
-      (content) => _generateEachContentEmbedding(content: content, emit: emit),
-    );
+    try {
+      final embeddingFutures = _newData.map(
+        (content) =>
+            _generateEachContentEmbedding(content: content, emit: emit),
+      );
 
-    final List<ContentEmbeddingResponseModel?> embeddings = await Future.wait(
-      embeddingFutures,
-    );
+      final List<ContentEmbeddingResponseModel?> embeddings = await Future.wait(
+        embeddingFutures,
+      );
 
-    _embeddingsLocalStorageService.insertEmbeddings(
-      embeddings.nonNulls.map((e) {
-        return ContentEmbeddingsEntity(
-          contentId: e.cid,
-          contentVectors: e.embeddings,
+      _embeddingsLocalStorageService.insertEmbeddings(
+        embeddings.nonNulls.map((e) {
+          return ContentEmbeddingsEntity(
+            contentId: e.cid,
+            contentVectors: e.embeddings,
+          );
+        }).toList(),
+      );
+
+      final List<ContentsEntity> contents = [];
+      for (final embedding in embeddings.nonNulls.toList()) {
+        final file = _newData.singleWhere(
+          (element) => element.cid == embedding.cid,
         );
-      }).toList(),
-    );
+        final path = await _contentsLocalStorageService.storeFileToAppDirectory(
+          file.file,
+          file.fileType,
+        );
+        final content = ContentsEntity(
+          contentId: embedding.cid,
+          path: path,
+          contentName: file.name,
+          contentSizeInBytes: file.sizeInBytes,
+          extension: file.extension,
+          type: file.fileType.name,
+          createdAt: DateTime.now(),
+          updatedAt: null,
+        );
+
+        contents.add(content);
+      }
+
+      _contentsLocalStorageService.insertContents(contents);
+      emit(NewContentsStates.success());
+    } catch (e) {
+      log("[EMBEDDING GENERATION BLOC ERROR] $e");
+      emit(NewContentsStates.error(message: e.toString()));
+    }
   }
 
   Future<ContentEmbeddingResponseModel?> _generateEachContentEmbedding({
