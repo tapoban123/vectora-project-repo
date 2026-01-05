@@ -1,6 +1,10 @@
-class ApiRoutes {
-  ApiRoutes._();
+import 'package:flutter/foundation.dart';
 
-  static const String generateImageEmbeddings = "/content/embeddings/image";
-  static const String generateTextEmbeddings = "/content/embeddings/text";
+class ApiRoutes {
+  static const String content = "/content";
+  static const String embeddings = "/content/embeddings";
+  static const String generateImageEmbeddings = "$embeddings/image";
+  static const String generateTextEmbeddings = kDebugMode
+      ? "$content/dev/embeddings/text"
+      : "$embeddings/text";
 }

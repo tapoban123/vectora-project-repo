@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:developer';
 import 'dart:io';
 
 import 'package:ai_personal_content_app/core/api/api_client.dart';
@@ -7,13 +8,18 @@ import 'package:ai_personal_content_app/core/api/exceptions.dart';
 import 'package:ai_personal_content_app/core/api/logger.dart';
 import 'package:ai_personal_content_app/features/home/models/content_embedding_response_model.dart';
 import 'package:dio/dio.dart';
+import 'package:flutter/foundation.dart';
 import 'package:fpdart/fpdart.dart';
 
 class EmbeddingGenerationService {
   final Dio _dio = ApiClient().dio;
 
   Future<Either<ApiException, ContentEmbeddingResponseModel>>
-  generateImageEmbeddings({String? cid, required File image}) async {
+  generateImageEmbeddings({
+    String? cid,
+    required File image,
+    required Function(int count, int total) onReceiveProgress,
+  }) async {
     try {
       final formData = FormData.fromMap({
         "image": await MultipartFile.fromFile(image.path),
@@ -21,6 +27,7 @@ class EmbeddingGenerationService {
       final response = await _dio.post(
         ApiRoutes.generateImageEmbeddings,
         data: formData,
+        onReceiveProgress: onReceiveProgress,
       );
 
       if (response.statusCode == 200) {
@@ -57,16 +64,22 @@ class EmbeddingGenerationService {
   }
 
   Future<Either<ApiException, ContentEmbeddingResponseModel>>
-  generateTextEmbeddings({String? cid, required String text}) async {
+  generateTextEmbeddings({
+    String? cid,
+    required String text,
+    required Function(int count, int total) onReceiveProgress,
+  }) async {
     try {
       final response = await _dio.post(
         ApiRoutes.generateTextEmbeddings,
         data: jsonEncode({"text": text}),
+        onReceiveProgress: onReceiveProgress,
       );
 
       if (response.statusCode == 200) {
+        log(response.data.toString());
         return Right(
-          ContentEmbeddingResponseModel.fromJson(jsonDecode(response.data)),
+          ContentEmbeddingResponseModel.fromJson(response.data),
         );
       }
       return Left(

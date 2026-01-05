@@ -11,5 +11,9 @@ sealed class NewContentsStates with _$NewContentsStates {
     required List<PreviewFileModel> contents,
   }) = _NewContents;
 
+  factory NewContentsStates.loading({
+    required PreviewFileModel content,
+  }) = _Loading;
+
   factory NewContentsStates.error({required String message}) = _Error;
 }

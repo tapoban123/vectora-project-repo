@@ -55,12 +55,13 @@ extension NewContentsStatesPatterns on NewContentsStates {
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeMap<TResult extends Object?>({TResult Function( _Initial value)?  initial,TResult Function( _NewContents value)?  newContents,TResult Function( _Error value)?  error,required TResult orElse(),}){
+@optionalTypeArgs TResult maybeMap<TResult extends Object?>({TResult Function( _Initial value)?  initial,TResult Function( _NewContents value)?  newContents,TResult Function( _Loading value)?  loading,TResult Function( _Error value)?  error,required TResult orElse(),}){
 final _that = this;
 switch (_that) {
 case _Initial() when initial != null:
 return initial(_that);case _NewContents() when newContents != null:
-return newContents(_that);case _Error() when error != null:
+return newContents(_that);case _Loading() when loading != null:
+return loading(_that);case _Error() when error != null:
 return error(_that);case _:
   return orElse();
 
@@ -79,12 +80,13 @@ return error(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult map<TResult extends Object?>({required TResult Function( _Initial value)  initial,required TResult Function( _NewContents value)  newContents,required TResult Function( _Error value)  error,}){
+@optionalTypeArgs TResult map<TResult extends Object?>({required TResult Function( _Initial value)  initial,required TResult Function( _NewContents value)  newContents,required TResult Function( _Loading value)  loading,required TResult Function( _Error value)  error,}){
 final _that = this;
 switch (_that) {
 case _Initial():
 return initial(_that);case _NewContents():
-return newContents(_that);case _Error():
+return newContents(_that);case _Loading():
+return loading(_that);case _Error():
 return error(_that);}
 }
 /// A variant of `map` that fallback to returning `null`.
@@ -99,12 +101,13 @@ return error(_that);}
 /// }
 /// ```
 
-@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>({TResult? Function( _Initial value)?  initial,TResult? Function( _NewContents value)?  newContents,TResult? Function( _Error value)?  error,}){
+@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>({TResult? Function( _Initial value)?  initial,TResult? Function( _NewContents value)?  newContents,TResult? Function( _Loading value)?  loading,TResult? Function( _Error value)?  error,}){
 final _that = this;
 switch (_that) {
 case _Initial() when initial != null:
 return initial(_that);case _NewContents() when newContents != null:
-return newContents(_that);case _Error() when error != null:
+return newContents(_that);case _Loading() when loading != null:
+return loading(_that);case _Error() when error != null:
 return error(_that);case _:
   return null;
 
@@ -122,11 +125,12 @@ return error(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>({TResult Function()?  initial,TResult Function( List<PreviewFileModel> contents)?  newContents,TResult Function( String message)?  error,required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>({TResult Function()?  initial,TResult Function( List<PreviewFileModel> contents)?  newContents,TResult Function( PreviewFileModel content)?  loading,TResult Function( String message)?  error,required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _Initial() when initial != null:
 return initial();case _NewContents() when newContents != null:
-return newContents(_that.contents);case _Error() when error != null:
+return newContents(_that.contents);case _Loading() when loading != null:
+return loading(_that.content);case _Error() when error != null:
 return error(_that.message);case _:
   return orElse();
 
@@ -145,11 +149,12 @@ return error(_that.message);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>({required TResult Function()  initial,required TResult Function( List<PreviewFileModel> contents)  newContents,required TResult Function( String message)  error,}) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>({required TResult Function()  initial,required TResult Function( List<PreviewFileModel> contents)  newContents,required TResult Function( PreviewFileModel content)  loading,required TResult Function( String message)  error,}) {final _that = this;
 switch (_that) {
 case _Initial():
 return initial();case _NewContents():
-return newContents(_that.contents);case _Error():
+return newContents(_that.contents);case _Loading():
+return loading(_that.content);case _Error():
 return error(_that.message);}
 }
 /// A variant of `when` that fallback to returning `null`
@@ -164,11 +169,12 @@ return error(_that.message);}
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>({TResult? Function()?  initial,TResult? Function( List<PreviewFileModel> contents)?  newContents,TResult? Function( String message)?  error,}) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>({TResult? Function()?  initial,TResult? Function( List<PreviewFileModel> contents)?  newContents,TResult? Function( PreviewFileModel content)?  loading,TResult? Function( String message)?  error,}) {final _that = this;
 switch (_that) {
 case _Initial() when initial != null:
 return initial();case _NewContents() when newContents != null:
-return newContents(_that.contents);case _Error() when error != null:
+return newContents(_that.contents);case _Loading() when loading != null:
+return loading(_that.content);case _Error() when error != null:
 return error(_that.message);case _:
   return null;
 
@@ -279,6 +285,81 @@ as List<PreviewFileModel>,
 }
 
 
+}
+
+/// @nodoc
+
+
+class _Loading implements NewContentsStates {
+   _Loading({required this.content});
+  
+
+ final  PreviewFileModel content;
+
+/// Create a copy of NewContentsStates
+/// with the given fields replaced by the non-null parameter values.
+@JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+_$LoadingCopyWith<_Loading> get copyWith => __$LoadingCopyWithImpl<_Loading>(this, _$identity);
+
+
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _Loading&&(identical(other.content, content) || other.content == content));
+}
+
+
+@override
+int get hashCode => Object.hash(runtimeType,content);
+
+@override
+String toString() {
+  return 'NewContentsStates.loading(content: $content)';
+}
+
+
+}
+
+/// @nodoc
+abstract mixin class _$LoadingCopyWith<$Res> implements $NewContentsStatesCopyWith<$Res> {
+  factory _$LoadingCopyWith(_Loading value, $Res Function(_Loading) _then) = __$LoadingCopyWithImpl;
+@useResult
+$Res call({
+ PreviewFileModel content
+});
+
+
+$PreviewFileModelCopyWith<$Res> get content;
+
+}
+/// @nodoc
+class __$LoadingCopyWithImpl<$Res>
+    implements _$LoadingCopyWith<$Res> {
+  __$LoadingCopyWithImpl(this._self, this._then);
+
+  final _Loading _self;
+  final $Res Function(_Loading) _then;
+
+/// Create a copy of NewContentsStates
+/// with the given fields replaced by the non-null parameter values.
+@pragma('vm:prefer-inline') $Res call({Object? content = null,}) {
+  return _then(_Loading(
+content: null == content ? _self.content : content // ignore: cast_nullable_to_non_nullable
+as PreviewFileModel,
+  ));
+}
+
+/// Create a copy of NewContentsStates
+/// with the given fields replaced by the non-null parameter values.
+@override
+@pragma('vm:prefer-inline')
+$PreviewFileModelCopyWith<$Res> get content {
+  
+  return $PreviewFileModelCopyWith<$Res>(_self.content, (value) {
+    return _then(_self.copyWith(content: value));
+  });
+}
 }
 
 /// @nodoc

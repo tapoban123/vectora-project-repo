@@ -4,7 +4,10 @@ import 'package:ai_personal_content_app/core/common/widgets/custom_appbar.dart';
 import 'package:ai_personal_content_app/core/common/widgets/custom_button.dart';
 import 'package:ai_personal_content_app/core/theme/app_colors.dart';
 import 'package:ai_personal_content_app/core/utils/utils.dart';
+import 'package:ai_personal_content_app/features/home/controllers/new_contents_bloc/new_contents_bloc.dart';
 import 'package:ai_personal_content_app/features/home/controllers/new_contents_bloc/new_contents_cubit.dart';
+import 'package:ai_personal_content_app/features/home/controllers/new_contents_bloc/new_contents_events.dart';
+import 'package:ai_personal_content_app/features/home/controllers/new_contents_bloc/new_contents_states.dart';
 import 'package:ai_personal_content_app/features/home/models/preview_file_model.dart';
 import 'package:ai_personal_content_app/router.dart';
 import 'package:flutter/material.dart';
@@ -16,13 +19,15 @@ class AddNewContentScreen extends StatelessWidget {
   const AddNewContentScreen({super.key});
 
   void _clearContentsAndPopScreen(BuildContext context) {
-    context.read<NewContentsCubit>().clear();
+    // context.read<NewContentsCubit>().clear();
+    context.read<NewContentsBloc>().add(ClearAllAddedContentsEvent());
     context.pop();
   }
 
   @override
   Widget build(BuildContext context) {
-    final addNewContentCubit = context.read<NewContentsCubit>();
+    // final addNewContentCubit = context.read<NewContentsCubit>();
+    final addNewContentRef = context.read<NewContentsBloc>();
 
     return PopScope(
       canPop: false,
@@ -41,73 +46,87 @@ class AddNewContentScreen extends StatelessWidget {
         ),
         body: Padding(
           padding: EdgeInsets.symmetric(horizontal: 16.w),
-          child: Expanded(
-            child: Column(
-              spacing: 8.h,
-              children: [
-                _AddContentOptionButton(
-                  title: "Take Photo",
-                  icon: Icons.camera_alt_outlined,
-                  onTap: () {
-                    addNewContentCubit.captureImage();
-                  },
-                ),
-                _AddContentOptionButton(
-                  title: "Scan Document",
-                  icon: Icons.document_scanner_outlined,
-                  onTap: () {
-                    addNewContentCubit.scanDocuments();
-                  },
-                ),
-                _AddContentOptionButton(
-                  title: "Upload File",
-                  icon: Icons.upload_file,
-                  onTap: () {
-                    addNewContentCubit.uploadFiles();
-                  },
-                ),
-                _AddContentOptionButton(
-                  title: "Create/Paste notes",
-                  icon: Icons.paste_outlined,
-                  onTap: () {
-                    context.push(RouteNames.createOrPasteNote);
-                  },
-                ),
-                50.verticalSpace,
-                BlocBuilder<NewContentsCubit, List<PreviewFileModel>>(
-                  builder: (context, state) {
-                    if (state.isEmpty) {
-                      return SizedBox.shrink();
-                    }
-                    return Expanded(
-                      child: Stack(
-                        alignment: Alignment.center,
-                        children: [
-                          ListView.builder(
-                            itemCount: state.length,
-                            itemBuilder: (context, index) {
-                              final file = state[index];
+          child: Column(
+            spacing: 8.h,
+            children: [
+              _AddContentOptionButton(
+                title: "Take Photo",
+                icon: Icons.camera_alt_outlined,
+                onTap: () {
+                  addNewContentRef.add(CaptureImageEvent());
+                },
+              ),
+              _AddContentOptionButton(
+                title: "Scan Document",
+                icon: Icons.document_scanner_outlined,
+                onTap: () {
+                  addNewContentRef.add(ScanDocumentsEvent());
+                },
+              ),
+              _AddContentOptionButton(
+                title: "Upload File",
+                icon: Icons.upload_file,
+                onTap: () {
+                  addNewContentRef.add(UploadFilesEvent());
+                },
+              ),
+              _AddContentOptionButton(
+                title: "Create/Paste notes",
+                icon: Icons.paste_outlined,
+                onTap: () {
+                  context.push(RouteNames.createOrPasteNote);
+                },
+              ),
+              50.verticalSpace,
+              Expanded(
+                child: BlocConsumer<NewContentsBloc, NewContentsStates>(
+                  buildWhen: (previous, current) => current.maybeWhen(
+                    orElse: () => false,
+                    newContents: (contents) => true,
+                  ),
+                  listener: (context, state) {
 
-                              return _NewContentWidget(
-                                file: file,
-                                index: index,
+                  },
+                  builder: (context, state) {
+                    final List<PreviewFileModel> contents = state.maybeWhen(
+                      orElse: () => [],
+                      newContents: (contents) => contents,
+                    );
+
+                    if (contents.isEmpty) {
+                      return SizedBox();
+                    }
+                    return Stack(
+                      alignment: Alignment.center,
+                      children: [
+                        ListView.builder(
+                          itemCount: contents.length,
+                          itemBuilder: (context, index) {
+                            final file = contents[index];
+
+                            return _NewContentWidget(
+                              file: file,
+                              index: index,
+                            );
+                          },
+                        ),
+                        Positioned(
+                          bottom: 0,
+                          child: CustomAppButton(
+                            buttonText: "Add to library",
+                            onTap: () {
+                              addNewContentRef.add(
+                                GenerateEmbeddingsForAllEvent(),
                               );
                             },
                           ),
-                          Positioned(
-                            bottom: 0,
-                            child: CustomAppButton(
-                              buttonText: "Add to library",
-                              onTap: () {},
-                            ),
-                          ),
-                        ],
-                      ),
+                        ),
+                      ],
                     );
                   },
                 ),
-              ],
-            ),
+              ),
+            ],
           ),
         ),
       ),
@@ -259,9 +278,23 @@ class _NewContentWidget extends StatelessWidget {
                   ),
                 ),
                 10.verticalSpace,
-                SizedBox(
-                  width: getScreenWidth(context) * 0.5,
-                  child: LinearProgressIndicator(color: AppColors.blueColor),
+                BlocBuilder<NewContentsBloc, NewContentsStates>(
+                  buildWhen: (previous, current) => current.maybeWhen(
+                    orElse: () => false,
+                    loading: (content) => content.cid == file.cid,
+                  ),
+                  builder: (context, state) {
+                    return state.maybeWhen(
+                      orElse: () => SizedBox.shrink(),
+                      loading: (content) => SizedBox(
+                        width: getScreenWidth(context) * 0.5,
+                        child: LinearProgressIndicator(
+                          color: AppColors.blueColor,
+                          value: content.loadingProgress,
+                        ),
+                      ),
+                    );
+                  },
                 ),
               ],
             ),

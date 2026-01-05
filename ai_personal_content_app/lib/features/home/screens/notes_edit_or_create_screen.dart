@@ -5,7 +5,9 @@ import 'dart:io';
 import 'package:ai_personal_content_app/core/common/widgets/custom_appbar.dart';
 import 'package:ai_personal_content_app/core/common/widgets/custom_button.dart';
 import 'package:ai_personal_content_app/core/theme/app_fonts.dart';
+import 'package:ai_personal_content_app/features/home/controllers/new_contents_bloc/new_contents_bloc.dart';
 import 'package:ai_personal_content_app/features/home/controllers/new_contents_bloc/new_contents_cubit.dart';
+import 'package:ai_personal_content_app/features/home/controllers/new_contents_bloc/new_contents_events.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_quill/flutter_quill.dart';
@@ -41,7 +43,7 @@ class _NotesEditOrCreateScreenState extends State<NotesEditOrCreateScreen> {
     final file = File(
       p.join(
         directory.path,
-        "${deltaString.substring(0, deltaString.length <= 15 ? deltaString.length - 1 : 15)}.json",
+        "${deltaString.substring(0, deltaString.length <= 15 ? deltaString.length - 1 : 15).trim()}.json",
       ),
     );
 
@@ -131,13 +133,11 @@ class _NotesEditOrCreateScreenState extends State<NotesEditOrCreateScreen> {
               padding: EdgeInsets.symmetric(vertical: 6.w),
               child: CustomAppButton(
                 buttonText: "Save Note",
-                height: 48.h,
+                minimumSize: Size(double.infinity, 48.h),
                 onTap: () async {
                   final noteJson = await _saveNoteAsJson();
                   if (context.mounted) {
-                    context.read<NewContentsCubit>().createOrPasteNotes(
-                      noteJson,
-                    );
+                    context.read<NewContentsBloc>().add(CreateOrPasteNotesEvent(notesJson: noteJson));
                     context.pop();
                   }
                 },
