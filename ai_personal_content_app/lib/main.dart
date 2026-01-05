@@ -17,9 +17,9 @@ late final ObjectboxConfig objectBoxInstance;
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  init();
-
   objectBoxInstance = await ObjectboxConfig.create();
+
+  init();
   runApp(const MyApp());
 }
 

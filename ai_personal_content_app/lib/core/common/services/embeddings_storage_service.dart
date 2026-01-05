@@ -25,6 +25,7 @@ class EmbeddingsLocalStorageService {
         )
         .build();
     final results = query.findWithScores();
+    query.close();
 
     return results;
   }
