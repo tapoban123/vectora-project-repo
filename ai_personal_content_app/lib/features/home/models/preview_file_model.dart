@@ -7,10 +7,12 @@ import 'package:uuid/uuid.dart';
 part 'preview_file_model.freezed.dart';
 
 @freezed
-class PreviewFileModel with _$PreviewFileModel{
+class PreviewFileModel with _$PreviewFileModel {
   final String cid;
   final File file;
   final String name;
+  final String? imageDescription;
+  final String? scannedImageTexts;
   final int sizeInBytes;
   final String extension;
   final ContentFileType fileType;
@@ -21,6 +23,8 @@ class PreviewFileModel with _$PreviewFileModel{
     required this.cid,
     required this.file,
     required this.name,
+    this.imageDescription,
+    this.scannedImageTexts,
     required this.sizeInBytes,
     required this.extension,
     required this.fileType,

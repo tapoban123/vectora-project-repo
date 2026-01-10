@@ -11,6 +11,8 @@ class ContentsEntity {
 
   String path;
   String contentName;
+  String? imageDescription;
+  String? scannedImageTexts;
   String extension;
   String type;
 
@@ -26,10 +28,12 @@ class ContentsEntity {
     required this.contentId,
     required this.path,
     required this.contentName,
+    this.imageDescription,
+    this.scannedImageTexts,
     required this.contentSizeInBytes,
     required this.extension,
     required this.type,
     required this.createdAt,
-    required this.updatedAt,
+    this.updatedAt,
   });
 }

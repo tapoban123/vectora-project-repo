@@ -14,7 +14,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$PreviewFileModel {
 
- String get cid; File get file; String get name; int get sizeInBytes; String get extension; ContentFileType get fileType; bool get isLoading; double? get loadingProgress;
+ String get cid; File get file; String get name; String? get imageDescription; String? get scannedImageTexts; int get sizeInBytes; String get extension; ContentFileType get fileType; bool get isLoading; double? get loadingProgress;
 /// Create a copy of PreviewFileModel
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -25,16 +25,16 @@ $PreviewFileModelCopyWith<PreviewFileModel> get copyWith => _$PreviewFileModelCo
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is PreviewFileModel&&(identical(other.cid, cid) || other.cid == cid)&&(identical(other.file, file) || other.file == file)&&(identical(other.name, name) || other.name == name)&&(identical(other.sizeInBytes, sizeInBytes) || other.sizeInBytes == sizeInBytes)&&(identical(other.extension, extension) || other.extension == extension)&&(identical(other.fileType, fileType) || other.fileType == fileType)&&(identical(other.isLoading, isLoading) || other.isLoading == isLoading)&&(identical(other.loadingProgress, loadingProgress) || other.loadingProgress == loadingProgress));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is PreviewFileModel&&(identical(other.cid, cid) || other.cid == cid)&&(identical(other.file, file) || other.file == file)&&(identical(other.name, name) || other.name == name)&&(identical(other.imageDescription, imageDescription) || other.imageDescription == imageDescription)&&(identical(other.scannedImageTexts, scannedImageTexts) || other.scannedImageTexts == scannedImageTexts)&&(identical(other.sizeInBytes, sizeInBytes) || other.sizeInBytes == sizeInBytes)&&(identical(other.extension, extension) || other.extension == extension)&&(identical(other.fileType, fileType) || other.fileType == fileType)&&(identical(other.isLoading, isLoading) || other.isLoading == isLoading)&&(identical(other.loadingProgress, loadingProgress) || other.loadingProgress == loadingProgress));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,cid,file,name,sizeInBytes,extension,fileType,isLoading,loadingProgress);
+int get hashCode => Object.hash(runtimeType,cid,file,name,imageDescription,scannedImageTexts,sizeInBytes,extension,fileType,isLoading,loadingProgress);
 
 @override
 String toString() {
-  return 'PreviewFileModel(cid: $cid, file: $file, name: $name, sizeInBytes: $sizeInBytes, extension: $extension, fileType: $fileType, isLoading: $isLoading, loadingProgress: $loadingProgress)';
+  return 'PreviewFileModel(cid: $cid, file: $file, name: $name, imageDescription: $imageDescription, scannedImageTexts: $scannedImageTexts, sizeInBytes: $sizeInBytes, extension: $extension, fileType: $fileType, isLoading: $isLoading, loadingProgress: $loadingProgress)';
 }
 
 
@@ -45,7 +45,7 @@ abstract mixin class $PreviewFileModelCopyWith<$Res>  {
   factory $PreviewFileModelCopyWith(PreviewFileModel value, $Res Function(PreviewFileModel) _then) = _$PreviewFileModelCopyWithImpl;
 @useResult
 $Res call({
- String cid, File file, String name, int sizeInBytes, String extension, ContentFileType fileType, bool isLoading, double? loadingProgress
+ String cid, File file, String name, String? imageDescription, String? scannedImageTexts, int sizeInBytes, String extension, ContentFileType fileType, bool isLoading, double? loadingProgress
 });
 
 
@@ -62,12 +62,14 @@ class _$PreviewFileModelCopyWithImpl<$Res>
 
 /// Create a copy of PreviewFileModel
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? cid = null,Object? file = null,Object? name = null,Object? sizeInBytes = null,Object? extension = null,Object? fileType = null,Object? isLoading = null,Object? loadingProgress = freezed,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? cid = null,Object? file = null,Object? name = null,Object? imageDescription = freezed,Object? scannedImageTexts = freezed,Object? sizeInBytes = null,Object? extension = null,Object? fileType = null,Object? isLoading = null,Object? loadingProgress = freezed,}) {
   return _then(PreviewFileModel._(
 cid: null == cid ? _self.cid : cid // ignore: cast_nullable_to_non_nullable
 as String,file: null == file ? _self.file : file // ignore: cast_nullable_to_non_nullable
 as File,name: null == name ? _self.name : name // ignore: cast_nullable_to_non_nullable
-as String,sizeInBytes: null == sizeInBytes ? _self.sizeInBytes : sizeInBytes // ignore: cast_nullable_to_non_nullable
+as String,imageDescription: freezed == imageDescription ? _self.imageDescription : imageDescription // ignore: cast_nullable_to_non_nullable
+as String?,scannedImageTexts: freezed == scannedImageTexts ? _self.scannedImageTexts : scannedImageTexts // ignore: cast_nullable_to_non_nullable
+as String?,sizeInBytes: null == sizeInBytes ? _self.sizeInBytes : sizeInBytes // ignore: cast_nullable_to_non_nullable
 as int,extension: null == extension ? _self.extension : extension // ignore: cast_nullable_to_non_nullable
 as String,fileType: null == fileType ? _self.fileType : fileType // ignore: cast_nullable_to_non_nullable
 as ContentFileType,isLoading: null == isLoading ? _self.isLoading : isLoading // ignore: cast_nullable_to_non_nullable

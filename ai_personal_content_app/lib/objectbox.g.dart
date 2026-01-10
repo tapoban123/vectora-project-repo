@@ -23,7 +23,7 @@ final _entities = <obx_int.ModelEntity>[
   obx_int.ModelEntity(
     id: const obx_int.IdUid(2, 8128517059530730439),
     name: 'ContentsEntity',
-    lastPropertyId: const obx_int.IdUid(9, 3299448024628878195),
+    lastPropertyId: const obx_int.IdUid(11, 3958599634335642310),
     flags: 0,
     properties: <obx_int.ModelProperty>[
       obx_int.ModelProperty(
@@ -79,6 +79,18 @@ final _entities = <obx_int.ModelEntity>[
         id: const obx_int.IdUid(9, 3299448024628878195),
         name: 'updatedAt',
         type: 10,
+        flags: 0,
+      ),
+      obx_int.ModelProperty(
+        id: const obx_int.IdUid(10, 2791187969336182065),
+        name: 'imageDescription',
+        type: 9,
+        flags: 0,
+      ),
+      obx_int.ModelProperty(
+        id: const obx_int.IdUid(11, 3958599634335642310),
+        name: 'scannedImageTexts',
+        type: 9,
         flags: 0,
       ),
     ],
@@ -188,7 +200,13 @@ obx_int.ModelDefinition getObjectBoxModel() {
         final contentNameOffset = fbb.writeString(object.contentName);
         final extensionOffset = fbb.writeString(object.extension);
         final typeOffset = fbb.writeString(object.type);
-        fbb.startTable(10);
+        final imageDescriptionOffset = object.imageDescription == null
+            ? null
+            : fbb.writeString(object.imageDescription!);
+        final scannedImageTextsOffset = object.scannedImageTexts == null
+            ? null
+            : fbb.writeString(object.scannedImageTexts!);
+        fbb.startTable(12);
         fbb.addInt64(0, object.id);
         fbb.addOffset(1, contentIdOffset);
         fbb.addOffset(2, pathOffset);
@@ -198,6 +216,8 @@ obx_int.ModelDefinition getObjectBoxModel() {
         fbb.addInt32(6, object.contentSizeInBytes);
         fbb.addInt64(7, object.createdAt.millisecondsSinceEpoch);
         fbb.addInt64(8, object.updatedAt?.millisecondsSinceEpoch);
+        fbb.addOffset(9, imageDescriptionOffset);
+        fbb.addOffset(10, scannedImageTextsOffset);
         fbb.finish(fbb.endTable());
         return object.id;
       },
@@ -218,6 +238,12 @@ obx_int.ModelDefinition getObjectBoxModel() {
         final contentNameParam = const fb.StringReader(
           asciiOptimization: true,
         ).vTableGet(buffer, rootOffset, 10, '');
+        final imageDescriptionParam = const fb.StringReader(
+          asciiOptimization: true,
+        ).vTableGetNullable(buffer, rootOffset, 22);
+        final scannedImageTextsParam = const fb.StringReader(
+          asciiOptimization: true,
+        ).vTableGetNullable(buffer, rootOffset, 24);
         final contentSizeInBytesParam = const fb.Int32Reader().vTableGet(
           buffer,
           rootOffset,
@@ -240,6 +266,8 @@ obx_int.ModelDefinition getObjectBoxModel() {
           contentId: contentIdParam,
           path: pathParam,
           contentName: contentNameParam,
+          imageDescription: imageDescriptionParam,
+          scannedImageTexts: scannedImageTextsParam,
           contentSizeInBytes: contentSizeInBytesParam,
           extension: extensionParam,
           type: typeParam,
@@ -338,6 +366,16 @@ class ContentsEntity_ {
   /// See [ContentsEntity.updatedAt].
   static final updatedAt = obx.QueryDateProperty<ContentsEntity>(
     _entities[0].properties[8],
+  );
+
+  /// See [ContentsEntity.imageDescription].
+  static final imageDescription = obx.QueryStringProperty<ContentsEntity>(
+    _entities[0].properties[9],
+  );
+
+  /// See [ContentsEntity.scannedImageTexts].
+  static final scannedImageTexts = obx.QueryStringProperty<ContentsEntity>(
+    _entities[0].properties[10],
   );
 }
 

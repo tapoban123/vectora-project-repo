@@ -22,7 +22,7 @@ class EmbeddingGenerationService {
     try {
       final formData = FormData.fromMap({
         "cid": cid,
-        "image":await MultipartFile.fromFile(image.path),
+        "image": await MultipartFile.fromFile(image.path),
       });
       final response = await _dio.post(
         ApiRoutes.generateImageEmbeddings,

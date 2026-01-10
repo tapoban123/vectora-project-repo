@@ -5,7 +5,7 @@
   "entities": [
     {
       "id": "2:8128517059530730439",
-      "lastPropertyId": "9:3299448024628878195",
+      "lastPropertyId": "11:3958599634335642310",
       "name": "ContentsEntity",
       "properties": [
         {
@@ -55,6 +55,16 @@
           "id": "9:3299448024628878195",
           "name": "updatedAt",
           "type": 10
+        },
+        {
+          "id": "10:2791187969336182065",
+          "name": "imageDescription",
+          "type": 9
+        },
+        {
+          "id": "11:3958599634335642310",
+          "name": "scannedImageTexts",
+          "type": 9
         }
       ],
       "relations": []
