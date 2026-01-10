@@ -68,7 +68,6 @@ def generate_text_embeddings_dev(text: str):
                 contents=text,
                 config=types.EmbedContentConfig(output_dimensionality=512)
             )
-            print(response)
             return response
         except:
             count += 1

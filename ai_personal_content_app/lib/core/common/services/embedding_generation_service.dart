@@ -8,7 +8,6 @@ import 'package:ai_personal_content_app/core/api/exceptions.dart';
 import 'package:ai_personal_content_app/core/api/logger.dart';
 import 'package:ai_personal_content_app/features/home/models/content_embedding_response_model.dart';
 import 'package:dio/dio.dart';
-import 'package:flutter/foundation.dart';
 import 'package:fpdart/fpdart.dart';
 
 class EmbeddingGenerationService {
@@ -22,7 +21,8 @@ class EmbeddingGenerationService {
   }) async {
     try {
       final formData = FormData.fromMap({
-        "image": await MultipartFile.fromFile(image.path),
+        "cid": cid,
+        "image":await MultipartFile.fromFile(image.path),
       });
       final response = await _dio.post(
         ApiRoutes.generateImageEmbeddings,
@@ -32,7 +32,7 @@ class EmbeddingGenerationService {
 
       if (response.statusCode == 200) {
         return Right(
-          ContentEmbeddingResponseModel.fromJson(jsonDecode(response.data)),
+          ContentEmbeddingResponseModel.fromJson(response.data),
         );
       }
       return Left(

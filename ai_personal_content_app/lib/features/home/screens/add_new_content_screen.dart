@@ -84,6 +84,7 @@ class AddNewContentScreen extends StatelessWidget {
                     orElse: () => false,
                     newContents: (contents) => true,
                   ),
+                  listenWhen: (previous, current) => previous.maybeWhen(orElse: () => false,error: (message) => true,)|| current.maybeWhen(orElse: () => false,error: (message) => true,),
                   listener: (context, state) {
                     state.maybeWhen(
                       orElse: () => null,

@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:developer';
 import 'dart:io';
 
+import 'package:ai_personal_content_app/core/api/exceptions.dart';
 import 'package:ai_personal_content_app/core/common/constants.dart';
 import 'package:ai_personal_content_app/core/common/services/embedding_generation_service.dart';
 import 'package:ai_personal_content_app/core/common/services/embeddings_storage_service.dart';
@@ -16,6 +17,7 @@ import 'package:cunning_document_scanner/cunning_document_scanner.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_quill/flutter_quill.dart';
+import 'package:fpdart/fpdart.dart';
 import 'package:image_picker/image_picker.dart';
 
 class NewContentsBloc extends Bloc<NewContentsEvents, NewContentsStates> {
@@ -147,9 +149,10 @@ class NewContentsBloc extends Bloc<NewContentsEvents, NewContentsStates> {
 
       _contentsLocalStorageService.insertContents(contents);
       emit(NewContentsStates.success());
-    } catch (e) {
-      log("[EMBEDDING GENERATION BLOC ERROR] $e");
+    } catch (e, stk) {
+      log("[EMBEDDING GENERATION BLOC ERROR] $e\n$stk");
       emit(NewContentsStates.error(message: e.toString()));
+      emit(NewContentsStates.initial());
     }
   }
 
@@ -157,32 +160,49 @@ class NewContentsBloc extends Bloc<NewContentsEvents, NewContentsStates> {
     required PreviewFileModel content,
     required Emitter emit,
   }) async {
-    final fileData = await content.file.readAsString();
     ContentEmbeddingResponseModel? embeddings;
+    late Either<ApiException, ContentEmbeddingResponseModel> embeddingsResp;
 
     if (content.fileType == ContentFileType.NOTE) {
+      final fileData = await content.file.readAsString();
       final doc = Document.fromJson(jsonDecode(fileData));
       final String plainText = doc.toPlainText();
-      final embeddingsResp = await _embeddingGenerationService
-          .generateTextEmbeddings(
+      embeddingsResp = await _embeddingGenerationService.generateTextEmbeddings(
+        cid: content.cid,
+        text: plainText,
+        onReceiveProgress: (count, total) {
+          _onReceiveProgress(count, total, emit, content);
+        },
+      );
+    } else if (content.fileType == ContentFileType.IMAGE) {
+      embeddingsResp = await _embeddingGenerationService
+          .generateImageEmbeddings(
             cid: content.cid,
-            text: plainText,
+            image: content.file,
             onReceiveProgress: (count, total) {
-              emit(
-                NewContentsStates.loading(
-                  content: content.copyWith(loadingProgress: count / total),
-                ),
-              );
+              _onReceiveProgress(count, total, emit, content);
             },
           );
-
-      embeddingsResp.fold(
-        (l) => emit(NewContentsStates.error(message: l.message)),
-        (r) => embeddings = r,
-      );
-      return embeddings;
     }
-    return null;
+
+    embeddingsResp.fold(
+      (l) => emit(NewContentsStates.error(message: l.message)),
+      (r) => embeddings = r,
+    );
+    return embeddings;
+  }
+
+  void _onReceiveProgress(
+    int count,
+    int total,
+    Emitter emit,
+    PreviewFileModel content,
+  ) {
+    emit(
+      NewContentsStates.loading(
+        content: content.copyWith(loadingProgress: count / total),
+      ),
+    );
   }
 
   void _clear(ClearAllAddedContentsEvent event, Emitter emit) {
