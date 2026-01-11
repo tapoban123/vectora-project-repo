@@ -14,7 +14,7 @@ async def get_image_embeddings(image: Annotated[UploadFile, File()], cid: str = 
     return {
         "id": uuid.uuid4().hex,
         "cid": cid,
-        "response": embeddings_with_description,
+        **embeddings_with_description,
     }
 
 
@@ -35,10 +35,10 @@ async def get_image_embeddings(image: Annotated[UploadFile, File()], cid: str = 
 async def get_text_embeddings(textData: TextEmbeddingSchema):
     embeddings = generate_text_embeddings_gemini(textData.text)
     if textData.cid is None:
-        return {"embeddings": embeddings.embeddings[0].values}
+        return {"embeddings": embeddings}
 
     return {
         "id": uuid.uuid4().hex,
         "cid": textData.cid,
-        "embeddings": embeddings.embeddings[0].values,
+        "embeddings": embeddings,
     }

@@ -22,7 +22,7 @@ async def generate_image_embeddings_from_text(image: UploadFile):
     image_description = await _generate_image_description(image)
     clean_des = clean_vision_text(image_description)
     embeddings = generate_text_embeddings_gemini(clean_des)
-    return {"description": clean_des, "img_des_embeddings": embeddings}
+    return {"description": clean_des, "embeddings": embeddings}
 
 
 async def _generate_image_description(image: UploadFile) -> str | None:

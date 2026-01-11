@@ -10,6 +10,7 @@ abstract class ContentEmbeddingResponseModel
   factory ContentEmbeddingResponseModel({
     String? id,
     String? cid, // content Id
+    String? description,
     required List<double> embeddings,
   }) = _ContentEmbeddingResponseModel;
 
