@@ -18,6 +18,7 @@ import 'package:file_picker/file_picker.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_quill/flutter_quill.dart';
 import 'package:fpdart/fpdart.dart';
+import 'package:google_mlkit_text_recognition/google_mlkit_text_recognition.dart';
 import 'package:image_picker/image_picker.dart';
 
 class NewContentsBloc extends Bloc<NewContentsEvents, NewContentsStates> {
@@ -71,6 +72,15 @@ class NewContentsBloc extends Bloc<NewContentsEvents, NewContentsStates> {
         NewContentsStates.newContents(contents: List.unmodifiable(_newData)),
       );
     }
+  }
+
+  void _extractTextFromScannedImagesOCR({required File file})async{
+    final inputImage = InputImage.fromFile(file);
+    final textRecognizer = TextRecognizer(script: TextRecognitionScript.latin);
+    final RecognizedText recognizedText = await textRecognizer.processImage(inputImage);
+    String text = recognizedText.text;
+
+    log(text);
   }
 
   void _uploadFiles(UploadFilesEvent event, Emitter emit) async {
@@ -137,6 +147,7 @@ class NewContentsBloc extends Bloc<NewContentsEvents, NewContentsStates> {
           contentId: embedding.cid!,
           path: path,
           contentName: file.name,
+          imageDescription: embedding.description,
           contentSizeInBytes: file.sizeInBytes,
           extension: file.extension,
           type: file.fileType.name,

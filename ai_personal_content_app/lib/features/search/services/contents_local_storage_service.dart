@@ -33,6 +33,14 @@ class ContentsLocalStorageService {
     _contentsBox.putMany(contents);
   }
 
+  void removeContent(int id) {
+    _contentsBox.remove(id);
+  }
+
+  void removeMultipleContent(List<int> ids) {
+    _contentsBox.removeMany(ids);
+  }
+
   List<ContentsEntity> fetchAllContents() {
     return _contentsBox.getAll();
   }

@@ -12,6 +12,14 @@ class EmbeddingsLocalStorageService {
     _embeddingsBox.putMany(embeddings);
   }
 
+  void deleteEmbedding(int id) {
+    _embeddingsBox.remove(id);
+  }
+
+  void deleteMultipleEmbedding(List<int> ids) {
+    _embeddingsBox.removeMany(ids);
+  }
+
   List<ContentEmbeddingsEntity> fetchAllEmbeddings() {
     return _embeddingsBox.getAll();
   }
