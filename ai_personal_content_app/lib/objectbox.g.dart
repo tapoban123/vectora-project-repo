@@ -100,7 +100,7 @@ final _entities = <obx_int.ModelEntity>[
   obx_int.ModelEntity(
     id: const obx_int.IdUid(3, 6761161346725710068),
     name: 'ContentEmbeddingsEntity',
-    lastPropertyId: const obx_int.IdUid(3, 6436470048979430510),
+    lastPropertyId: const obx_int.IdUid(4, 8765777697624316136),
     flags: 0,
     properties: <obx_int.ModelProperty>[
       obx_int.ModelProperty(
@@ -123,6 +123,13 @@ final _entities = <obx_int.ModelEntity>[
         flags: 8,
         indexId: const obx_int.IdUid(5, 9172710413250616416),
         hnswParams: obx_int.ModelHnswParams(dimensions: 512, distanceType: 2),
+      ),
+      obx_int.ModelProperty(
+        id: const obx_int.IdUid(4, 8765777697624316136),
+        name: 'contentType',
+        type: 9,
+        flags: 2048,
+        indexId: const obx_int.IdUid(6, 7746834619786622742),
       ),
     ],
     relations: <obx_int.ModelRelation>[],
@@ -169,7 +176,7 @@ obx_int.ModelDefinition getObjectBoxModel() {
   final model = obx_int.ModelInfo(
     entities: _entities,
     lastEntityId: const obx_int.IdUid(3, 6761161346725710068),
-    lastIndexId: const obx_int.IdUid(5, 9172710413250616416),
+    lastIndexId: const obx_int.IdUid(6, 7746834619786622742),
     lastRelationId: const obx_int.IdUid(0, 0),
     lastSequenceId: const obx_int.IdUid(0, 0),
     retiredEntityUids: const [6423172255409896124],
@@ -291,10 +298,12 @@ obx_int.ModelDefinition getObjectBoxModel() {
         final contentVectorsOffset = fbb.writeListFloat32(
           object.contentVectors,
         );
-        fbb.startTable(4);
+        final contentTypeOffset = fbb.writeString(object.contentType);
+        fbb.startTable(5);
         fbb.addInt64(0, object.id);
         fbb.addOffset(1, contentIdOffset);
         fbb.addOffset(2, contentVectorsOffset);
+        fbb.addOffset(3, contentTypeOffset);
         fbb.finish(fbb.endTable());
         return object.id;
       },
@@ -304,12 +313,16 @@ obx_int.ModelDefinition getObjectBoxModel() {
         final contentIdParam = const fb.StringReader(
           asciiOptimization: true,
         ).vTableGet(buffer, rootOffset, 6, '');
+        final contentTypeParam = const fb.StringReader(
+          asciiOptimization: true,
+        ).vTableGet(buffer, rootOffset, 10, '');
         final contentVectorsParam = const fb.ListReader<double>(
           fb.Float32Reader(),
           lazy: false,
         ).vTableGet(buffer, rootOffset, 8, []);
         final object = ContentEmbeddingsEntity(
           contentId: contentIdParam,
+          contentType: contentTypeParam,
           contentVectors: contentVectorsParam,
         )..id = const fb.Int64Reader().vTableGet(buffer, rootOffset, 4, 0);
 
@@ -394,5 +407,10 @@ class ContentEmbeddingsEntity_ {
   /// See [ContentEmbeddingsEntity.contentVectors].
   static final contentVectors = obx.QueryHnswProperty<ContentEmbeddingsEntity>(
     _entities[1].properties[2],
+  );
+
+  /// See [ContentEmbeddingsEntity.contentType].
+  static final contentType = obx.QueryStringProperty<ContentEmbeddingsEntity>(
+    _entities[1].properties[3],
   );
 }

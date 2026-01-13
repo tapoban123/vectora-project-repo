@@ -128,12 +128,12 @@ return error(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>({TResult Function()?  initial,TResult Function()?  loading,TResult Function( List<ContentWithScroreModel> contents)?  embeddingsGenerated,TResult Function( String message,  int? statusCode)?  error,required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>({TResult Function()?  initial,TResult Function()?  loading,TResult Function( List<ContentWithScroreModel> images,  List<ContentWithScroreModel> documents,  List<ContentWithScroreModel> notes)?  embeddingsGenerated,TResult Function( String message,  int? statusCode)?  error,required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _Initial() when initial != null:
 return initial();case _Loading() when loading != null:
 return loading();case _EmbeddingsGenerated() when embeddingsGenerated != null:
-return embeddingsGenerated(_that.contents);case _Error() when error != null:
+return embeddingsGenerated(_that.images,_that.documents,_that.notes);case _Error() when error != null:
 return error(_that.message,_that.statusCode);case _:
   return orElse();
 
@@ -152,12 +152,12 @@ return error(_that.message,_that.statusCode);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>({required TResult Function()  initial,required TResult Function()  loading,required TResult Function( List<ContentWithScroreModel> contents)  embeddingsGenerated,required TResult Function( String message,  int? statusCode)  error,}) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>({required TResult Function()  initial,required TResult Function()  loading,required TResult Function( List<ContentWithScroreModel> images,  List<ContentWithScroreModel> documents,  List<ContentWithScroreModel> notes)  embeddingsGenerated,required TResult Function( String message,  int? statusCode)  error,}) {final _that = this;
 switch (_that) {
 case _Initial():
 return initial();case _Loading():
 return loading();case _EmbeddingsGenerated():
-return embeddingsGenerated(_that.contents);case _Error():
+return embeddingsGenerated(_that.images,_that.documents,_that.notes);case _Error():
 return error(_that.message,_that.statusCode);case _:
   throw StateError('Unexpected subclass');
 
@@ -175,12 +175,12 @@ return error(_that.message,_that.statusCode);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>({TResult? Function()?  initial,TResult? Function()?  loading,TResult? Function( List<ContentWithScroreModel> contents)?  embeddingsGenerated,TResult? Function( String message,  int? statusCode)?  error,}) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>({TResult? Function()?  initial,TResult? Function()?  loading,TResult? Function( List<ContentWithScroreModel> images,  List<ContentWithScroreModel> documents,  List<ContentWithScroreModel> notes)?  embeddingsGenerated,TResult? Function( String message,  int? statusCode)?  error,}) {final _that = this;
 switch (_that) {
 case _Initial() when initial != null:
 return initial();case _Loading() when loading != null:
 return loading();case _EmbeddingsGenerated() when embeddingsGenerated != null:
-return embeddingsGenerated(_that.contents);case _Error() when error != null:
+return embeddingsGenerated(_that.images,_that.documents,_that.notes);case _Error() when error != null:
 return error(_that.message,_that.statusCode);case _:
   return null;
 
@@ -257,14 +257,28 @@ String toString() {
 
 
 class _EmbeddingsGenerated implements SearchContentsStates {
-   _EmbeddingsGenerated({required final  List<ContentWithScroreModel> contents}): _contents = contents;
+   _EmbeddingsGenerated({required final  List<ContentWithScroreModel> images, required final  List<ContentWithScroreModel> documents, required final  List<ContentWithScroreModel> notes}): _images = images,_documents = documents,_notes = notes;
   
 
- final  List<ContentWithScroreModel> _contents;
- List<ContentWithScroreModel> get contents {
-  if (_contents is EqualUnmodifiableListView) return _contents;
+ final  List<ContentWithScroreModel> _images;
+ List<ContentWithScroreModel> get images {
+  if (_images is EqualUnmodifiableListView) return _images;
   // ignore: implicit_dynamic_type
-  return EqualUnmodifiableListView(_contents);
+  return EqualUnmodifiableListView(_images);
+}
+
+ final  List<ContentWithScroreModel> _documents;
+ List<ContentWithScroreModel> get documents {
+  if (_documents is EqualUnmodifiableListView) return _documents;
+  // ignore: implicit_dynamic_type
+  return EqualUnmodifiableListView(_documents);
+}
+
+ final  List<ContentWithScroreModel> _notes;
+ List<ContentWithScroreModel> get notes {
+  if (_notes is EqualUnmodifiableListView) return _notes;
+  // ignore: implicit_dynamic_type
+  return EqualUnmodifiableListView(_notes);
 }
 
 
@@ -278,16 +292,16 @@ _$EmbeddingsGeneratedCopyWith<_EmbeddingsGenerated> get copyWith => __$Embedding
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _EmbeddingsGenerated&&const DeepCollectionEquality().equals(other._contents, _contents));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _EmbeddingsGenerated&&const DeepCollectionEquality().equals(other._images, _images)&&const DeepCollectionEquality().equals(other._documents, _documents)&&const DeepCollectionEquality().equals(other._notes, _notes));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,const DeepCollectionEquality().hash(_contents));
+int get hashCode => Object.hash(runtimeType,const DeepCollectionEquality().hash(_images),const DeepCollectionEquality().hash(_documents),const DeepCollectionEquality().hash(_notes));
 
 @override
 String toString() {
-  return 'SearchContentsStates.embeddingsGenerated(contents: $contents)';
+  return 'SearchContentsStates.embeddingsGenerated(images: $images, documents: $documents, notes: $notes)';
 }
 
 
@@ -298,7 +312,7 @@ abstract mixin class _$EmbeddingsGeneratedCopyWith<$Res> implements $SearchConte
   factory _$EmbeddingsGeneratedCopyWith(_EmbeddingsGenerated value, $Res Function(_EmbeddingsGenerated) _then) = __$EmbeddingsGeneratedCopyWithImpl;
 @useResult
 $Res call({
- List<ContentWithScroreModel> contents
+ List<ContentWithScroreModel> images, List<ContentWithScroreModel> documents, List<ContentWithScroreModel> notes
 });
 
 
@@ -315,9 +329,11 @@ class __$EmbeddingsGeneratedCopyWithImpl<$Res>
 
 /// Create a copy of SearchContentsStates
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') $Res call({Object? contents = null,}) {
+@pragma('vm:prefer-inline') $Res call({Object? images = null,Object? documents = null,Object? notes = null,}) {
   return _then(_EmbeddingsGenerated(
-contents: null == contents ? _self._contents : contents // ignore: cast_nullable_to_non_nullable
+images: null == images ? _self._images : images // ignore: cast_nullable_to_non_nullable
+as List<ContentWithScroreModel>,documents: null == documents ? _self._documents : documents // ignore: cast_nullable_to_non_nullable
+as List<ContentWithScroreModel>,notes: null == notes ? _self._notes : notes // ignore: cast_nullable_to_non_nullable
 as List<ContentWithScroreModel>,
   ));
 }

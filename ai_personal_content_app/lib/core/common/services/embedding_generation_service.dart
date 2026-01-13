@@ -16,12 +16,14 @@ class EmbeddingGenerationService {
   Future<Either<ApiException, ContentEmbeddingResponseModel>>
   generateImageEmbeddings({
     String? cid,
+    String? contentType,
     required File image,
     required Function(int count, int total) onReceiveProgress,
   }) async {
     try {
       final formData = FormData.fromMap({
         "cid": cid,
+        "contentType": contentType,
         "image": await MultipartFile.fromFile(image.path),
       });
       final response = await _dio.post(
@@ -31,9 +33,7 @@ class EmbeddingGenerationService {
       );
 
       if (response.statusCode == 200) {
-        return Right(
-          ContentEmbeddingResponseModel.fromJson(response.data),
-        );
+        return Right(ContentEmbeddingResponseModel.fromJson(response.data));
       }
       return Left(
         CustomApiException(
@@ -66,20 +66,23 @@ class EmbeddingGenerationService {
   Future<Either<ApiException, ContentEmbeddingResponseModel>>
   generateTextEmbeddings({
     String? cid,
+    String? contentType,
     required String text,
     Function(int count, int total)? onReceiveProgress,
   }) async {
     try {
       final response = await _dio.post(
         ApiRoutes.generateTextEmbeddings,
-        data: jsonEncode({"cid":cid, "text": text}),
+        data: jsonEncode({
+          "cid": cid,
+          "contentType": contentType,
+          "text": text,
+        }),
         onReceiveProgress: onReceiveProgress,
       );
 
       if (response.statusCode == 200) {
-        return Right(
-          ContentEmbeddingResponseModel.fromJson(response.data),
-        );
+        return Right(ContentEmbeddingResponseModel.fromJson(response.data));
       }
       return Left(
         CustomApiException(

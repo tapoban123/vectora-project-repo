@@ -71,7 +71,7 @@
     },
     {
       "id": "3:6761161346725710068",
-      "lastPropertyId": "3:6436470048979430510",
+      "lastPropertyId": "4:8765777697624316136",
       "name": "ContentEmbeddingsEntity",
       "properties": [
         {
@@ -93,13 +93,20 @@
           "indexId": "5:9172710413250616416",
           "type": 28,
           "flags": 8
+        },
+        {
+          "id": "4:8765777697624316136",
+          "name": "contentType",
+          "indexId": "6:7746834619786622742",
+          "type": 9,
+          "flags": 2048
         }
       ],
       "relations": []
     }
   ],
   "lastEntityId": "3:6761161346725710068",
-  "lastIndexId": "5:9172710413250616416",
+  "lastIndexId": "6:7746834619786622742",
   "lastRelationId": "0:0",
   "lastSequenceId": "0:0",
   "modelVersion": 5,

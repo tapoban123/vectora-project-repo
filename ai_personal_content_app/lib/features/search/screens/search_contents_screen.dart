@@ -230,166 +230,149 @@ class _SearchContentsScreenState extends State<SearchContentsScreen> {
                         color: AppColors.offWhiteColor,
                       ),
                     ),
-                    embeddingsGenerated: (contents) => ValueListenableBuilder(
-                      valueListenable: _selectedFilter,
-                      builder: (context, selectedFilter, child) {
-                        log(
-                          contents
-                              .map((e) => e.content.contentName)
-                              .toList()
-                              .toString(),
-                        );
-                        log(contents.map((e) => e.score).toList().toString());
-                        final images = contents
-                            .where(
-                              (element) =>
-                                  element.content.type ==
-                                  ContentFileType.IMAGE.name,
-                            )
-                            .toList();
-                        final documents = contents
-                            .where(
-                              (element) =>
-                                  element.content.type ==
-                                  ContentFileType.PDF.name,
-                            )
-                            .toList();
-                        final notes = contents
-                            .where(
-                              (element) =>
-                                  element.content.type ==
-                                  ContentFileType.NOTE.name,
-                            )
-                            .toList();
+                    embeddingsGenerated: (images, documents, notes) =>
+                        ValueListenableBuilder(
+                          valueListenable: _selectedFilter,
+                          builder: (context, selectedFilter, child) {
+                            final double farthestDocument = documents.isNotEmpty
+                                ? documents.first.distance
+                                : 0;
+                            final double nearestDocument = documents.isNotEmpty
+                                ? documents.last.distance
+                                : 0;
+                            final double farthestNote = notes.isNotEmpty
+                                ? notes.first.distance
+                                : 0;
+                            final double nearestNote = notes.isNotEmpty
+                                ? notes.last.distance
+                                : 0;
 
-                        final bestScore = contents.first.score;
-                        final worstScore = contents.last.score;
-
-                        return CustomScrollView(
-                          slivers: [
-                            if ([
-                              _SearchContentFilters.IMAGES,
-                              _SearchContentFilters.ALL,
-                            ].contains(selectedFilter))
-                              SliverToBoxAdapter(
-                                child: Padding(
-                                  padding: EdgeInsets.only(bottom: 14.w),
-                                  child: _sectionHeadingText(
-                                    "IMAGES (${images.length})",
-                                  ),
-                                ),
-                              ),
-                            if (images.isNotEmpty &&
-                                selectedFilter == _SearchContentFilters.ALL)
-                              SliverToBoxAdapter(
-                                child: SizedBox(
-                                  height: 120.h,
-                                  child: ListView.separated(
-                                    separatorBuilder: (context, index) =>
-                                        SizedBox(width: 12.w),
-                                    scrollDirection: Axis.horizontal,
-                                    itemCount: images.length,
-                                    itemBuilder: (context, index) =>
-                                        _ImageCardWidget(
-                                          contentWithScores: images[index],
-                                        ),
-                                  ),
-                                ),
-                              ),
-                            if (images.isNotEmpty &&
-                                selectedFilter == _SearchContentFilters.IMAGES)
-                              SliverGrid(
-                                gridDelegate:
-                                    SliverGridDelegateWithFixedCrossAxisCount(
-                                      crossAxisCount: 2,
-                                      childAspectRatio: 1,
-                                      mainAxisSpacing: 10.w,
-                                      crossAxisSpacing: 12.h,
+                            return CustomScrollView(
+                              slivers: [
+                                if ([
+                                  _SearchContentFilters.IMAGES,
+                                  _SearchContentFilters.ALL,
+                                ].contains(selectedFilter))
+                                  SliverToBoxAdapter(
+                                    child: Padding(
+                                      padding: EdgeInsets.only(bottom: 14.w),
+                                      child: _sectionHeadingText(
+                                        "IMAGES (${images.length})",
+                                      ),
                                     ),
-                                delegate: SliverChildBuilderDelegate(
-                                  childCount: images.length,
-                                  (context, index) => _ImageCardWidget(
-                                    isGridLayout: true,
-                                    contentWithScores: images[index],
                                   ),
-                                ),
-                              ),
-                            if ([
-                              _SearchContentFilters.DOCUMENTS,
-                              _SearchContentFilters.ALL,
-                            ].contains(selectedFilter))
-                              SliverToBoxAdapter(
-                                child: Padding(
-                                  padding: EdgeInsets.only(
-                                    top:
-                                        selectedFilter ==
-                                            _SearchContentFilters.ALL
-                                        ? 30.h
-                                        : 0,
-                                    bottom: 12.h,
+                                if (images.isNotEmpty &&
+                                    selectedFilter == _SearchContentFilters.ALL)
+                                  SliverToBoxAdapter(
+                                    child: SizedBox(
+                                      height: 120.h,
+                                      child: ListView.separated(
+                                        separatorBuilder: (context, index) =>
+                                            SizedBox(width: 12.w),
+                                        scrollDirection: Axis.horizontal,
+                                        itemCount: images.length,
+                                        itemBuilder: (context, index) =>
+                                            _ImageCardWidget(
+                                              contentWithDistance: images[index],
+                                            ),
+                                      ),
+                                    ),
                                   ),
-                                  child: _sectionHeadingText(
-                                    "DOCUMENTS (${documents.length})",
+                                if (images.isNotEmpty &&
+                                    selectedFilter ==
+                                        _SearchContentFilters.IMAGES)
+                                  SliverGrid(
+                                    gridDelegate:
+                                        SliverGridDelegateWithFixedCrossAxisCount(
+                                          crossAxisCount: 2,
+                                          childAspectRatio: 1,
+                                          mainAxisSpacing: 10.w,
+                                          crossAxisSpacing: 12.h,
+                                        ),
+                                    delegate: SliverChildBuilderDelegate(
+                                      childCount: images.length,
+                                      (context, index) => _ImageCardWidget(
+                                        isGridLayout: true,
+                                        contentWithDistance: images[index],
+                                      ),
+                                    ),
                                   ),
-                                ),
-                              ),
-                            if (documents.isNotEmpty &&
-                                [
+                                if ([
                                   _SearchContentFilters.DOCUMENTS,
                                   _SearchContentFilters.ALL,
                                 ].contains(selectedFilter))
-                              SliverList.separated(
-                                separatorBuilder: (context, index) =>
-                                    SizedBox(height: 10.h),
-                                itemCount: documents.length,
-                                itemBuilder: (context, index) =>
-                                    _DocumentCardWidget(
-                                      fileType: ContentFileType.PDF,
-                                      contentWithScore: documents[index],
-                                      bestScore: bestScore,
-                                      worstScore: worstScore,
+                                  SliverToBoxAdapter(
+                                    child: Padding(
+                                      padding: EdgeInsets.only(
+                                        top:
+                                            selectedFilter ==
+                                                _SearchContentFilters.ALL
+                                            ? 30.h
+                                            : 0,
+                                        bottom: 12.h,
+                                      ),
+                                      child: _sectionHeadingText(
+                                        "DOCUMENTS (${documents.length})",
+                                      ),
                                     ),
-                              ),
-                            if ([
-                              _SearchContentFilters.NOTES,
-                              _SearchContentFilters.ALL,
-                            ].contains(selectedFilter))
-                              SliverToBoxAdapter(
-                                child: Padding(
-                                  padding: EdgeInsets.only(
-                                    top:
-                                        selectedFilter ==
-                                            _SearchContentFilters.ALL
-                                        ? 30.h
-                                        : 0,
-                                    bottom: 12.h,
                                   ),
-                                  child: _sectionHeadingText(
-                                    "NOTES (${notes.length})",
+                                if (documents.isNotEmpty &&
+                                    [
+                                      _SearchContentFilters.DOCUMENTS,
+                                      _SearchContentFilters.ALL,
+                                    ].contains(selectedFilter))
+                                  SliverList.separated(
+                                    separatorBuilder: (context, index) =>
+                                        SizedBox(height: 10.h),
+                                    itemCount: documents.length,
+                                    itemBuilder: (context, index) =>
+                                        _DocumentCardWidget(
+                                          fileType: ContentFileType.PDF,
+                                          contentWithDistance: documents[index],
+                                          farthestDistance: farthestDocument,
+                                          nearestDistance: nearestDocument,
+                                        ),
                                   ),
-                                ),
-                              ),
-                            if (notes.isNotEmpty &&
-                                [
+                                if ([
                                   _SearchContentFilters.NOTES,
                                   _SearchContentFilters.ALL,
                                 ].contains(selectedFilter))
-                              SliverList.separated(
-                                separatorBuilder: (context, index) =>
-                                    SizedBox(height: 10.h),
-                                itemCount: notes.length,
-                                itemBuilder: (context, index) =>
-                                    _DocumentCardWidget(
-                                      contentWithScore: notes[index],
-                                      fileType: ContentFileType.NOTE,
-                                      bestScore: bestScore,
-                                      worstScore: worstScore,
+                                  SliverToBoxAdapter(
+                                    child: Padding(
+                                      padding: EdgeInsets.only(
+                                        top:
+                                            selectedFilter ==
+                                                _SearchContentFilters.ALL
+                                            ? 30.h
+                                            : 0,
+                                        bottom: 12.h,
+                                      ),
+                                      child: _sectionHeadingText(
+                                        "NOTES (${notes.length})",
+                                      ),
                                     ),
-                              ),
-                          ],
-                        );
-                      },
-                    ),
+                                  ),
+                                if (notes.isNotEmpty &&
+                                    [
+                                      _SearchContentFilters.NOTES,
+                                      _SearchContentFilters.ALL,
+                                    ].contains(selectedFilter))
+                                  SliverList.separated(
+                                    separatorBuilder: (context, index) =>
+                                        SizedBox(height: 10.h),
+                                    itemCount: notes.length,
+                                    itemBuilder: (context, index) =>
+                                        _DocumentCardWidget(
+                                          contentWithDistance: notes[index],
+                                          fileType: ContentFileType.NOTE,
+                                          farthestDistance: farthestNote,
+                                          nearestDistance: nearestNote,
+                                        ),
+                                  ),
+                              ],
+                            );
+                          },
+                        ),
                   );
                 },
               ),
@@ -414,33 +397,33 @@ class _SearchContentsScreenState extends State<SearchContentsScreen> {
 }
 
 int _calculateSimilarityPercent({
-  required double score,
-  required double bestScore,
-  required double worstScore,
+  required double distance,
+  required double farthest,
+  required double nearest,
 }) {
   late final double matchScore;
-  if (bestScore <= worstScore) {
+  if (farthest <= nearest) {
     return 100;
   } else {
-    matchScore = (score - worstScore) / (bestScore - worstScore);
+    matchScore = (distance - nearest) / (farthest - nearest);
   }
 
   return (matchScore * 100).round();
 }
 
 class _ImageCardWidget extends StatelessWidget {
-  final ContentWithScroreModel contentWithScores;
+  final ContentWithScroreModel contentWithDistance;
   final bool isGridLayout;
 
   const _ImageCardWidget({
     super.key,
-    required this.contentWithScores,
+    required this.contentWithDistance,
     this.isGridLayout = false,
   });
 
   @override
   Widget build(BuildContext context) {
-    final contentData = contentWithScores.content;
+    final contentData = contentWithDistance.content;
     return Stack(
       alignment: Alignment.bottomCenter,
       children: [
@@ -496,17 +479,17 @@ class _ImageCardWidget extends StatelessWidget {
 }
 
 class _DocumentCardWidget extends StatelessWidget {
-  final ContentWithScroreModel contentWithScore;
-  final double bestScore;
-  final double worstScore;
+  final ContentWithScroreModel contentWithDistance;
+  final double farthestDistance;
+  final double nearestDistance;
   final ContentFileType fileType;
 
   const _DocumentCardWidget({
     super.key,
-    required this.contentWithScore,
+    required this.contentWithDistance,
     required this.fileType,
-    required this.worstScore,
-    required this.bestScore,
+    required this.nearestDistance,
+    required this.farthestDistance,
   });
 
   Color _getMatchPercentColor(int percent) {
@@ -525,14 +508,15 @@ class _DocumentCardWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final contentData = contentWithScore.content;
+    final contentData = contentWithDistance.content;
     final matchPercent = _calculateSimilarityPercent(
-      score: contentWithScore.score,
-      bestScore: bestScore,
-      worstScore: worstScore,
+      distance: contentWithDistance.distance,
+      farthest: farthestDistance,
+      nearest: nearestDistance,
     );
     final percentColor = _getMatchPercentColor(matchPercent);
     final isPdf = fileType == ContentFileType.PDF;
+    log(contentWithDistance.distance.toString());
 
     return Container(
       width: double.infinity,

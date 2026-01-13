@@ -16,7 +16,7 @@ T _$identity<T>(T value) => value;
 mixin _$ContentEmbeddingResponseModel {
 
  String? get id; String? get cid;// content Id
- String? get description; List<double> get embeddings;
+ String? get description; String? get contentType; List<double> get embeddings;
 /// Create a copy of ContentEmbeddingResponseModel
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -29,16 +29,16 @@ $ContentEmbeddingResponseModelCopyWith<ContentEmbeddingResponseModel> get copyWi
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is ContentEmbeddingResponseModel&&(identical(other.id, id) || other.id == id)&&(identical(other.cid, cid) || other.cid == cid)&&(identical(other.description, description) || other.description == description)&&const DeepCollectionEquality().equals(other.embeddings, embeddings));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is ContentEmbeddingResponseModel&&(identical(other.id, id) || other.id == id)&&(identical(other.cid, cid) || other.cid == cid)&&(identical(other.description, description) || other.description == description)&&(identical(other.contentType, contentType) || other.contentType == contentType)&&const DeepCollectionEquality().equals(other.embeddings, embeddings));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,cid,description,const DeepCollectionEquality().hash(embeddings));
+int get hashCode => Object.hash(runtimeType,id,cid,description,contentType,const DeepCollectionEquality().hash(embeddings));
 
 @override
 String toString() {
-  return 'ContentEmbeddingResponseModel(id: $id, cid: $cid, description: $description, embeddings: $embeddings)';
+  return 'ContentEmbeddingResponseModel(id: $id, cid: $cid, description: $description, contentType: $contentType, embeddings: $embeddings)';
 }
 
 
@@ -49,7 +49,7 @@ abstract mixin class $ContentEmbeddingResponseModelCopyWith<$Res>  {
   factory $ContentEmbeddingResponseModelCopyWith(ContentEmbeddingResponseModel value, $Res Function(ContentEmbeddingResponseModel) _then) = _$ContentEmbeddingResponseModelCopyWithImpl;
 @useResult
 $Res call({
- String? id, String? cid, String? description, List<double> embeddings
+ String? id, String? cid, String? description, String? contentType, List<double> embeddings
 });
 
 
@@ -66,11 +66,12 @@ class _$ContentEmbeddingResponseModelCopyWithImpl<$Res>
 
 /// Create a copy of ContentEmbeddingResponseModel
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? id = freezed,Object? cid = freezed,Object? description = freezed,Object? embeddings = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? id = freezed,Object? cid = freezed,Object? description = freezed,Object? contentType = freezed,Object? embeddings = null,}) {
   return _then(_self.copyWith(
 id: freezed == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String?,cid: freezed == cid ? _self.cid : cid // ignore: cast_nullable_to_non_nullable
 as String?,description: freezed == description ? _self.description : description // ignore: cast_nullable_to_non_nullable
+as String?,contentType: freezed == contentType ? _self.contentType : contentType // ignore: cast_nullable_to_non_nullable
 as String?,embeddings: null == embeddings ? _self.embeddings : embeddings // ignore: cast_nullable_to_non_nullable
 as List<double>,
   ));
@@ -157,10 +158,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String? id,  String? cid,  String? description,  List<double> embeddings)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String? id,  String? cid,  String? description,  String? contentType,  List<double> embeddings)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _ContentEmbeddingResponseModel() when $default != null:
-return $default(_that.id,_that.cid,_that.description,_that.embeddings);case _:
+return $default(_that.id,_that.cid,_that.description,_that.contentType,_that.embeddings);case _:
   return orElse();
 
 }
@@ -178,10 +179,10 @@ return $default(_that.id,_that.cid,_that.description,_that.embeddings);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String? id,  String? cid,  String? description,  List<double> embeddings)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String? id,  String? cid,  String? description,  String? contentType,  List<double> embeddings)  $default,) {final _that = this;
 switch (_that) {
 case _ContentEmbeddingResponseModel():
-return $default(_that.id,_that.cid,_that.description,_that.embeddings);case _:
+return $default(_that.id,_that.cid,_that.description,_that.contentType,_that.embeddings);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -198,10 +199,10 @@ return $default(_that.id,_that.cid,_that.description,_that.embeddings);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String? id,  String? cid,  String? description,  List<double> embeddings)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String? id,  String? cid,  String? description,  String? contentType,  List<double> embeddings)?  $default,) {final _that = this;
 switch (_that) {
 case _ContentEmbeddingResponseModel() when $default != null:
-return $default(_that.id,_that.cid,_that.description,_that.embeddings);case _:
+return $default(_that.id,_that.cid,_that.description,_that.contentType,_that.embeddings);case _:
   return null;
 
 }
@@ -213,13 +214,14 @@ return $default(_that.id,_that.cid,_that.description,_that.embeddings);case _:
 @JsonSerializable()
 
 class _ContentEmbeddingResponseModel implements ContentEmbeddingResponseModel {
-   _ContentEmbeddingResponseModel({this.id, this.cid, this.description, required final  List<double> embeddings}): _embeddings = embeddings;
+   _ContentEmbeddingResponseModel({this.id, this.cid, this.description, this.contentType, required final  List<double> embeddings}): _embeddings = embeddings;
   factory _ContentEmbeddingResponseModel.fromJson(Map<String, dynamic> json) => _$ContentEmbeddingResponseModelFromJson(json);
 
 @override final  String? id;
 @override final  String? cid;
 // content Id
 @override final  String? description;
+@override final  String? contentType;
  final  List<double> _embeddings;
 @override List<double> get embeddings {
   if (_embeddings is EqualUnmodifiableListView) return _embeddings;
@@ -241,16 +243,16 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _ContentEmbeddingResponseModel&&(identical(other.id, id) || other.id == id)&&(identical(other.cid, cid) || other.cid == cid)&&(identical(other.description, description) || other.description == description)&&const DeepCollectionEquality().equals(other._embeddings, _embeddings));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _ContentEmbeddingResponseModel&&(identical(other.id, id) || other.id == id)&&(identical(other.cid, cid) || other.cid == cid)&&(identical(other.description, description) || other.description == description)&&(identical(other.contentType, contentType) || other.contentType == contentType)&&const DeepCollectionEquality().equals(other._embeddings, _embeddings));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,cid,description,const DeepCollectionEquality().hash(_embeddings));
+int get hashCode => Object.hash(runtimeType,id,cid,description,contentType,const DeepCollectionEquality().hash(_embeddings));
 
 @override
 String toString() {
-  return 'ContentEmbeddingResponseModel(id: $id, cid: $cid, description: $description, embeddings: $embeddings)';
+  return 'ContentEmbeddingResponseModel(id: $id, cid: $cid, description: $description, contentType: $contentType, embeddings: $embeddings)';
 }
 
 
@@ -261,7 +263,7 @@ abstract mixin class _$ContentEmbeddingResponseModelCopyWith<$Res> implements $C
   factory _$ContentEmbeddingResponseModelCopyWith(_ContentEmbeddingResponseModel value, $Res Function(_ContentEmbeddingResponseModel) _then) = __$ContentEmbeddingResponseModelCopyWithImpl;
 @override @useResult
 $Res call({
- String? id, String? cid, String? description, List<double> embeddings
+ String? id, String? cid, String? description, String? contentType, List<double> embeddings
 });
 
 
@@ -278,11 +280,12 @@ class __$ContentEmbeddingResponseModelCopyWithImpl<$Res>
 
 /// Create a copy of ContentEmbeddingResponseModel
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? id = freezed,Object? cid = freezed,Object? description = freezed,Object? embeddings = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? id = freezed,Object? cid = freezed,Object? description = freezed,Object? contentType = freezed,Object? embeddings = null,}) {
   return _then(_ContentEmbeddingResponseModel(
 id: freezed == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String?,cid: freezed == cid ? _self.cid : cid // ignore: cast_nullable_to_non_nullable
 as String?,description: freezed == description ? _self.description : description // ignore: cast_nullable_to_non_nullable
+as String?,contentType: freezed == contentType ? _self.contentType : contentType // ignore: cast_nullable_to_non_nullable
 as String?,embeddings: null == embeddings ? _self._embeddings : embeddings // ignore: cast_nullable_to_non_nullable
 as List<double>,
   ));

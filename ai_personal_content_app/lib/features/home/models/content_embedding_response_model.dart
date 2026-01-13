@@ -11,6 +11,7 @@ abstract class ContentEmbeddingResponseModel
     String? id,
     String? cid, // content Id
     String? description,
+    String? contentType,
     required List<double> embeddings,
   }) = _ContentEmbeddingResponseModel;
 

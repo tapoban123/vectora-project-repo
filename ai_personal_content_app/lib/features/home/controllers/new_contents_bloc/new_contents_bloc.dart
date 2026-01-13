@@ -167,6 +167,7 @@ class NewContentsBloc extends Bloc<NewContentsEvents, NewContentsStates> {
           return ContentEmbeddingsEntity(
             contentId: e.cid!,
             contentVectors: e.embeddings,
+            contentType: e.contentType!,
           );
         }).toList(),
       );
@@ -218,6 +219,7 @@ class NewContentsBloc extends Bloc<NewContentsEvents, NewContentsStates> {
       embeddingsResp = await _embeddingGenerationService.generateTextEmbeddings(
         cid: content.cid,
         text: plainText,
+        contentType: content.fileType.name,
         onReceiveProgress: (count, total) {
           _onReceiveProgress(count, total, emit, content);
         },
@@ -227,6 +229,7 @@ class NewContentsBloc extends Bloc<NewContentsEvents, NewContentsStates> {
           .generateImageEmbeddings(
             cid: content.cid,
             image: content.file,
+            contentType: content.fileType.name,
             onReceiveProgress: (count, total) {
               _onReceiveProgress(count, total, emit, content);
             },

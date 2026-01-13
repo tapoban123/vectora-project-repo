@@ -12,6 +12,7 @@ _ContentEmbeddingResponseModel _$ContentEmbeddingResponseModelFromJson(
   id: json['id'] as String?,
   cid: json['cid'] as String?,
   description: json['description'] as String?,
+  contentType: json['contentType'] as String?,
   embeddings: (json['embeddings'] as List<dynamic>)
       .map((e) => (e as num).toDouble())
       .toList(),
@@ -23,5 +24,6 @@ Map<String, dynamic> _$ContentEmbeddingResponseModelToJson(
   'id': instance.id,
   'cid': instance.cid,
   'description': instance.description,
+  'contentType': instance.contentType,
   'embeddings': instance.embeddings,
 };

@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:ai_personal_content_app/core/common/services/embedding_generation_service.dart';
 import 'package:ai_personal_content_app/core/common/services/embeddings_storage_service.dart';
 import 'package:ai_personal_content_app/features/search/controllers/search_contents_bloc/search_contents_events.dart';
@@ -44,25 +46,69 @@ class SearchContentsBloc
           final matchedEmbeddings = _embeddingsLocalStorageService
               .fetchNearestEmbeddings(r.embeddings);
 
-          final matchedContents = _contentsLocalStorageService
-              .fetchContentsByCid(matchedEmbeddings.map((e) => e.cid).toList());
+          final matchedImageEmbeddings = matchedEmbeddings.images;
+          final matchedDocumentsEmbeddings = matchedEmbeddings.documents;
+          final matchedNotesEmbeddings = matchedEmbeddings.notes;
 
-          final contentsWithScore = matchedContents
-              .map(
-                (e) => ContentWithScroreModel(
-                  score: matchedEmbeddings
-                      .firstWhere((element) => e.contentId == element.cid)
-                      .score,
-                  content: e,
-                ),
-              )
-              .toList();
+          final matchedImages = _contentsLocalStorageService.fetchContentsByCid(
+            matchedImageEmbeddings.map((e) => e.cid).toList(),
+          );
+          final matchedDocuments = _contentsLocalStorageService
+              .fetchContentsByCid(
+                matchedDocumentsEmbeddings.map((e) => e.cid).toList(),
+              );
+          final matchedNotes = _contentsLocalStorageService.fetchContentsByCid(
+            matchedNotesEmbeddings.map((e) => e.cid).toList(),
+          );
+
+          final List<ContentWithScroreModel> imagesWithScore =
+              matchedImageEmbeddings.isNotEmpty
+              ? matchedImages
+                    .map(
+                      (e) => ContentWithScroreModel(
+                        distance: matchedImageEmbeddings
+                            .firstWhere((element) => e.contentId == element.cid)
+                            .distance,
+                        content: e,
+                      ),
+                    )
+                    .toList()
+              : [];
+          final List<ContentWithScroreModel> documentsWithScore =
+              matchedDocumentsEmbeddings.isNotEmpty
+              ? matchedDocuments
+                    .map(
+                      (e) => ContentWithScroreModel(
+                        distance: matchedDocumentsEmbeddings
+                            .firstWhere((element) => e.contentId == element.cid)
+                            .distance,
+                        content: e,
+                      ),
+                    )
+                    .toList()
+              : [];
+          final List<ContentWithScroreModel> notesWithScore =
+              matchedNotesEmbeddings.isNotEmpty
+              ? matchedNotes
+                    .map(
+                      (e) => ContentWithScroreModel(
+                        distance: matchedNotesEmbeddings
+                            .firstWhere((element) => e.contentId == element.cid)
+                            .distance,
+                        content: e,
+                      ),
+                    )
+                    .toList()
+              : [];
           emit(
             SearchContentsStates.embeddingsGenerated(
-              contents: contentsWithScore,
+              documents: documentsWithScore,
+              images: imagesWithScore,
+              notes: notesWithScore,
             ),
           );
-        } catch (e) {
+        } catch (e, stk) {
+          log("[GENERATE QUERY EMBEDDINGS BLOC ERROR] $e\n$stk");
           emit(SearchContentsStates.error(message: e.toString()));
         }
       },

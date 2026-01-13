@@ -11,7 +11,9 @@ abstract class SearchContentsStates with _$SearchContentsStates{
   factory SearchContentsStates.loading() = _Loading;
 
   factory SearchContentsStates.embeddingsGenerated({
-    required List<ContentWithScroreModel> contents,
+    required List<ContentWithScroreModel> images,
+    required List<ContentWithScroreModel> documents,
+    required List<ContentWithScroreModel> notes,
   }) = _EmbeddingsGenerated;
 
   factory SearchContentsStates.error({
