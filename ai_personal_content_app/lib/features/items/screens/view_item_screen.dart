@@ -3,8 +3,11 @@ import 'package:ai_personal_content_app/core/common/widgets/custom_appbar.dart';
 import 'package:ai_personal_content_app/core/theme/app_colors.dart';
 import 'package:ai_personal_content_app/core/theme/app_svgs.dart';
 import 'package:ai_personal_content_app/core/utils/utils.dart';
+import 'package:ai_personal_content_app/features/search/controllers/contents_manager_bloc/contents_manager_bloc.dart';
+import 'package:ai_personal_content_app/features/search/controllers/contents_manager_bloc/contents_manager_events.dart';
 import 'package:ai_personal_content_app/features/search/entities/contents_entity.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
@@ -76,7 +79,12 @@ class _ViewItemScreenState extends State<ViewItemScreen> {
         icon: Icons.delete_outline,
         color: AppColors.deepRedColor,
         label: "Delete",
-        onTap: () {},
+        onTap: () {
+          context.read<ContentsManagerBloc>().add(
+            RemoveContent(cid: content.contentId, objectBoxId: content.id),
+          );
+          context.pop();
+        },
       ),
     ];
 

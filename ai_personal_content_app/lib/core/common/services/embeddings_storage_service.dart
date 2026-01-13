@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:ai_personal_content_app/core/common/models/nearest_embedding_contents_model.dart';
 import 'package:ai_personal_content_app/features/search/entities/content_embeddings_entity.dart';
 import 'package:ai_personal_content_app/main.dart';
@@ -12,8 +14,11 @@ class EmbeddingsLocalStorageService {
     _embeddingsBox.putMany(embeddings);
   }
 
-  void deleteEmbedding(int id) {
-    _embeddingsBox.remove(id);
+  void deleteEmbedding(String cid) {
+    final query = _embeddingsBox.query(ContentEmbeddingsEntity_.contentId.equals(cid)).build();
+    final embedding = query.findFirst();
+    query.close();
+    _embeddingsBox.remove(embedding!.id);
   }
 
   void deleteMultipleEmbedding(List<int> ids) {
@@ -31,12 +36,13 @@ class EmbeddingsLocalStorageService {
         .query(
           ContentEmbeddingsEntity_.contentVectors.nearestNeighborsF32(
             queryEmbedding,
-            3,
+            5,
           ),
         )
         .build();
     final results = query.findWithScores();
     query.close();
+    log(results.toString());
 
     return results
         .map(

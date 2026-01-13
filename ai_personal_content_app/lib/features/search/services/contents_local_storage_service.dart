@@ -47,7 +47,7 @@ class ContentsLocalStorageService {
 
   List<ContentsEntity> fetchContentsByCid(List<String> cids) {
     final query = _contentsBox
-        .query(ContentsEntity_.contentId.equals(cids.first))
+        .query(ContentsEntity_.contentId.oneOf(cids))
         .order(ContentsEntity_.createdAt, flags: Order.descending)
         .build();
 

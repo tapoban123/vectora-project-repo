@@ -1,4 +1,5 @@
 import 'dart:developer';
+import 'dart:io';
 
 import 'package:ai_personal_content_app/core/common/constants.dart';
 import 'package:ai_personal_content_app/core/common/widgets/custom_appbar.dart';
@@ -7,6 +8,8 @@ import 'package:ai_personal_content_app/core/utils/utils.dart';
 import 'package:ai_personal_content_app/features/search/controllers/search_contents_bloc/search_contents_bloc.dart';
 import 'package:ai_personal_content_app/features/search/controllers/search_contents_bloc/search_contents_events.dart';
 import 'package:ai_personal_content_app/features/search/controllers/search_contents_bloc/search_contents_states.dart';
+import 'package:ai_personal_content_app/features/search/entities/contents_entity.dart';
+import 'package:ai_personal_content_app/features/search/models/contents_with_scrore_model.dart';
 import 'package:ai_personal_content_app/router.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -30,9 +33,10 @@ class _SearchContentsScreenState extends State<SearchContentsScreen> {
   final ValueNotifier<_SearchContentFilters> _selectedFilter = ValueNotifier(
     _SearchContentFilters.ALL,
   );
-  final List _documents = List.generate(8, (index) => index);
-  final List _images = List.generate(7, (index) => index);
-  final List _notes = List.generate(8, (index) => index);
+
+  // List _documents = List.generate(8, (index) => index);
+  // List _images = List.generate(7, (index) => index);
+  // List _notes = List.generate(8, (index) => index);
 
   @override
   void initState() {
@@ -229,8 +233,37 @@ class _SearchContentsScreenState extends State<SearchContentsScreen> {
                     embeddingsGenerated: (contents) => ValueListenableBuilder(
                       valueListenable: _selectedFilter,
                       builder: (context, selectedFilter, child) {
-                        // log(contents.map((e) => e.content.contentName,).toList().toString());
-                        // log(contents.map((e) => e.score,).toList().toString());
+                        log(
+                          contents
+                              .map((e) => e.content.contentName)
+                              .toList()
+                              .toString(),
+                        );
+                        log(contents.map((e) => e.score).toList().toString());
+                        final images = contents
+                            .where(
+                              (element) =>
+                                  element.content.type ==
+                                  ContentFileType.IMAGE.name,
+                            )
+                            .toList();
+                        final documents = contents
+                            .where(
+                              (element) =>
+                                  element.content.type ==
+                                  ContentFileType.PDF.name,
+                            )
+                            .toList();
+                        final notes = contents
+                            .where(
+                              (element) =>
+                                  element.content.type ==
+                                  ContentFileType.NOTE.name,
+                            )
+                            .toList();
+
+                        final bestScore = contents.first.score;
+                        final worstScore = contents.last.score;
 
                         return CustomScrollView(
                           slivers: [
@@ -241,10 +274,12 @@ class _SearchContentsScreenState extends State<SearchContentsScreen> {
                               SliverToBoxAdapter(
                                 child: Padding(
                                   padding: EdgeInsets.only(bottom: 14.w),
-                                  child: _sectionHeadingText("IMAGES (12)"),
+                                  child: _sectionHeadingText(
+                                    "IMAGES (${images.length})",
+                                  ),
                                 ),
                               ),
-                            if (_images.isNotEmpty &&
+                            if (images.isNotEmpty &&
                                 selectedFilter == _SearchContentFilters.ALL)
                               SliverToBoxAdapter(
                                 child: SizedBox(
@@ -253,13 +288,15 @@ class _SearchContentsScreenState extends State<SearchContentsScreen> {
                                     separatorBuilder: (context, index) =>
                                         SizedBox(width: 12.w),
                                     scrollDirection: Axis.horizontal,
-                                    itemCount: _images.length,
+                                    itemCount: images.length,
                                     itemBuilder: (context, index) =>
-                                        _ImageCardWidget(),
+                                        _ImageCardWidget(
+                                          contentWithScores: images[index],
+                                        ),
                                   ),
                                 ),
                               ),
-                            if (_images.isNotEmpty &&
+                            if (images.isNotEmpty &&
                                 selectedFilter == _SearchContentFilters.IMAGES)
                               SliverGrid(
                                 gridDelegate:
@@ -270,9 +307,11 @@ class _SearchContentsScreenState extends State<SearchContentsScreen> {
                                       crossAxisSpacing: 12.h,
                                     ),
                                 delegate: SliverChildBuilderDelegate(
-                                  childCount: _images.length,
-                                  (context, index) =>
-                                      _ImageCardWidget(isGridLayout: true),
+                                  childCount: images.length,
+                                  (context, index) => _ImageCardWidget(
+                                    isGridLayout: true,
+                                    contentWithScores: images[index],
+                                  ),
                                 ),
                               ),
                             if ([
@@ -289,10 +328,12 @@ class _SearchContentsScreenState extends State<SearchContentsScreen> {
                                         : 0,
                                     bottom: 12.h,
                                   ),
-                                  child: _sectionHeadingText("DOCUMENTS (8)"),
+                                  child: _sectionHeadingText(
+                                    "DOCUMENTS (${documents.length})",
+                                  ),
                                 ),
                               ),
-                            if (_documents.isNotEmpty &&
+                            if (documents.isNotEmpty &&
                                 [
                                   _SearchContentFilters.DOCUMENTS,
                                   _SearchContentFilters.ALL,
@@ -300,10 +341,13 @@ class _SearchContentsScreenState extends State<SearchContentsScreen> {
                               SliverList.separated(
                                 separatorBuilder: (context, index) =>
                                     SizedBox(height: 10.h),
-                                itemCount: _documents.length,
+                                itemCount: documents.length,
                                 itemBuilder: (context, index) =>
                                     _DocumentCardWidget(
                                       fileType: ContentFileType.PDF,
+                                      contentWithScore: documents[index],
+                                      bestScore: bestScore,
+                                      worstScore: worstScore,
                                     ),
                               ),
                             if ([
@@ -320,10 +364,12 @@ class _SearchContentsScreenState extends State<SearchContentsScreen> {
                                         : 0,
                                     bottom: 12.h,
                                   ),
-                                  child: _sectionHeadingText("NOTES (5)"),
+                                  child: _sectionHeadingText(
+                                    "NOTES (${notes.length})",
+                                  ),
                                 ),
                               ),
-                            if (_notes.isNotEmpty &&
+                            if (notes.isNotEmpty &&
                                 [
                                   _SearchContentFilters.NOTES,
                                   _SearchContentFilters.ALL,
@@ -331,10 +377,13 @@ class _SearchContentsScreenState extends State<SearchContentsScreen> {
                               SliverList.separated(
                                 separatorBuilder: (context, index) =>
                                     SizedBox(height: 10.h),
-                                itemCount: _notes.length,
+                                itemCount: notes.length,
                                 itemBuilder: (context, index) =>
                                     _DocumentCardWidget(
+                                      contentWithScore: notes[index],
                                       fileType: ContentFileType.NOTE,
+                                      bestScore: bestScore,
+                                      worstScore: worstScore,
                                     ),
                               ),
                           ],
@@ -364,13 +413,34 @@ class _SearchContentsScreenState extends State<SearchContentsScreen> {
   }
 }
 
+int _calculateSimilarityPercent({
+  required double score,
+  required double bestScore,
+  required double worstScore,
+}) {
+  late final double matchScore;
+  if (bestScore <= worstScore) {
+    return 100;
+  } else {
+    matchScore = (score - worstScore) / (bestScore - worstScore);
+  }
+
+  return (matchScore * 100).round();
+}
+
 class _ImageCardWidget extends StatelessWidget {
+  final ContentWithScroreModel contentWithScores;
   final bool isGridLayout;
 
-  const _ImageCardWidget({super.key, this.isGridLayout = false});
+  const _ImageCardWidget({
+    super.key,
+    required this.contentWithScores,
+    this.isGridLayout = false,
+  });
 
   @override
   Widget build(BuildContext context) {
+    final contentData = contentWithScores.content;
     return Stack(
       alignment: Alignment.bottomCenter,
       children: [
@@ -383,7 +453,7 @@ class _ImageCardWidget extends StatelessWidget {
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(12.r),
               image: DecorationImage(
-                image: NetworkImage(RANDOM_IMAGE_URL),
+                image: FileImage(File(contentData.path)),
                 fit: BoxFit.cover,
               ),
             ),
@@ -411,7 +481,7 @@ class _ImageCardWidget extends StatelessWidget {
           left: 12.w,
           child: IgnorePointer(
             child: Text(
-              "AI Brainstorming",
+              contentData.contentName,
               style: TextStyle(
                 fontSize: 12.sp,
                 color: Colors.white,
@@ -426,9 +496,18 @@ class _ImageCardWidget extends StatelessWidget {
 }
 
 class _DocumentCardWidget extends StatelessWidget {
+  final ContentWithScroreModel contentWithScore;
+  final double bestScore;
+  final double worstScore;
   final ContentFileType fileType;
 
-  const _DocumentCardWidget({super.key, required this.fileType});
+  const _DocumentCardWidget({
+    super.key,
+    required this.contentWithScore,
+    required this.fileType,
+    required this.worstScore,
+    required this.bestScore,
+  });
 
   Color _getMatchPercentColor(int percent) {
     if (percent >= 90) {
@@ -446,7 +525,12 @@ class _DocumentCardWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final matchPercent = 97;
+    final contentData = contentWithScore.content;
+    final matchPercent = _calculateSimilarityPercent(
+      score: contentWithScore.score,
+      bestScore: bestScore,
+      worstScore: worstScore,
+    );
     final percentColor = _getMatchPercentColor(matchPercent);
     final isPdf = fileType == ContentFileType.PDF;
 
@@ -484,7 +568,7 @@ class _DocumentCardWidget extends StatelessWidget {
                     SizedBox(
                       width: getScreenWidth(context) * 0.55,
                       child: Text(
-                        "Lorem ipsum dolor sit amet, consectetur adipiscing",
+                        contentData.contentName,
                         style: TextStyle(
                           color: Colors.white,
                           fontSize: 16.sp,
@@ -541,11 +625,11 @@ class _DocumentCardWidget extends StatelessWidget {
                   children: [
                     _fileMetadataWidget(
                       Icons.calendar_today_sharp,
-                      DateFormat("MMM d").format(DateTime.now()),
+                      DateFormat("MMM d").format(contentData.createdAt),
                     ),
                     _fileMetadataWidget(
                       Icons.access_time_filled_rounded,
-                      DateFormat("h:mm a").format(DateTime.now()),
+                      DateFormat("h:mm a").format(contentData.createdAt),
                     ),
                   ],
                 ),

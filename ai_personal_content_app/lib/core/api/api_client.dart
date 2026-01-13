@@ -11,8 +11,8 @@ class ApiClient {
     dio = Dio(
       BaseOptions(
         baseUrl: "http://10.0.2.2:8000",
-        connectTimeout: Duration(seconds: 5),
-        receiveTimeout: Duration(seconds: 5),
+        connectTimeout: Duration(seconds: 10),
+        receiveTimeout: Duration(seconds: 10),
         headers: {Headers.acceptHeader: Headers.jsonContentType},
         responseType: ResponseType.json,
         validateStatus: (status) =>

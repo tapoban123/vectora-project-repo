@@ -125,11 +125,11 @@ return removeMultipleContent(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>({TResult Function( FilterAndSortOptions? filterAndSortOptions)?  fetchAllContents,TResult Function( int id)?  removeContent,TResult Function( List<int> ids)?  removeMultipleContent,required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>({TResult Function( FilterAndSortOptions? filterAndSortOptions)?  fetchAllContents,TResult Function( int objectBoxId,  String cid)?  removeContent,TResult Function( List<int> ids)?  removeMultipleContent,required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case FetchAllContents() when fetchAllContents != null:
 return fetchAllContents(_that.filterAndSortOptions);case RemoveContent() when removeContent != null:
-return removeContent(_that.id);case RemoveMultipleContent() when removeMultipleContent != null:
+return removeContent(_that.objectBoxId,_that.cid);case RemoveMultipleContent() when removeMultipleContent != null:
 return removeMultipleContent(_that.ids);case _:
   return orElse();
 
@@ -148,11 +148,11 @@ return removeMultipleContent(_that.ids);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>({required TResult Function( FilterAndSortOptions? filterAndSortOptions)  fetchAllContents,required TResult Function( int id)  removeContent,required TResult Function( List<int> ids)  removeMultipleContent,}) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>({required TResult Function( FilterAndSortOptions? filterAndSortOptions)  fetchAllContents,required TResult Function( int objectBoxId,  String cid)  removeContent,required TResult Function( List<int> ids)  removeMultipleContent,}) {final _that = this;
 switch (_that) {
 case FetchAllContents():
 return fetchAllContents(_that.filterAndSortOptions);case RemoveContent():
-return removeContent(_that.id);case RemoveMultipleContent():
+return removeContent(_that.objectBoxId,_that.cid);case RemoveMultipleContent():
 return removeMultipleContent(_that.ids);case _:
   throw StateError('Unexpected subclass');
 
@@ -170,11 +170,11 @@ return removeMultipleContent(_that.ids);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>({TResult? Function( FilterAndSortOptions? filterAndSortOptions)?  fetchAllContents,TResult? Function( int id)?  removeContent,TResult? Function( List<int> ids)?  removeMultipleContent,}) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>({TResult? Function( FilterAndSortOptions? filterAndSortOptions)?  fetchAllContents,TResult? Function( int objectBoxId,  String cid)?  removeContent,TResult? Function( List<int> ids)?  removeMultipleContent,}) {final _that = this;
 switch (_that) {
 case FetchAllContents() when fetchAllContents != null:
 return fetchAllContents(_that.filterAndSortOptions);case RemoveContent() when removeContent != null:
-return removeContent(_that.id);case RemoveMultipleContent() when removeMultipleContent != null:
+return removeContent(_that.objectBoxId,_that.cid);case RemoveMultipleContent() when removeMultipleContent != null:
 return removeMultipleContent(_that.ids);case _:
   return null;
 
@@ -253,10 +253,11 @@ as FilterAndSortOptions?,
 
 
 class RemoveContent implements ContentsManagerEvents {
-   RemoveContent({required this.id});
+   RemoveContent({required this.objectBoxId, required this.cid});
   
 
- final  int id;
+ final  int objectBoxId;
+ final  String cid;
 
 /// Create a copy of ContentsManagerEvents
 /// with the given fields replaced by the non-null parameter values.
@@ -268,16 +269,16 @@ $RemoveContentCopyWith<RemoveContent> get copyWith => _$RemoveContentCopyWithImp
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is RemoveContent&&(identical(other.id, id) || other.id == id));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is RemoveContent&&(identical(other.objectBoxId, objectBoxId) || other.objectBoxId == objectBoxId)&&(identical(other.cid, cid) || other.cid == cid));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,id);
+int get hashCode => Object.hash(runtimeType,objectBoxId,cid);
 
 @override
 String toString() {
-  return 'ContentsManagerEvents.removeContent(id: $id)';
+  return 'ContentsManagerEvents.removeContent(objectBoxId: $objectBoxId, cid: $cid)';
 }
 
 
@@ -288,7 +289,7 @@ abstract mixin class $RemoveContentCopyWith<$Res> implements $ContentsManagerEve
   factory $RemoveContentCopyWith(RemoveContent value, $Res Function(RemoveContent) _then) = _$RemoveContentCopyWithImpl;
 @useResult
 $Res call({
- int id
+ int objectBoxId, String cid
 });
 
 
@@ -305,10 +306,11 @@ class _$RemoveContentCopyWithImpl<$Res>
 
 /// Create a copy of ContentsManagerEvents
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') $Res call({Object? id = null,}) {
+@pragma('vm:prefer-inline') $Res call({Object? objectBoxId = null,Object? cid = null,}) {
   return _then(RemoveContent(
-id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
-as int,
+objectBoxId: null == objectBoxId ? _self.objectBoxId : objectBoxId // ignore: cast_nullable_to_non_nullable
+as int,cid: null == cid ? _self.cid : cid // ignore: cast_nullable_to_non_nullable
+as String,
   ));
 }
 

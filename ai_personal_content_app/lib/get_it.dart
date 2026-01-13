@@ -24,7 +24,10 @@ void init() {
     ),
   );
   getIt.registerFactory<ContentsManagerBloc>(
-    () => ContentsManagerBloc(contentsLocalStorageService: getIt()),
+    () => ContentsManagerBloc(
+      contentsLocalStorageService: getIt(),
+      embeddingsLocalStorageService: getIt(),
+    ),
   );
   getIt.registerSingleton<EmbeddingGenerationService>(
     EmbeddingGenerationService(),
