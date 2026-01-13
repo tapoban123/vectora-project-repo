@@ -78,7 +78,8 @@ class NewContentsBloc extends Bloc<NewContentsEvents, NewContentsStates> {
         _newData.add(
           PreviewFileModel.fromFile(
             file: scannedImagePdf,
-          ).copyWith(scannedImageTexts: scannedText.join("\n")),
+            extractedTexts: scannedText.join("\n"),
+          ),
         );
         emit(
           NewContentsStates.newContents(contents: List.unmodifiable(_newData)),
@@ -157,9 +158,10 @@ class NewContentsBloc extends Bloc<NewContentsEvents, NewContentsStates> {
             _generateEachContentEmbedding(content: content, emit: emit),
       );
 
-      final List<ContentEmbeddingResponseModel?> embeddings = await Future.wait(
-        embeddingFutures,
-      );
+      final List<ContentEmbeddingResponseModel?> embeddings =
+          await Future.wait(embeddingFutures).onError(
+            (ApiException error, stackTrace) => throw Exception(error.message),
+          );
 
       _embeddingsLocalStorageService.insertEmbeddings(
         embeddings.nonNulls.map((e) {
@@ -230,12 +232,17 @@ class NewContentsBloc extends Bloc<NewContentsEvents, NewContentsStates> {
               _onReceiveProgress(count, total, emit, content);
             },
           );
+    } else if (content.fileType == ContentFileType.SCANNED_PDF) {
+      embeddingsResp = await _embeddingGenerationService.generateTextEmbeddings(
+        cid: content.cid,
+        text: content.scannedImageTexts!,
+        onReceiveProgress: (count, total) {
+          _onReceiveProgress(count, total, emit, content);
+        },
+      );
     }
 
-    embeddingsResp.fold(
-      (l) => emit(NewContentsStates.error(message: l.message)),
-      (r) => embeddings = r,
-    );
+    embeddingsResp.fold((l) => throw l, (r) => embeddings = r);
     return embeddings;
   }
 

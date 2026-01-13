@@ -32,7 +32,10 @@ class PreviewFileModel with _$PreviewFileModel {
     this.loadingProgress,
   });
 
-  factory PreviewFileModel.fromFile({required File file}) {
+  factory PreviewFileModel.fromFile({
+    required File file,
+    String? extractedTexts,
+  }) {
     final ext = p.extension(file.path).substring(1);
 
     return PreviewFileModel._(
@@ -41,7 +44,10 @@ class PreviewFileModel with _$PreviewFileModel {
       name: p.basename(file.path),
       sizeInBytes: file.lengthSync(),
       extension: ext.toUpperCase(),
-      fileType: _detectFileType(ext),
+      fileType: extractedTexts != null
+          ? ContentFileType.SCANNED_PDF
+          : _detectFileType(ext),
+      scannedImageTexts: extractedTexts,
     );
   }
 
