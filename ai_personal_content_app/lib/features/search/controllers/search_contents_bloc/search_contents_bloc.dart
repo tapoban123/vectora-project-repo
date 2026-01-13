@@ -61,7 +61,7 @@ class SearchContentsBloc
             matchedNotesEmbeddings.map((e) => e.cid).toList(),
           );
 
-          final List<ContentWithScroreModel> imagesWithScore =
+          final List<ContentWithScroreModel> imagesWithDistance =
               matchedImageEmbeddings.isNotEmpty
               ? matchedImages
                     .map(
@@ -74,7 +74,7 @@ class SearchContentsBloc
                     )
                     .toList()
               : [];
-          final List<ContentWithScroreModel> documentsWithScore =
+          final List<ContentWithScroreModel> documentsWithDistance =
               matchedDocumentsEmbeddings.isNotEmpty
               ? matchedDocuments
                     .map(
@@ -87,7 +87,7 @@ class SearchContentsBloc
                     )
                     .toList()
               : [];
-          final List<ContentWithScroreModel> notesWithScore =
+          final List<ContentWithScroreModel> notesWithDistance =
               matchedNotesEmbeddings.isNotEmpty
               ? matchedNotes
                     .map(
@@ -100,11 +100,18 @@ class SearchContentsBloc
                     )
                     .toList()
               : [];
+
+          documentsWithDistance.sort(
+            (a, b) => a.distance.compareTo(b.distance),
+          );
+          imagesWithDistance.sort((a, b) => a.distance.compareTo(b.distance));
+          notesWithDistance.sort((a, b) => a.distance.compareTo(b.distance));
+
           emit(
             SearchContentsStates.embeddingsGenerated(
-              documents: documentsWithScore,
-              images: imagesWithScore,
-              notes: notesWithScore,
+              documents: documentsWithDistance,
+              images: imagesWithDistance,
+              notes: notesWithDistance,
             ),
           );
         } catch (e, stk) {

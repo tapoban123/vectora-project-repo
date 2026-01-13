@@ -273,7 +273,8 @@ class _SearchContentsScreenState extends State<SearchContentsScreen> {
                                         itemCount: images.length,
                                         itemBuilder: (context, index) =>
                                             _ImageCardWidget(
-                                              contentWithDistance: images[index],
+                                              contentWithDistance:
+                                                  images[index],
                                             ),
                                       ),
                                     ),
@@ -401,14 +402,13 @@ int _calculateSimilarityPercent({
   required double farthest,
   required double nearest,
 }) {
-  late final double matchScore;
   if (farthest <= nearest) {
     return 100;
-  } else {
-    matchScore = (distance - nearest) / (farthest - nearest);
   }
 
-  return (matchScore * 100).round();
+  final double normalised = 1.0 - ((distance - nearest) / (farthest - nearest));
+  final matchDegree = normalised.clamp(0.0, 1.0);
+  return (matchDegree * 100).round();
 }
 
 class _ImageCardWidget extends StatelessWidget {

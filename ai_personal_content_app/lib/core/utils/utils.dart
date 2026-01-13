@@ -1,8 +1,11 @@
+import 'dart:io';
+
 import 'package:ai_personal_content_app/core/theme/app_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
+import 'package:photo_view/photo_view.dart';
 
 final SystemUiOverlayStyle commonSystemUiOverlayStyle = SystemUiOverlayStyle(
   systemNavigationBarColor: AppColors.backgroundColor,
@@ -153,5 +156,11 @@ void showAppDialog(
         ),
       ),
     ),
+  );
+}
+
+Widget openPhotoView({required String path}) {
+  return Container(
+    child: PhotoView(imageProvider: FileImage(File(path))),
   );
 }
