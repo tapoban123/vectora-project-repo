@@ -20,6 +20,10 @@ import 'package:flutter_quill/flutter_quill.dart';
 import 'package:fpdart/fpdart.dart';
 import 'package:google_mlkit_text_recognition/google_mlkit_text_recognition.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:pdf/pdf.dart';
+import 'package:pdf/widgets.dart' as pw;
+import 'package:uuid/uuid.dart';
 
 class NewContentsBloc extends Bloc<NewContentsEvents, NewContentsStates> {
   final EmbeddingGenerationService _embeddingGenerationService;
@@ -64,23 +68,55 @@ class NewContentsBloc extends Bloc<NewContentsEvents, NewContentsStates> {
     );
 
     if (imagesPath != null) {
-      final files = imagesPath
-          .map((path) => PreviewFileModel.fromFile(file: File(path)))
-          .toList();
-      _newData.addAll(files);
-      emit(
-        NewContentsStates.newContents(contents: List.unmodifiable(_newData)),
+      final scannedText = await Future.wait(
+        imagesPath
+            .map((path) => _extractTextFromScannedImagesOCR(file: File(path)))
+            .toList(),
       );
+      if (scannedText.isNotEmpty) {
+        final scannedImagePdf = await _convertScannedImagesToPdf(imagesPath);
+        _newData.add(
+          PreviewFileModel.fromFile(
+            file: scannedImagePdf,
+          ).copyWith(scannedImageTexts: scannedText.join("\n")),
+        );
+        emit(
+          NewContentsStates.newContents(contents: List.unmodifiable(_newData)),
+        );
+      }
     }
   }
 
-  void _extractTextFromScannedImagesOCR({required File file})async{
+  Future<String> _extractTextFromScannedImagesOCR({required File file}) async {
     final inputImage = InputImage.fromFile(file);
     final textRecognizer = TextRecognizer(script: TextRecognitionScript.latin);
-    final RecognizedText recognizedText = await textRecognizer.processImage(inputImage);
+    final RecognizedText recognizedText = await textRecognizer.processImage(
+      inputImage,
+    );
     String text = recognizedText.text;
 
     log(text);
+    return text;
+  }
+
+  Future<File> _convertScannedImagesToPdf(List<String> imagePaths) async {
+    final pdf = pw.Document();
+
+    imagePaths.map((imagePath) {
+      final image = pw.MemoryImage(File(imagePath).readAsBytesSync());
+      pdf.addPage(
+        pw.Page(
+          build: (pw.Context context) {
+            return pw.Center(child: pw.Image(image));
+          },
+        ),
+      );
+    });
+
+    final tempDir = await getTemporaryDirectory();
+    final file = File("${tempDir.path}/${Uuid().v1()}.pdf");
+    await file.writeAsBytes(await pdf.save());
+    return file;
   }
 
   void _uploadFiles(UploadFilesEvent event, Emitter emit) async {
