@@ -159,8 +159,44 @@ void showAppDialog(
   );
 }
 
-Widget openPhotoView({required String path}) {
-  return Container(
-    child: PhotoView(imageProvider: FileImage(File(path))),
-  );
+class ViewPhotoScreen extends StatelessWidget {
+  final String name;
+  final String path;
+
+  const ViewPhotoScreen({super.key, required this.path, required this.name});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: Colors.black,
+      body: SafeArea(
+        child: Stack(
+          alignment: Alignment.center,
+          children: [
+            PhotoView(imageProvider: FileImage(File(path))),
+            Positioned(
+              top: 0,
+              left: 0,
+              child: IconButton(
+                onPressed: () {
+                  context.pop();
+                },
+                icon: Icon(Icons.close),
+              ),
+            ),
+            Positioned(
+              top: kMaterialListPadding.top,
+              child: Text(
+                name,
+                style: TextStyle(
+                  fontSize: 16.sp,
+                  fontVariations: [FontVariation.weight(500)],
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
 }

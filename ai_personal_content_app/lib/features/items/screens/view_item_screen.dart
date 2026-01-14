@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:ai_personal_content_app/core/common/constants.dart';
 import 'package:ai_personal_content_app/core/common/widgets/custom_appbar.dart';
 import 'package:ai_personal_content_app/core/theme/app_colors.dart';
@@ -6,6 +8,7 @@ import 'package:ai_personal_content_app/core/utils/utils.dart';
 import 'package:ai_personal_content_app/features/search/controllers/contents_manager_bloc/contents_manager_bloc.dart';
 import 'package:ai_personal_content_app/features/search/controllers/contents_manager_bloc/contents_manager_events.dart';
 import 'package:ai_personal_content_app/features/search/entities/contents_entity.dart';
+import 'package:ai_personal_content_app/router.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -117,13 +120,28 @@ class _ViewItemScreenState extends State<ViewItemScreen> {
           children: [
             Expanded(
               flex: 1,
-              child: Container(
-                height: getScreenHeight(context) * 0.5,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(12.r),
-                  image: DecorationImage(
-                    image: NetworkImage(RANDOM_IMAGE_URL),
-                    fit: BoxFit.cover,
+              child: GestureDetector(
+                onTap: () {
+                  if (content.type == ContentFileType.IMAGE.name) {
+                    context.push(
+                      RouteNames.viewPhoto,
+                      extra: {
+                        "path": content.path,
+                        "name": content.contentName,
+                      },
+                    );
+                  }
+                },
+                child: Container(
+                  height: getScreenHeight(context) * 0.5,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(12.r),
+                    image: DecorationImage(
+                      image: content.type == ContentFileType.IMAGE.name
+                          ? FileImage(File(content.path))
+                          : NetworkImage(RANDOM_IMAGE_URL),
+                      fit: BoxFit.cover,
+                    ),
                   ),
                 ),
               ),

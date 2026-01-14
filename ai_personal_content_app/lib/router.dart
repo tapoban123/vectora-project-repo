@@ -1,3 +1,4 @@
+import 'package:ai_personal_content_app/core/utils/utils.dart';
 import 'package:ai_personal_content_app/features/auth/screens/onboarding_screen.dart';
 import 'package:ai_personal_content_app/features/home/screens/add_new_content_screen.dart';
 import 'package:ai_personal_content_app/features/home/screens/home_screen.dart';
@@ -19,6 +20,7 @@ class RouteNames {
   static const String createOrPasteNote = "/create-or-paste-note";
   static const String searchContent = "/search-content";
   static const String contentLibrary = "/content-library";
+  static const String viewPhoto = "/view-photo";
 }
 
 final router = GoRouter(
@@ -55,6 +57,13 @@ final router = GoRouter(
     GoRoute(
       path: RouteNames.contentLibrary,
       builder: (context, state) => ContentLibraryScreen(),
+    ),
+    GoRoute(
+      path: RouteNames.viewPhoto,
+      builder: (context, state) {
+        final data = state.extra as Map;
+        return ViewPhotoScreen(path: data["path"], name: data["name"]);
+      },
     ),
   ],
 );
