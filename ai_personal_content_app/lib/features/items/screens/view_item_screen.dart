@@ -97,10 +97,15 @@ class _ViewItemScreenState extends State<ViewItemScreen> {
     if (_contentIsNote) {
       final json = File(content.path).readAsStringSync();
       final String text = Document.fromJson(jsonDecode(json)).toPlainText();
-      previewIcon = SelectableText(
-        text,
-        style: TextStyle(fontVariations: [FontVariation.weight(500)]),
-        selectionColor: Colors.black,
+      previewIcon = SingleChildScrollView(
+        physics: _contentIsNote
+            ? AlwaysScrollableScrollPhysics()
+            : NeverScrollableScrollPhysics(),
+        child: SelectableText(
+          text,
+          style: TextStyle(fontVariations: [FontVariation.weight(500)]),
+          selectionColor: Colors.black,
+        ),
       );
     } else if (contentIsPdf) {
       previewIcon = Icon(
@@ -151,25 +156,20 @@ class _ViewItemScreenState extends State<ViewItemScreen> {
                     );
                   }
                 },
-                child: SingleChildScrollView(
-                  physics: _contentIsNote
-                      ? AlwaysScrollableScrollPhysics()
-                      : NeverScrollableScrollPhysics(),
-                  child: Container(
-                    height: getScreenHeight(context) * 0.5,
-                    padding: EdgeInsets.all(10.w),
-                    decoration: BoxDecoration(
-                      color: AppColors.metalColor,
-                      borderRadius: BorderRadius.circular(12.r),
-                      image: _contentIsImage
-                          ? DecorationImage(
-                              image: FileImage(File(content.path)),
-                              fit: BoxFit.cover,
-                            )
-                          : null,
-                    ),
-                    child: previewIcon,
+                child: Container(
+                  height: getScreenHeight(context) * 0.5,
+                  padding: EdgeInsets.all(10.w),
+                  decoration: BoxDecoration(
+                    color: AppColors.metalColor,
+                    borderRadius: BorderRadius.circular(12.r),
+                    image: _contentIsImage
+                        ? DecorationImage(
+                            image: FileImage(File(content.path)),
+                            fit: BoxFit.cover,
+                          )
+                        : null,
                   ),
+                  child: previewIcon,
                 ),
               ),
             ),
