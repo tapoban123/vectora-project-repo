@@ -75,6 +75,8 @@ void showAppDialog(
   required String message,
   String? buttonText,
   VoidCallback? onConfirmTap,
+  Color? confirmButtonColor,
+  bool includeCancelButton = false,
   DialogType dialogType = DialogType.INFO,
 }) {
   Color color;
@@ -90,6 +92,28 @@ void showAppDialog(
       icon = Icons.info;
       break;
   }
+
+  ElevatedButton dialogButton({
+    required String text,
+    required Color bgColor,
+    required VoidCallback onTap,
+  }) => ElevatedButton(
+    onPressed: onTap,
+    style: ElevatedButton.styleFrom(
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12.r)),
+      backgroundColor: bgColor,
+      minimumSize: Size(double.infinity, 50.h),
+    ),
+    child: Text(
+      text,
+      style: TextStyle(
+        color: Colors.white,
+        fontSize: 16.sp,
+        fontVariations: [FontVariation.weight(600)],
+      ),
+    ),
+  );
+
   showDialog(
     context: context,
     builder: (context) => Dialog(
@@ -130,27 +154,33 @@ void showAppDialog(
               ),
             ),
             8.verticalSpace,
-            ElevatedButton(
-              onPressed:
-                  onConfirmTap ??
-                  () {
-                    context.pop();
-                  },
-              style: ElevatedButton.styleFrom(
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(12.r),
+            Row(
+              spacing: includeCancelButton ? 10.w : 0,
+              children: [
+                Flexible(
+                  flex: 1,
+                  child: dialogButton(
+                    text: buttonText ?? "Close",
+                    bgColor: confirmButtonColor ?? AppColors.blueColor,
+                    onTap:
+                        onConfirmTap ??
+                        () {
+                          context.pop();
+                        },
+                  ),
                 ),
-                backgroundColor: AppColors.blueColor,
-                minimumSize: Size(double.infinity, 50.h),
-              ),
-              child: Text(
-                buttonText ?? "Close",
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 16.sp,
-                  fontVariations: [FontVariation.weight(600)],
-                ),
-              ),
+                if (includeCancelButton)
+                  Flexible(
+                    flex: 1,
+                    child: dialogButton(
+                      text: "Cancel",
+                      bgColor: AppColors.blueColor,
+                      onTap: () {
+                        context.pop();
+                      },
+                    ),
+                  ),
+              ],
             ),
           ],
         ),

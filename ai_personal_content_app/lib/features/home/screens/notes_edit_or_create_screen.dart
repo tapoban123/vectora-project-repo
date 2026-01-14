@@ -18,7 +18,9 @@ import 'package:path/path.dart' as p;
 import 'package:uuid/uuid.dart';
 
 class NotesEditOrCreateScreen extends StatefulWidget {
-  const NotesEditOrCreateScreen({super.key});
+  final File? notesJson;
+
+  const NotesEditOrCreateScreen({super.key, this.notesJson});
 
   @override
   State<NotesEditOrCreateScreen> createState() =>
@@ -31,6 +33,12 @@ class _NotesEditOrCreateScreenState extends State<NotesEditOrCreateScreen> {
   @override
   void initState() {
     _controller = QuillController.basic();
+    if (widget.notesJson != null) {
+      WidgetsBinding.instance.addPostFrameCallback((timeStamp) async {
+        final String json = await widget.notesJson!.readAsString();
+        _controller.document = Document.fromJson(jsonDecode(json));
+      });
+    }
     super.initState();
   }
 
@@ -137,7 +145,9 @@ class _NotesEditOrCreateScreenState extends State<NotesEditOrCreateScreen> {
                 onTap: () async {
                   final noteJson = await _saveNoteAsJson();
                   if (context.mounted) {
-                    context.read<NewContentsBloc>().add(CreateOrPasteNotesEvent(notesJson: noteJson));
+                    context.read<NewContentsBloc>().add(
+                      CreateOrPasteNotesEvent(notesJson: noteJson),
+                    );
                     context.pop();
                   }
                 },

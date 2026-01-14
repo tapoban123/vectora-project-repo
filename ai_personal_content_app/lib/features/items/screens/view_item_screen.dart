@@ -26,44 +26,24 @@ class ViewItemScreen extends StatefulWidget {
 
 class _ViewItemScreenState extends State<ViewItemScreen> {
   late final GlobalKey<ScaffoldState> _scaffoldKey;
+  late final ContentsEntity content;
+  late final bool _contentIsNote;
+  late final bool _contentIsImage;
+  late final bool contentIsPdf;
 
   @override
   void initState() {
+    content = widget.content;
+    _contentIsNote = content.type == ContentFileType.NOTE.name;
+    _contentIsImage = content.type == ContentFileType.IMAGE.name;
+    contentIsPdf = content.type == ContentFileType.PDF.name;
+
     _scaffoldKey = GlobalKey();
     super.initState();
   }
 
-  // void _showFoodSearchBottomSheet(BuildContext parentContext) {
-  //
-  //   _scaffoldKey.currentState?.showBottomSheet(enableDrag: false, (
-  //       parentContext,
-  //       ) {
-  //     final screenHeight = MediaQuery.of(context).size.height;
-  //     return ValueListenableBuilder<bool>(
-  //       valueListenable: _isBottomSheetOpen,
-  //       builder: (context, isOpen, _) {
-  //         final targetHeight =
-  //             (isOpen ? _maxFraction : _minFraction) * screenHeight;
-  //         return AnimatedContainer(
-  //           duration: const Duration(milliseconds: 300),
-  //           curve: Curves.easeOut,
-  //           height: targetHeight,
-  //           width: double.infinity,
-  //           decoration: BoxDecoration(
-  //             color: CustomTheme.scaffoldBgColor,
-  //             borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
-  //           ),
-  //           child: _FoodSearchBottomSheet(isSheetOpen: isOpen),
-  //         );
-  //       },
-  //     );
-  //   });
-  // }
-
   @override
   Widget build(BuildContext context) {
-    final content = widget.content;
-
     final optionsData = [
       (
         icon: Icons.chat_outlined,
@@ -75,21 +55,40 @@ class _ViewItemScreenState extends State<ViewItemScreen> {
           );
         },
       ),
-      // (icon: Icons.manage_search, color: null, label: "Search", onTap: () {}),
       (icon: Icons.push_pin_outlined, color: null, label: "Pin", onTap: () {}),
-      // (icon: Icons.share, color: null, label: "Share", onTap: () {}),
       (
         icon: Icons.delete_outline,
         color: AppColors.deepRedColor,
         label: "Delete",
         onTap: () {
-          context.read<ContentsManagerBloc>().add(
-            RemoveContent(cid: content.contentId, objectBoxId: content.id),
+          showAppDialog(
+            context,
+            includeCancelButton: true,
+            confirmButtonColor: AppColors.deepRedColor,
+            title: "Delete Content",
+            message: "Are you sure you want to delete this content?",
+            buttonText: "Continue",
+            onConfirmTap: () {
+              context.read<ContentsManagerBloc>().add(
+                DeleteContent(cid: content.contentId, objectBoxId: content.id),
+              );
+              context.pop();
+            },
           );
-          context.pop();
         },
       ),
     ];
+
+    if (_contentIsNote) {
+      optionsData.insert(0, (
+        icon: Icons.edit,
+        color: null,
+        label: "Edit",
+        onTap: () {
+          context.push(RouteNames.createOrEditNote, extra: File(content.path));
+        },
+      ));
+    }
 
     return Scaffold(
       key: _scaffoldKey,
@@ -122,13 +121,18 @@ class _ViewItemScreenState extends State<ViewItemScreen> {
               flex: 1,
               child: GestureDetector(
                 onTap: () {
-                  if (content.type == ContentFileType.IMAGE.name) {
+                  if (_contentIsImage) {
                     context.push(
                       RouteNames.viewPhoto,
                       extra: {
                         "path": content.path,
                         "name": content.contentName,
                       },
+                    );
+                  } else if (_contentIsNote) {
+                    context.push(
+                      RouteNames.createOrEditNote,
+                      extra: File(content.path),
                     );
                   }
                 },
@@ -137,7 +141,7 @@ class _ViewItemScreenState extends State<ViewItemScreen> {
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(12.r),
                     image: DecorationImage(
-                      image: content.type == ContentFileType.IMAGE.name
+                      image: _contentIsImage
                           ? FileImage(File(content.path))
                           : NetworkImage(RANDOM_IMAGE_URL),
                       fit: BoxFit.cover,

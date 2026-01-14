@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:ai_personal_content_app/core/utils/utils.dart';
 import 'package:ai_personal_content_app/features/auth/screens/onboarding_screen.dart';
 import 'package:ai_personal_content_app/features/home/screens/add_new_content_screen.dart';
@@ -17,7 +19,7 @@ class RouteNames {
   static const String viewItemOptions = "/view-item";
   static const String userProfile = "/user-profile";
   static const String addNewContent = "/add-new-content";
-  static const String createOrPasteNote = "/create-or-paste-note";
+  static const String createOrEditNote = "/create-or-edit-note";
   static const String searchContent = "/search-content";
   static const String contentLibrary = "/content-library";
   static const String viewPhoto = "/view-photo";
@@ -47,8 +49,11 @@ final router = GoRouter(
       builder: (context, state) => AddNewContentScreen(),
     ),
     GoRoute(
-      path: RouteNames.createOrPasteNote,
-      builder: (context, state) => NotesEditOrCreateScreen(),
+      path: RouteNames.createOrEditNote,
+      builder: (context, state) {
+        final notesJson = state.extra as File?;
+        return NotesEditOrCreateScreen(notesJson: notesJson);
+      },
     ),
     GoRoute(
       path: RouteNames.searchContent,

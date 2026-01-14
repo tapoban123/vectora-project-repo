@@ -9,8 +9,8 @@ abstract class ContentsManagerEvents with _$ContentsManagerEvents {
     FilterAndSortOptions? filterAndSortOptions,
   }) = FetchAllContents;
 
-  factory ContentsManagerEvents.removeContent({required int objectBoxId, required String cid}) =
-      RemoveContent;
+  factory ContentsManagerEvents.deleteContent({required int objectBoxId, required String cid}) =
+      DeleteContent;
 
   factory ContentsManagerEvents.removeMultipleContent({
     required List<int> ids,

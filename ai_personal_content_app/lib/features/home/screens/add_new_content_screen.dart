@@ -74,7 +74,7 @@ class AddNewContentScreen extends StatelessWidget {
                 title: "Create/Paste notes",
                 icon: Icons.paste_outlined,
                 onTap: () {
-                  context.push(RouteNames.createOrPasteNote);
+                  context.push(RouteNames.createOrEditNote);
                 },
               ),
               50.verticalSpace,
