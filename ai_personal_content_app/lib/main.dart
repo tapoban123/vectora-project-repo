@@ -2,8 +2,8 @@ import 'package:ai_personal_content_app/core/configs/objectbox_config.dart';
 import 'package:ai_personal_content_app/core/theme/app_colors.dart';
 import 'package:ai_personal_content_app/core/theme/app_fonts.dart';
 import 'package:ai_personal_content_app/core/utils/utils.dart';
+import 'package:ai_personal_content_app/features/home/controllers/cubits/recent_items_cubit.dart';
 import 'package:ai_personal_content_app/features/home/controllers/new_contents_bloc/new_contents_bloc.dart';
-import 'package:ai_personal_content_app/features/home/controllers/new_contents_bloc/new_contents_cubit.dart';
 import 'package:ai_personal_content_app/features/search/controllers/contents_manager_bloc/contents_manager_bloc.dart';
 import 'package:ai_personal_content_app/features/search/controllers/search_contents_bloc/search_contents_bloc.dart';
 import 'package:ai_personal_content_app/get_it.dart';
@@ -41,6 +41,7 @@ class MyApp extends StatelessWidget {
           BlocProvider(create: (context) => getIt<NewContentsBloc>()),
           BlocProvider(create: (context) => getIt<ContentsManagerBloc>()),
           BlocProvider(create: (context) => getIt<SearchContentsBloc>()),
+          BlocProvider(create: (context) => getIt<RecentItemsCubit>()),
         ],
         child: MaterialApp.router(
           title: "AI Personal Content Universe",

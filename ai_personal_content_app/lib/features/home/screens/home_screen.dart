@@ -1,16 +1,31 @@
 import 'package:ai_personal_content_app/core/common/widgets/custom_appbar.dart';
 import 'package:ai_personal_content_app/core/theme/app_colors.dart';
 import 'package:ai_personal_content_app/core/utils/utils.dart';
-import 'package:ai_personal_content_app/features/home/widgets/item_card.dart';
+import 'package:ai_personal_content_app/features/home/controllers/cubits/recent_items_cubit.dart';
+import 'package:ai_personal_content_app/core/common/widgets/content_card_for_grid_layout.dart';
+import 'package:ai_personal_content_app/features/search/entities/contents_entity.dart';
 import 'package:ai_personal_content_app/router.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 
-class HomeScreen extends StatelessWidget {
+class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
 
+  @override
+  State<HomeScreen> createState() => _HomeScreenState();
+}
+
+class _HomeScreenState extends State<HomeScreen> {
+  @override
+  void initState() {
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      context.read<RecentItemsCubit>().fetchRecentItems();
+    },);
+    super.initState();
+  }
   @override
   Widget build(BuildContext context) {
     return AnnotatedRegion<SystemUiOverlayStyle>(
@@ -121,16 +136,21 @@ class HomeScreen extends StatelessWidget {
                       ),
                     ),
                     Expanded(
-                      child: GridView.builder(
-                        itemCount: 4,
-                        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                          crossAxisCount: 2,
-                          crossAxisSpacing: 14.w,
-                          mainAxisSpacing: 14.w,
-                          childAspectRatio: 0.8,
-                        ),
-                        itemBuilder: (context, index) => ItemCard(),
-                      ),
+                      child:
+                          BlocBuilder<RecentItemsCubit, List<ContentsEntity>>(
+                            builder: (context, state) => GridView.builder(
+                              itemCount: state.length,
+                              gridDelegate:
+                                  SliverGridDelegateWithFixedCrossAxisCount(
+                                    crossAxisCount: 2,
+                                    crossAxisSpacing: 14.w,
+                                    mainAxisSpacing: 14.w,
+                                    childAspectRatio: 0.8,
+                                  ),
+                              itemBuilder: (context, index) =>
+                                  ContentCardForGridLayout(content: state[index]),
+                            ),
+                          ),
                     ),
                   ],
                 ),

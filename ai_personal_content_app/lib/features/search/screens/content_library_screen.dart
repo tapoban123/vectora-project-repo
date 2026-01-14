@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:ai_personal_content_app/core/common/constants.dart';
+import 'package:ai_personal_content_app/core/common/widgets/content_card_for_grid_layout.dart';
 import 'package:ai_personal_content_app/core/common/widgets/custom_appbar.dart';
 import 'package:ai_personal_content_app/core/common/widgets/custom_button.dart';
 import 'package:ai_personal_content_app/core/theme/app_colors.dart';
@@ -569,67 +570,7 @@ class _GridItemsLayout extends StatelessWidget {
       itemCount: contents.length,
       itemBuilder: (context, index) {
         final content = contents[index];
-        final bool isContentImage = content.type == ContentFileType.IMAGE.name;
-        final bool isContentNote = content.type == ContentFileType.NOTE.name;
-        final bool isContentPdf = content.type == ContentFileType.PDF.name;
-
-        Widget? iconWidget;
-
-        if (isContentNote) {
-          final json = File(content.path).readAsStringSync();
-          final String noteText = Document.fromJson(jsonDecode(json)).toPlainText();
-          iconWidget = Text(noteText, style: TextStyle(
-              fontSize: 12.sp,
-              fontVariations: [FontVariation.weight(500)]),
-          overflow: TextOverflow.ellipsis,
-          maxLines: 10,);
-        }
-        return GestureDetector(
-          onTap: () {
-            context.push(
-              RouteNames.viewItemOptions,
-              extra: {"content": content},
-            );
-          },
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Container(
-                width: double.infinity,
-                height: 170.h,
-                padding: EdgeInsets.all(6.w),
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(8.r),
-                  color: AppColors.metalColor,
-                  image:isContentImage? DecorationImage(
-                    image:  FileImage(File(content.path)),
-                    fit: BoxFit.cover,
-                  ):null,
-                ),
-                child: iconWidget,
-              ),
-              12.verticalSpace,
-              Text(
-                content.contentName,
-                style: TextStyle(
-                  fontSize: 16.sp,
-                  fontVariations: [FontVariation.weight(600)],
-                ),
-                maxLines: 2,
-                overflow: TextOverflow.ellipsis,
-              ),
-              Text(
-                content.extension.toUpperCase(),
-                style: TextStyle(
-                  fontSize: 14.sp,
-                  color: AppColors.lightGreyColor,
-                  fontVariations: [FontVariation.weight(400)],
-                ),
-              ),
-            ],
-          ),
-        );
+        return ContentCardForGridLayout(content: content);
       },
     );
   }
