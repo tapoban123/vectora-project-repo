@@ -1,3 +1,6 @@
+import 'dart:convert';
+import 'dart:io';
+
 import 'package:ai_personal_content_app/core/common/constants.dart';
 import 'package:ai_personal_content_app/core/common/widgets/custom_appbar.dart';
 import 'package:ai_personal_content_app/core/common/widgets/custom_button.dart';
@@ -10,6 +13,7 @@ import 'package:ai_personal_content_app/router.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_quill/flutter_quill.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 
@@ -565,7 +569,21 @@ class _GridItemsLayout extends StatelessWidget {
       itemCount: contents.length,
       itemBuilder: (context, index) {
         final content = contents[index];
+        final bool isContentImage = content.type == ContentFileType.IMAGE.name;
+        final bool isContentNote = content.type == ContentFileType.NOTE.name;
+        final bool isContentPdf = content.type == ContentFileType.PDF.name;
 
+        Widget? iconWidget;
+
+        if (isContentNote) {
+          final json = File(content.path).readAsStringSync();
+          final String noteText = Document.fromJson(jsonDecode(json)).toPlainText();
+          iconWidget = Text(noteText, style: TextStyle(
+              fontSize: 12.sp,
+              fontVariations: [FontVariation.weight(500)]),
+          overflow: TextOverflow.ellipsis,
+          maxLines: 10,);
+        }
         return GestureDetector(
           onTap: () {
             context.push(
@@ -580,13 +598,16 @@ class _GridItemsLayout extends StatelessWidget {
               Container(
                 width: double.infinity,
                 height: 170.h,
+                padding: EdgeInsets.all(6.w),
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(8.r),
-                  image: DecorationImage(
-                    image: NetworkImage(RANDOM_IMAGE_URL),
+                  color: AppColors.metalColor,
+                  image:isContentImage? DecorationImage(
+                    image:  FileImage(File(content.path)),
                     fit: BoxFit.cover,
-                  ),
+                  ):null,
                 ),
+                child: iconWidget,
               ),
               12.verticalSpace,
               Text(
@@ -625,7 +646,37 @@ class _ListItemsLayout extends StatelessWidget {
       itemCount: contents.length,
       itemBuilder: (context, index) {
         final content = contents[index];
+        final bool isContentImage = content.type == ContentFileType.IMAGE.name;
+        final bool isContentNote = content.type == ContentFileType.NOTE.name;
+        final bool isContentPdf = content.type == ContentFileType.PDF.name;
 
+        late final Widget iconWidget;
+
+        if (isContentImage) {
+          iconWidget = ClipRRect(
+            borderRadius: BorderRadius.circular(8.r),
+            child: Image.file(
+              File(content.path),
+              height: 48.w,
+              width: 48.w,
+              fit: BoxFit.cover,
+            ),
+          );
+        } else {
+          iconWidget = Container(
+            height: 48.w,
+            width: 48.w,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(8.r),
+              color: AppColors.greyColor,
+            ),
+            child: Icon(
+              isContentNote ? Icons.note_alt : Icons.picture_as_pdf,
+              color: AppColors.offWhiteColor,
+              size: 24.w,
+            ),
+          );
+        }
         return ListTile(
           onTap: () {
             context.push(
@@ -636,15 +687,7 @@ class _ListItemsLayout extends StatelessWidget {
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(8.r),
           ),
-          leading: ClipRRect(
-            borderRadius: BorderRadius.circular(8.r),
-            child: Image.network(
-              RANDOM_IMAGE_URL,
-              fit: BoxFit.cover,
-              height: 48.w,
-              width: 48.w,
-            ),
-          ),
+          leading: iconWidget,
           title: Text(
             content.contentName,
             style: TextStyle(

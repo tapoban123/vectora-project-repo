@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:ai_personal_content_app/core/common/constants.dart';
@@ -11,6 +12,7 @@ import 'package:ai_personal_content_app/features/search/entities/contents_entity
 import 'package:ai_personal_content_app/router.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_quill/flutter_quill.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
@@ -90,6 +92,24 @@ class _ViewItemScreenState extends State<ViewItemScreen> {
       ));
     }
 
+    Widget? previewIcon;
+
+    if (_contentIsNote) {
+      final json = File(content.path).readAsStringSync();
+      final String text = Document.fromJson(jsonDecode(json)).toPlainText();
+      previewIcon = SelectableText(
+        text,
+        style: TextStyle(fontVariations: [FontVariation.weight(500)]),
+        selectionColor: Colors.black,
+      );
+    } else if (contentIsPdf) {
+      previewIcon = Icon(
+        Icons.picture_as_pdf,
+        color: AppColors.offWhiteColor,
+        size: 40.w,
+      );
+    }
+
     return Scaffold(
       key: _scaffoldKey,
       appBar: CustomAppbar(
@@ -129,23 +149,26 @@ class _ViewItemScreenState extends State<ViewItemScreen> {
                         "name": content.contentName,
                       },
                     );
-                  } else if (_contentIsNote) {
-                    context.push(
-                      RouteNames.createOrEditNote,
-                      extra: File(content.path),
-                    );
                   }
                 },
-                child: Container(
-                  height: getScreenHeight(context) * 0.5,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(12.r),
-                    image: DecorationImage(
+                child: SingleChildScrollView(
+                  physics: _contentIsNote
+                      ? AlwaysScrollableScrollPhysics()
+                      : NeverScrollableScrollPhysics(),
+                  child: Container(
+                    height: getScreenHeight(context) * 0.5,
+                    padding: EdgeInsets.all(10.w),
+                    decoration: BoxDecoration(
+                      color: AppColors.metalColor,
+                      borderRadius: BorderRadius.circular(12.r),
                       image: _contentIsImage
-                          ? FileImage(File(content.path))
-                          : NetworkImage(RANDOM_IMAGE_URL),
-                      fit: BoxFit.cover,
+                          ? DecorationImage(
+                              image: FileImage(File(content.path)),
+                              fit: BoxFit.cover,
+                            )
+                          : null,
                     ),
+                    child: previewIcon,
                   ),
                 ),
               ),
