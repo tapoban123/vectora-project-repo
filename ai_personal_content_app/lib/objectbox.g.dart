@@ -23,7 +23,7 @@ final _entities = <obx_int.ModelEntity>[
   obx_int.ModelEntity(
     id: const obx_int.IdUid(2, 8128517059530730439),
     name: 'ContentsEntity',
-    lastPropertyId: const obx_int.IdUid(11, 3958599634335642310),
+    lastPropertyId: const obx_int.IdUid(12, 1205628442996170657),
     flags: 0,
     properties: <obx_int.ModelProperty>[
       obx_int.ModelProperty(
@@ -92,6 +92,13 @@ final _entities = <obx_int.ModelEntity>[
         name: 'scannedImageTexts',
         type: 9,
         flags: 0,
+      ),
+      obx_int.ModelProperty(
+        id: const obx_int.IdUid(12, 1205628442996170657),
+        name: 'isPinned',
+        type: 1,
+        flags: 8,
+        indexId: const obx_int.IdUid(7, 8889181047034173676),
       ),
     ],
     relations: <obx_int.ModelRelation>[],
@@ -176,7 +183,7 @@ obx_int.ModelDefinition getObjectBoxModel() {
   final model = obx_int.ModelInfo(
     entities: _entities,
     lastEntityId: const obx_int.IdUid(3, 6761161346725710068),
-    lastIndexId: const obx_int.IdUid(6, 7746834619786622742),
+    lastIndexId: const obx_int.IdUid(7, 8889181047034173676),
     lastRelationId: const obx_int.IdUid(0, 0),
     lastSequenceId: const obx_int.IdUid(0, 0),
     retiredEntityUids: const [6423172255409896124],
@@ -213,7 +220,7 @@ obx_int.ModelDefinition getObjectBoxModel() {
         final scannedImageTextsOffset = object.scannedImageTexts == null
             ? null
             : fbb.writeString(object.scannedImageTexts!);
-        fbb.startTable(12);
+        fbb.startTable(13);
         fbb.addInt64(0, object.id);
         fbb.addOffset(1, contentIdOffset);
         fbb.addOffset(2, pathOffset);
@@ -225,6 +232,7 @@ obx_int.ModelDefinition getObjectBoxModel() {
         fbb.addInt64(8, object.updatedAt?.millisecondsSinceEpoch);
         fbb.addOffset(9, imageDescriptionOffset);
         fbb.addOffset(10, scannedImageTextsOffset);
+        fbb.addBool(11, object.isPinned);
         fbb.finish(fbb.endTable());
         return object.id;
       },
@@ -251,6 +259,12 @@ obx_int.ModelDefinition getObjectBoxModel() {
         final scannedImageTextsParam = const fb.StringReader(
           asciiOptimization: true,
         ).vTableGetNullable(buffer, rootOffset, 24);
+        final isPinnedParam = const fb.BoolReader().vTableGet(
+          buffer,
+          rootOffset,
+          26,
+          false,
+        );
         final contentSizeInBytesParam = const fb.Int32Reader().vTableGet(
           buffer,
           rootOffset,
@@ -275,6 +289,7 @@ obx_int.ModelDefinition getObjectBoxModel() {
           contentName: contentNameParam,
           imageDescription: imageDescriptionParam,
           scannedImageTexts: scannedImageTextsParam,
+          isPinned: isPinnedParam,
           contentSizeInBytes: contentSizeInBytesParam,
           extension: extensionParam,
           type: typeParam,
@@ -389,6 +404,11 @@ class ContentsEntity_ {
   /// See [ContentsEntity.scannedImageTexts].
   static final scannedImageTexts = obx.QueryStringProperty<ContentsEntity>(
     _entities[0].properties[10],
+  );
+
+  /// See [ContentsEntity.isPinned].
+  static final isPinned = obx.QueryBooleanProperty<ContentsEntity>(
+    _entities[0].properties[11],
   );
 }
 

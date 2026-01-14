@@ -16,6 +16,9 @@ class ContentsEntity {
   String extension;
   String type;
 
+  @Index()
+  bool isPinned = false;
+
   @Property(type: PropertyType.int)
   int contentSizeInBytes;
 
@@ -30,6 +33,7 @@ class ContentsEntity {
     required this.contentName,
     this.imageDescription,
     this.scannedImageTexts,
+    this.isPinned = false,
     required this.contentSizeInBytes,
     required this.extension,
     required this.type,

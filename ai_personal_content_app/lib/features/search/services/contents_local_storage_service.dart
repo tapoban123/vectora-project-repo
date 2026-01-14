@@ -10,10 +10,8 @@ import 'package:uuid/uuid.dart';
 class ContentsLocalStorageService {
   final _contentsBox = objectBoxInstance.store.box<ContentsEntity>();
 
-  Future<String> storeFileToAppDirectory(
-    File file,
-    ContentFileType fileType,
-  ) async {
+  Future<String> storeFileToAppDirectory(File file,
+      ContentFileType fileType,) async {
     final appDirectory = await getApplicationDocumentsDirectory();
     final dirPath = appDirectory.path;
 
@@ -31,6 +29,14 @@ class ContentsLocalStorageService {
 
   void insertContents(List<ContentsEntity> contents) {
     _contentsBox.putMany(contents);
+  }
+
+  void pinContent(int id) {
+    final content = _contentsBox.get(id);
+    if (content != null) {
+      content.isPinned = true;
+      _contentsBox.put(content, mode: PutMode.update);
+    }
   }
 
   void removeContent(int id) {
