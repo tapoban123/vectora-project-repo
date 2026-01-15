@@ -17,7 +17,7 @@ class ContentsManagerBloc
        _embeddingsLocalStorageService = embeddingsLocalStorageService,
        super(ContentsManagerStates.initial()) {
     on<FetchAllContents>(_fetchAllContents);
-    on<DeleteContent>(_removeContent);
+    on<DeleteContent>(_deleteContent);
     on<RemoveMultipleContent>(_removeMultipleContent);
   }
 
@@ -32,10 +32,14 @@ class ContentsManagerBloc
     );
   }
 
-  void _removeContent(DeleteContent event, Emitter emit) async {
+  void _deleteContent(DeleteContent event, Emitter emit) async {
+    if (await event.file.exists()){
+      await event.file.delete();
+    }
     _contents.removeWhere((element) => element.id == event.objectBoxId);
     _contentsLocalStorageService.removeContent(event.objectBoxId);
     _embeddingsLocalStorageService.deleteEmbedding(event.cid);
+
     emit(
       ContentsManagerStates.allContents(contents: List.unmodifiable(_contents)),
     );

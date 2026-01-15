@@ -12,7 +12,7 @@ class PinItemsCubit extends Cubit<List<ContentsEntity>> {
 
   List<ContentsEntity> _pinnedContents = [];
 
-  bool checkIsContentPinned(int id){
+  bool checkIsContentPinned(int id) {
     return _contentsLocalStorageService.isContentPinned(id);
   }
 
@@ -31,6 +31,12 @@ class PinItemsCubit extends Cubit<List<ContentsEntity>> {
   void unPinContent(int id) {
     _contentsLocalStorageService.unPinContent(id);
     _pinnedContents.removeWhere((element) => element.id == id);
+    emit(List.from(_pinnedContents));
+  }
+
+  void unPinAllContents() {
+    _contentsLocalStorageService.unPinAllContents();
+    _pinnedContents.clear();
     emit(List.from(_pinnedContents));
   }
 }

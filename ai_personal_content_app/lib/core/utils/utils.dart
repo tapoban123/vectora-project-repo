@@ -15,40 +15,54 @@ final SystemUiOverlayStyle commonSystemUiOverlayStyle = SystemUiOverlayStyle(
 void showSnackBarMessage(
   BuildContext context, {
   required String message,
-  bool showActionButton = false,
+  String? actionButtonText,
+  VoidCallback? onTapActionButton,
 }) {
+  ScaffoldMessenger.of(context).clearSnackBars();
   ScaffoldMessenger.of(context).showSnackBar(
     SnackBar(
       behavior: SnackBarBehavior.floating,
+      backgroundColor: AppColors.greyColor,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadiusGeometry.circular(16.r),
+        side: BorderSide(color: AppColors.blueColor),
+      ),
       content: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Text(
-            message,
-            style: TextStyle(
-              fontSize: 14.sp,
-              fontVariations: [FontVariation.weight(400)],
-            ),
+          Row(
+            spacing: 12.w,
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Icon(Icons.check_circle, color: AppColors.blueColor, size: 18.w,),
+              Text(
+                message,
+                style: TextStyle(
+                  fontSize: 14.sp,
+                  color: Colors.white,
+                  fontVariations: [FontVariation.weight(600)],
+                ),
+              ),
+            ],
           ),
-          showActionButton
-              ? TextButton(
-                  onPressed: () {},
-                  style: TextButton.styleFrom(
-                    tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                    padding: EdgeInsets.all(0),
-                    visualDensity: VisualDensity.compact,
-                    minimumSize: Size(50, 0),
-                  ),
-                  child: Text(
-                    "UNDO",
-                    style: TextStyle(
-                      fontVariations: [FontVariation.weight(700)],
-                      fontSize: 16.sp,
-                      color: AppColors.blueColor,
-                    ),
-                  ),
-                )
-              : SizedBox.shrink(),
+          if (actionButtonText != null)
+            TextButton(
+              onPressed: onTapActionButton,
+              style: TextButton.styleFrom(
+                tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                padding: EdgeInsets.all(0),
+                visualDensity: VisualDensity.compact,
+                minimumSize: Size(50, 0),
+              ),
+              child: Text(
+                actionButtonText,
+                style: TextStyle(
+                  fontVariations: [FontVariation.weight(700)],
+                  fontSize: 16.sp,
+                  color: AppColors.blueColor,
+                ),
+              ),
+            ),
         ],
       ),
     ),
@@ -66,6 +80,8 @@ double getScreenWidth(BuildContext context) {
 double getScreenHeight(BuildContext context) {
   return MediaQuery.sizeOf(context).height;
 }
+
+void showToastMessage() {}
 
 enum DialogType { INFO, ERROR }
 

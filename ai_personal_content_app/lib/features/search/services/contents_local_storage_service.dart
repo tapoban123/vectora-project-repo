@@ -1,4 +1,3 @@
-import 'dart:developer';
 import 'dart:io';
 
 import 'package:ai_personal_content_app/core/common/constants.dart';
@@ -52,9 +51,9 @@ class ContentsLocalStorageService {
     }
   }
 
-  bool isContentPinned(int id){
+  bool isContentPinned(int id) {
     final content = _contentsBox.get(id);
-    if (content != null && content.isPinned){
+    if (content != null && content.isPinned) {
       return true;
     }
     return false;
@@ -70,6 +69,17 @@ class ContentsLocalStorageService {
     query.close();
 
     return results;
+  }
+
+  void unPinAllContents() {
+    final pinnedContents = getPinnedContents();
+    final unPinnedContents = pinnedContents.map((e) {
+      e.isPinned = false;
+      e.pinDateTime = null;
+      return e;
+    }).toList();
+
+    _contentsBox.putMany(unPinnedContents, mode: PutMode.update);
   }
 
   void removeContent(int id) {

@@ -14,7 +14,6 @@ import 'package:ai_personal_content_app/router.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_quill/flutter_quill.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 
@@ -67,7 +66,15 @@ class _ContentLibraryScreenState extends State<ContentLibraryScreen> {
       key: _scaffoldKey,
       appBar: CustomAppbar(
         title: "Library",
-        actions: [Icon(Icons.search_outlined, color: Colors.white)],
+        actions: [
+          IconButton(
+            onPressed: () {
+              context.push(RouteNames.searchContent);
+            },
+            style: IconButton.styleFrom(splashFactory: NoSplash.splashFactory),
+            icon: Icon(Icons.search_outlined, color: Colors.white),
+          ),
+        ],
       ),
       body: Padding(
         padding: EdgeInsets.symmetric(horizontal: 16.w),

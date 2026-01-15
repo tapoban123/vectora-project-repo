@@ -34,80 +34,19 @@ class _ViewItemScreenState extends State<ViewItemScreen> {
   late final bool _contentIsImage;
   late final bool contentIsPdf;
   late final ValueNotifier<bool> _isPinned;
+  Widget? previewIcon;
+  late final File contentFile;
 
   @override
   void initState() {
     content = widget.content;
+    contentFile = File(content.path);
     _contentIsNote = content.type == ContentFileType.NOTE.name;
     _contentIsImage = content.type == ContentFileType.IMAGE.name;
     contentIsPdf = content.type == ContentFileType.PDF.name;
-    _isPinned = ValueNotifier(context.read<PinItemsCubit>().checkIsContentPinned(content.id));
-
-    _scaffoldKey = GlobalKey();
-    super.initState();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    final optionsData = [
-      (
-        icon: Icons.chat_outlined,
-        color: null,
-        label: "Chat",
-        onTap: () {
-          _scaffoldKey.currentState?.showBottomSheet(
-            (context) => _ChatBottomSheetContent(scaffoldKey: _scaffoldKey),
-          );
-        },
-      ),
-      (
-        icon: Icons.push_pin_outlined,
-        color: null,
-        label: "Pin",
-        onTap: () {
-          if (_isPinned.value) {
-            context.read<PinItemsCubit>().unPinContent(content.id);
-          } else {
-            context.read<PinItemsCubit>().pinItem(content);
-          }
-          _isPinned.value = !_isPinned.value;
-        },
-      ),
-      (
-        icon: Icons.delete_outline,
-        color: AppColors.deepRedColor,
-        label: "Delete",
-        onTap: () {
-          showAppDialog(
-            context,
-            includeCancelButton: true,
-            confirmButtonColor: AppColors.deepRedColor,
-            title: "Delete Content",
-            message: "Are you sure you want to delete this content?",
-            buttonText: "Continue",
-            onConfirmTap: () {
-              context.read<ContentsManagerBloc>().add(
-                DeleteContent(cid: content.contentId, objectBoxId: content.id),
-              );
-              context.pop();
-            },
-          );
-        },
-      ),
-    ];
-
-    if (_contentIsNote) {
-      optionsData.insert(0, (
-        icon: Icons.edit,
-        color: null,
-        label: "Edit",
-        onTap: () {
-          context.push(RouteNames.createOrEditNote, extra: File(content.path));
-        },
-      ));
-    }
-
-    Widget? previewIcon;
+    _isPinned = ValueNotifier(
+      context.read<PinItemsCubit>().checkIsContentPinned(content.id),
+    );
 
     if (_contentIsNote) {
       final json = File(content.path).readAsStringSync();
@@ -128,6 +67,129 @@ class _ViewItemScreenState extends State<ViewItemScreen> {
         color: AppColors.offWhiteColor,
         size: 40.w,
       );
+    }
+
+    _scaffoldKey = GlobalKey();
+    super.initState();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final optionsData = [
+      (
+        icon: Icons.chat_outlined,
+        color: null,
+        label: "Chat",
+        onTap: () async {
+          final fileExists = await contentFile.exists();
+          if (context.mounted) {
+            if (fileExists) {
+              _scaffoldKey.currentState?.showBottomSheet(
+                (context) => _ChatBottomSheetContent(scaffoldKey: _scaffoldKey),
+              );
+            } else {
+              showSnackBarMessage(
+                context,
+                message: "Cannot chat with a deleted file.",
+              );
+            }
+          }
+        },
+      ),
+      (
+        icon: Icons.push_pin_outlined,
+        color: null,
+        label: "Pin",
+        onTap: () async {
+          final fileExists = await contentFile.exists();
+          if (context.mounted) {
+            if (fileExists) {
+              if (_isPinned.value) {
+                context.read<PinItemsCubit>().unPinContent(content.id);
+                showSnackBarMessage(context, message: "Item has been pinned.");
+              } else {
+                context.read<PinItemsCubit>().pinItem(content);
+                showSnackBarMessage(
+                  context,
+                  message: "Item has been unpinned.",
+                );
+              }
+              _isPinned.value = !_isPinned.value;
+            } else {
+              showSnackBarMessage(
+                context,
+                message: "Cannot perform PIN operations on deleted file.",
+              );
+            }
+          }
+        },
+      ),
+      (
+        icon: Icons.delete_outline,
+        color: AppColors.deepRedColor,
+        label: "Delete",
+        onTap: () async {
+          showAppDialog(
+            context,
+            includeCancelButton: true,
+            confirmButtonColor: AppColors.deepRedColor,
+            title: "Delete Content",
+            message: "Are you sure you want to delete this content?",
+            buttonText: "Continue",
+            onConfirmTap: () async {
+              final fileExists = await contentFile.exists();
+              if (context.mounted) {
+                if (fileExists) {
+                  context.read<ContentsManagerBloc>().add(
+                    DeleteContent(
+                      cid: content.contentId,
+                      objectBoxId: content.id,
+                      file: File(content.path),
+                    ),
+                  );
+                  showSnackBarMessage(
+                    context,
+                    message: "Content has been deleted.",
+                    actionButtonText: "UNDO",
+                    onTapActionButton: () {},
+                  );
+                  context.pop();
+                } else {
+                  showSnackBarMessage(
+                    context,
+                    message:
+                        "Cannot delete a file that has already been deleted.",
+                  );
+                }
+              }
+            },
+          );
+        },
+      ),
+    ];
+
+    if (_contentIsNote) {
+      optionsData.insert(0, (
+        icon: Icons.edit,
+        color: null,
+        label: "Edit",
+        onTap: () async {
+          final fileExists = await contentFile.exists();
+          if (context.mounted) {
+            if (fileExists) {
+              context.push(
+                RouteNames.createOrEditNote,
+                extra: File(content.path),
+              );
+            } else {
+              showSnackBarMessage(
+                context,
+                message: "Cannot edit a file that does not exist.",
+              );
+            }
+          }
+        },
+      ));
     }
 
     return Scaffold(
@@ -160,15 +222,23 @@ class _ViewItemScreenState extends State<ViewItemScreen> {
             Expanded(
               flex: 1,
               child: GestureDetector(
-                onTap: () {
-                  if (_contentIsImage) {
-                    context.push(
-                      RouteNames.viewPhoto,
-                      extra: {
-                        "path": content.path,
-                        "name": content.contentName,
-                      },
-                    );
+                onTap: () async {
+                  final fileExists = await contentFile.exists();
+                  if (context.mounted) {
+                    if (_contentIsImage && fileExists) {
+                      context.push(
+                        RouteNames.viewPhoto,
+                        extra: {
+                          "path": content.path,
+                          "name": content.contentName,
+                        },
+                      );
+                    } else {
+                      showSnackBarMessage(
+                        context,
+                        message: "File does not exist",
+                      );
+                    }
                   }
                 },
                 child: Container(

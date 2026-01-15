@@ -112,11 +112,9 @@ class _HomeScreenState extends State<HomeScreen> {
                       _sectionHeadingRow(
                         title: "Pinned",
                         dialogTitle: "Unpin All Items",
-                        message:
-                            "Are you sure you want to unpin all contents?",
+                        message: "Are you sure you want to unpin all contents?",
                         onConfirmDelete: () {
-                          // context
-                          //     .read<PinItemsCubit>();
+                          context.read<PinItemsCubit>().unPinAllContents();
                           context.pop();
                         },
                       ),
@@ -207,7 +205,7 @@ class _HomeScreenState extends State<HomeScreen> {
           onPressed: () {
             showAppDialog(
               context,
-              title: title,
+              title: dialogTitle,
               message: message,
               onConfirmTap: onConfirmDelete,
               includeCancelButton: true,
