@@ -33,6 +33,7 @@ class _ViewItemScreenState extends State<ViewItemScreen> {
   late final bool _contentIsNote;
   late final bool _contentIsImage;
   late final bool contentIsPdf;
+  late final ValueNotifier<bool> _isPinned;
 
   @override
   void initState() {
@@ -40,6 +41,7 @@ class _ViewItemScreenState extends State<ViewItemScreen> {
     _contentIsNote = content.type == ContentFileType.NOTE.name;
     _contentIsImage = content.type == ContentFileType.IMAGE.name;
     contentIsPdf = content.type == ContentFileType.PDF.name;
+    _isPinned = ValueNotifier(context.read<PinItemsCubit>().checkIsContentPinned(content.id));
 
     _scaffoldKey = GlobalKey();
     super.initState();
@@ -63,11 +65,12 @@ class _ViewItemScreenState extends State<ViewItemScreen> {
         color: null,
         label: "Pin",
         onTap: () {
-          if (content.isPinned) {
+          if (_isPinned.value) {
             context.read<PinItemsCubit>().unPinContent(content.id);
           } else {
             context.read<PinItemsCubit>().pinItem(content);
           }
+          _isPinned.value = !_isPinned.value;
         },
       ),
       (
@@ -222,15 +225,32 @@ class _ViewItemScreenState extends State<ViewItemScreen> {
                   40.verticalSpace,
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceAround,
-                    children: List.generate(
-                      optionsData.length,
-                      (index) => _ItemOptionsButton(
-                        icon: optionsData[index].icon,
-                        label: optionsData[index].label,
-                        onTap: optionsData[index].onTap,
-                        color: optionsData[index].color,
-                      ),
-                    ),
+                    children: List.generate(optionsData.length, (index) {
+                      final option = optionsData[index];
+                      if (option.label == "Pin") {
+                        return ValueListenableBuilder(
+                          valueListenable: _isPinned,
+                          builder: (context, isPinnedVal, child) =>
+                              _ItemOptionsButton(
+                                icon: option.icon,
+                                label: isPinnedVal ? "Pinned" : option.label,
+                                onTap: option.onTap,
+                                color: isPinnedVal
+                                    ? AppColors.greyColor
+                                    : optionsData[index].color,
+                                bgColor: isPinnedVal ? Colors.white : null,
+                                textColor: Colors.white,
+                              ),
+                        );
+                      }
+                      return _ItemOptionsButton(
+                        icon: option.icon,
+                        label: option.label,
+                        onTap: option.onTap,
+                        color: option.color,
+                        textColor: option.color,
+                      );
+                    }),
                   ),
                 ],
               ),
@@ -276,6 +296,8 @@ class _ItemOptionsButton extends StatelessWidget {
   final String label;
   final VoidCallback onTap;
   final Color? color;
+  final Color? bgColor;
+  final Color? textColor;
 
   const _ItemOptionsButton({
     super.key,
@@ -283,6 +305,8 @@ class _ItemOptionsButton extends StatelessWidget {
     required this.icon,
     required this.onTap,
     this.color,
+    this.bgColor,
+    this.textColor = Colors.white,
   });
 
   @override
@@ -295,7 +319,7 @@ class _ItemOptionsButton extends StatelessWidget {
           onPressed: onTap,
           style: IconButton.styleFrom(
             padding: EdgeInsetsGeometry.all(14.w),
-            backgroundColor: AppColors.greyColor,
+            backgroundColor: bgColor ?? AppColors.greyColor,
           ),
           icon: Icon(icon, color: color ?? Colors.white, size: 25.w),
         ),
@@ -304,7 +328,7 @@ class _ItemOptionsButton extends StatelessWidget {
           style: TextStyle(
             fontSize: 12.sp,
             fontVariations: [FontVariation.weight(600)],
-            color: color ?? Colors.white,
+            color: textColor,
           ),
         ),
       ],

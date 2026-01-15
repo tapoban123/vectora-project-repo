@@ -12,6 +12,10 @@ class PinItemsCubit extends Cubit<List<ContentsEntity>> {
 
   List<ContentsEntity> _pinnedContents = [];
 
+  bool checkIsContentPinned(int id){
+    return _contentsLocalStorageService.isContentPinned(id);
+  }
+
   void pinItem(ContentsEntity content) {
     _contentsLocalStorageService.pinContent(content.id);
     _pinnedContents.insert(0, content);
