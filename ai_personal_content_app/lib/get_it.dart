@@ -3,6 +3,7 @@ import 'package:ai_personal_content_app/core/common/services/embeddings_storage_
 import 'package:ai_personal_content_app/features/home/controllers/cubits/recent_items_cubit.dart';
 import 'package:ai_personal_content_app/features/home/controllers/new_contents_bloc/new_contents_bloc.dart';
 import 'package:ai_personal_content_app/features/home/services/recent_contents_local_db_service.dart';
+import 'package:ai_personal_content_app/features/items/controllers/cubits/pinned_items_cubit.dart';
 import 'package:ai_personal_content_app/features/search/controllers/contents_manager_bloc/contents_manager_bloc.dart';
 import 'package:ai_personal_content_app/features/search/controllers/search_contents_bloc/search_contents_bloc.dart';
 import 'package:ai_personal_content_app/features/search/services/contents_local_storage_service.dart';
@@ -36,6 +37,9 @@ void init() {
       contentsLocalStorageService: getIt(),
       recentContentsLocalDbService: getIt(),
     ),
+  );
+  getIt.registerFactory<PinItemsCubit>(
+    () => PinItemsCubit(contentsLocalStorageService: getIt()),
   );
 
   getIt.registerSingleton<RecentContentsLocalDbService>(

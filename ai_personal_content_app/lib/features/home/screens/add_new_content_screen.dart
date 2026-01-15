@@ -5,7 +5,6 @@ import 'package:ai_personal_content_app/core/common/widgets/custom_button.dart';
 import 'package:ai_personal_content_app/core/theme/app_colors.dart';
 import 'package:ai_personal_content_app/core/utils/utils.dart';
 import 'package:ai_personal_content_app/features/home/controllers/new_contents_bloc/new_contents_bloc.dart';
-import 'package:ai_personal_content_app/features/home/controllers/new_contents_bloc/new_contents_cubit.dart';
 import 'package:ai_personal_content_app/features/home/controllers/new_contents_bloc/new_contents_events.dart';
 import 'package:ai_personal_content_app/features/home/controllers/new_contents_bloc/new_contents_states.dart';
 import 'package:ai_personal_content_app/features/home/models/preview_file_model.dart';
@@ -270,7 +269,9 @@ class _NewContentWidget extends StatelessWidget {
                     ),
                     IconButton(
                       onPressed: () {
-                        context.read<NewContentsCubit>().removeContent(index);
+                        context.read<NewContentsBloc>().add(
+                          RemoveContentEvent(index: index),
+                        );
                       },
                       style: IconButton.styleFrom(
                         backgroundColor: AppColors.lightBlueGreyColor,

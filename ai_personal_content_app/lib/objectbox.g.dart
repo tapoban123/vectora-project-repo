@@ -23,7 +23,7 @@ final _entities = <obx_int.ModelEntity>[
   obx_int.ModelEntity(
     id: const obx_int.IdUid(2, 8128517059530730439),
     name: 'ContentsEntity',
-    lastPropertyId: const obx_int.IdUid(12, 1205628442996170657),
+    lastPropertyId: const obx_int.IdUid(13, 662594160804806353),
     flags: 0,
     properties: <obx_int.ModelProperty>[
       obx_int.ModelProperty(
@@ -99,6 +99,12 @@ final _entities = <obx_int.ModelEntity>[
         type: 1,
         flags: 8,
         indexId: const obx_int.IdUid(7, 8889181047034173676),
+      ),
+      obx_int.ModelProperty(
+        id: const obx_int.IdUid(13, 662594160804806353),
+        name: 'pinDateTime',
+        type: 10,
+        flags: 0,
       ),
     ],
     relations: <obx_int.ModelRelation>[],
@@ -220,7 +226,7 @@ obx_int.ModelDefinition getObjectBoxModel() {
         final scannedImageTextsOffset = object.scannedImageTexts == null
             ? null
             : fbb.writeString(object.scannedImageTexts!);
-        fbb.startTable(13);
+        fbb.startTable(14);
         fbb.addInt64(0, object.id);
         fbb.addOffset(1, contentIdOffset);
         fbb.addOffset(2, pathOffset);
@@ -233,6 +239,7 @@ obx_int.ModelDefinition getObjectBoxModel() {
         fbb.addOffset(9, imageDescriptionOffset);
         fbb.addOffset(10, scannedImageTextsOffset);
         fbb.addBool(11, object.isPinned);
+        fbb.addInt64(12, object.pinDateTime?.millisecondsSinceEpoch);
         fbb.finish(fbb.endTable());
         return object.id;
       },
@@ -243,6 +250,11 @@ obx_int.ModelDefinition getObjectBoxModel() {
           buffer,
           rootOffset,
           20,
+        );
+        final pinDateTimeValue = const fb.Int64Reader().vTableGetNullable(
+          buffer,
+          rootOffset,
+          28,
         );
         final contentIdParam = const fb.StringReader(
           asciiOptimization: true,
@@ -283,19 +295,24 @@ obx_int.ModelDefinition getObjectBoxModel() {
         final updatedAtParam = updatedAtValue == null
             ? null
             : DateTime.fromMillisecondsSinceEpoch(updatedAtValue);
-        final object = ContentsEntity(
-          contentId: contentIdParam,
-          path: pathParam,
-          contentName: contentNameParam,
-          imageDescription: imageDescriptionParam,
-          scannedImageTexts: scannedImageTextsParam,
-          isPinned: isPinnedParam,
-          contentSizeInBytes: contentSizeInBytesParam,
-          extension: extensionParam,
-          type: typeParam,
-          createdAt: createdAtParam,
-          updatedAt: updatedAtParam,
-        )..id = const fb.Int64Reader().vTableGet(buffer, rootOffset, 4, 0);
+        final object =
+            ContentsEntity(
+                contentId: contentIdParam,
+                path: pathParam,
+                contentName: contentNameParam,
+                imageDescription: imageDescriptionParam,
+                scannedImageTexts: scannedImageTextsParam,
+                isPinned: isPinnedParam,
+                contentSizeInBytes: contentSizeInBytesParam,
+                extension: extensionParam,
+                type: typeParam,
+                createdAt: createdAtParam,
+                updatedAt: updatedAtParam,
+              )
+              ..id = const fb.Int64Reader().vTableGet(buffer, rootOffset, 4, 0)
+              ..pinDateTime = pinDateTimeValue == null
+                  ? null
+                  : DateTime.fromMillisecondsSinceEpoch(pinDateTimeValue);
 
         return object;
       },
@@ -409,6 +426,11 @@ class ContentsEntity_ {
   /// See [ContentsEntity.isPinned].
   static final isPinned = obx.QueryBooleanProperty<ContentsEntity>(
     _entities[0].properties[11],
+  );
+
+  /// See [ContentsEntity.pinDateTime].
+  static final pinDateTime = obx.QueryDateProperty<ContentsEntity>(
+    _entities[0].properties[12],
   );
 }
 

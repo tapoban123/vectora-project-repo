@@ -19,6 +19,9 @@ class ContentsEntity {
   @Index()
   bool isPinned = false;
 
+  @Property(type: PropertyType.date)
+  DateTime? pinDateTime;
+
   @Property(type: PropertyType.int)
   int contentSizeInBytes;
 

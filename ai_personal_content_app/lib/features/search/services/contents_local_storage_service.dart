@@ -1,3 +1,4 @@
+import 'dart:developer';
 import 'dart:io';
 
 import 'package:ai_personal_content_app/core/common/constants.dart';
@@ -10,8 +11,10 @@ import 'package:uuid/uuid.dart';
 class ContentsLocalStorageService {
   final _contentsBox = objectBoxInstance.store.box<ContentsEntity>();
 
-  Future<String> storeFileToAppDirectory(File file,
-      ContentFileType fileType,) async {
+  Future<String> storeFileToAppDirectory(
+    File file,
+    ContentFileType fileType,
+  ) async {
     final appDirectory = await getApplicationDocumentsDirectory();
     final dirPath = appDirectory.path;
 
@@ -35,8 +38,30 @@ class ContentsLocalStorageService {
     final content = _contentsBox.get(id);
     if (content != null) {
       content.isPinned = true;
+      content.pinDateTime = DateTime.now();
       _contentsBox.put(content, mode: PutMode.update);
     }
+  }
+
+  void unPinContent(int id) {
+    final content = _contentsBox.get(id);
+    if (content != null) {
+      content.isPinned = false;
+      content.pinDateTime = null;
+      _contentsBox.put(content, mode: PutMode.put);
+    }
+  }
+
+  List<ContentsEntity> getPinnedContents() {
+    final query = _contentsBox
+        .query(ContentsEntity_.isPinned.equals(true))
+        .order(ContentsEntity_.pinDateTime, flags: Order.descending)
+        .build();
+
+    final results = query.find();
+    query.close();
+
+    return results;
   }
 
   void removeContent(int id) {

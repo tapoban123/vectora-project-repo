@@ -40,5 +40,7 @@ class RecentItemsCubit extends Cubit<List<ContentsEntity>> {
 
   void clearAllRecentItems()async{
     _recentContentsLocalDbService.clear();
+    _recentItems.clear();
+    emit(List.from(_recentItems));
   }
 }

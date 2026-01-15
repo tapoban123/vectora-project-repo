@@ -36,8 +36,8 @@ final router = GoRouter(
     GoRoute(
       path: RouteNames.viewItemOptions,
       builder: (context, state) {
-        final content = state.extra as Map<String, dynamic>?;
-        return ViewItemScreen(content: content?["content"]);
+        final content = state.extra as Map<String, dynamic>;
+        return ViewItemScreen(content: content["content"]);
       },
     ),
     GoRoute(

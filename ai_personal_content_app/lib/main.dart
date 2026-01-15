@@ -4,6 +4,7 @@ import 'package:ai_personal_content_app/core/theme/app_fonts.dart';
 import 'package:ai_personal_content_app/core/utils/utils.dart';
 import 'package:ai_personal_content_app/features/home/controllers/cubits/recent_items_cubit.dart';
 import 'package:ai_personal_content_app/features/home/controllers/new_contents_bloc/new_contents_bloc.dart';
+import 'package:ai_personal_content_app/features/items/controllers/cubits/pinned_items_cubit.dart';
 import 'package:ai_personal_content_app/features/search/controllers/contents_manager_bloc/contents_manager_bloc.dart';
 import 'package:ai_personal_content_app/features/search/controllers/search_contents_bloc/search_contents_bloc.dart';
 import 'package:ai_personal_content_app/get_it.dart';
@@ -37,11 +38,11 @@ class MyApp extends StatelessWidget {
       splitScreenMode: true,
       child: MultiBlocProvider(
         providers: [
-          // BlocProvider(create: (context) => NewContentsCubit()),
           BlocProvider(create: (context) => getIt<NewContentsBloc>()),
           BlocProvider(create: (context) => getIt<ContentsManagerBloc>()),
           BlocProvider(create: (context) => getIt<SearchContentsBloc>()),
           BlocProvider(create: (context) => getIt<RecentItemsCubit>()),
+          BlocProvider(create: (context) => getIt<PinItemsCubit>()),
         ],
         child: MaterialApp.router(
           title: "AI Personal Content Universe",

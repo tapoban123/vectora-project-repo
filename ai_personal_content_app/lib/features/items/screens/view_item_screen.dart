@@ -6,6 +6,7 @@ import 'package:ai_personal_content_app/core/common/widgets/custom_appbar.dart';
 import 'package:ai_personal_content_app/core/theme/app_colors.dart';
 import 'package:ai_personal_content_app/core/theme/app_svgs.dart';
 import 'package:ai_personal_content_app/core/utils/utils.dart';
+import 'package:ai_personal_content_app/features/items/controllers/cubits/pinned_items_cubit.dart';
 import 'package:ai_personal_content_app/features/search/controllers/contents_manager_bloc/contents_manager_bloc.dart';
 import 'package:ai_personal_content_app/features/search/controllers/contents_manager_bloc/contents_manager_events.dart';
 import 'package:ai_personal_content_app/features/search/entities/contents_entity.dart';
@@ -57,7 +58,18 @@ class _ViewItemScreenState extends State<ViewItemScreen> {
           );
         },
       ),
-      (icon: Icons.push_pin_outlined, color: null, label: "Pin", onTap: () {}),
+      (
+        icon: Icons.push_pin_outlined,
+        color: null,
+        label: "Pin",
+        onTap: () {
+          if (content.isPinned) {
+            context.read<PinItemsCubit>().unPinContent(content.id);
+          } else {
+            context.read<PinItemsCubit>().pinItem(content);
+          }
+        },
+      ),
       (
         icon: Icons.delete_outline,
         color: AppColors.deepRedColor,

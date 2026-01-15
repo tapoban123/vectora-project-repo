@@ -5,7 +5,7 @@
   "entities": [
     {
       "id": "2:8128517059530730439",
-      "lastPropertyId": "12:1205628442996170657",
+      "lastPropertyId": "13:662594160804806353",
       "name": "ContentsEntity",
       "properties": [
         {
@@ -72,6 +72,11 @@
           "indexId": "7:8889181047034173676",
           "type": 1,
           "flags": 8
+        },
+        {
+          "id": "13:662594160804806353",
+          "name": "pinDateTime",
+          "type": 10
         }
       ],
       "relations": []
