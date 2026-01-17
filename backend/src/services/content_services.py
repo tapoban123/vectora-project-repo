@@ -62,6 +62,10 @@ def generate_text_embeddings_gemini(text: str):
             continue
 
 
+def generate_pdf_embeddings(pdf: UploadFile):
+    pass
+
+
 async def generate_image_embeddings_voyageai(image: UploadFile):
     """Returns multimodal embeddings of an image generated using the VoyageAI embedding model."""
     image_contents = await image.read()
