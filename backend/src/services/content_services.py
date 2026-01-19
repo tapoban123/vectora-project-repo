@@ -1,5 +1,8 @@
 from io import BytesIO
 
+import fitz
+import pymupdf
+
 from fastapi import UploadFile
 import voyageai
 from PIL import Image
@@ -10,6 +13,7 @@ from google.genai import types, errors
 from src.core.constants import VOYAGE_API_SECRET, IMAGE_EMBEDDING_MODEL, COHERE_API_KEY, GEMINI_API_KEY
 from src.core.prompts import IMAGE_DESCRIPTION_PROMPT
 from src.core.utils import clean_vision_text
+from src.repositories.pdf_data_and_embedding_repo import PdfDataAndEmbeddingRepository
 
 voyage_client = voyageai.Client(api_key=VOYAGE_API_SECRET)
 co = cohere.ClientV2(api_key=COHERE_API_KEY)
@@ -62,8 +66,12 @@ def generate_text_embeddings_gemini(text: str):
             continue
 
 
-def generate_pdf_embeddings(pdf: UploadFile):
-    pass
+async def generate_pdf_embeddings(pdf: UploadFile):
+    contents = await pdf.read()
+    processor = PdfDataAndEmbeddingRepository(contents)
+
+    return {"text": processor.extract_text(),
+            "images": processor.extract_images()}
 
 
 async def generate_image_embeddings_voyageai(image: UploadFile):
