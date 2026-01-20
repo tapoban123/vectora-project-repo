@@ -5,7 +5,7 @@
   "entities": [
     {
       "id": "2:8128517059530730439",
-      "lastPropertyId": "13:662594160804806353",
+      "lastPropertyId": "15:884317820286076131",
       "name": "ContentsEntity",
       "properties": [
         {
@@ -57,11 +57,6 @@
           "type": 10
         },
         {
-          "id": "10:2791187969336182065",
-          "name": "imageDescription",
-          "type": 9
-        },
-        {
           "id": "11:3958599634335642310",
           "name": "scannedImageTexts",
           "type": 9
@@ -77,6 +72,16 @@
           "id": "13:662594160804806353",
           "name": "pinDateTime",
           "type": 10
+        },
+        {
+          "id": "14:4886866342222916058",
+          "name": "imageKeywords",
+          "type": 9
+        },
+        {
+          "id": "15:884317820286076131",
+          "name": "docExtractedTexts",
+          "type": 9
         }
       ],
       "relations": []
@@ -130,7 +135,8 @@
   "retiredPropertyUids": [
     6325179138622283954,
     7425859078920400728,
-    5883576386038801653
+    5883576386038801653,
+    2791187969336182065
   ],
   "retiredRelationUids": [],
   "version": 1

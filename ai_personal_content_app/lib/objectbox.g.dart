@@ -23,7 +23,7 @@ final _entities = <obx_int.ModelEntity>[
   obx_int.ModelEntity(
     id: const obx_int.IdUid(2, 8128517059530730439),
     name: 'ContentsEntity',
-    lastPropertyId: const obx_int.IdUid(13, 662594160804806353),
+    lastPropertyId: const obx_int.IdUid(15, 884317820286076131),
     flags: 0,
     properties: <obx_int.ModelProperty>[
       obx_int.ModelProperty(
@@ -82,12 +82,6 @@ final _entities = <obx_int.ModelEntity>[
         flags: 0,
       ),
       obx_int.ModelProperty(
-        id: const obx_int.IdUid(10, 2791187969336182065),
-        name: 'imageDescription',
-        type: 9,
-        flags: 0,
-      ),
-      obx_int.ModelProperty(
         id: const obx_int.IdUid(11, 3958599634335642310),
         name: 'scannedImageTexts',
         type: 9,
@@ -104,6 +98,18 @@ final _entities = <obx_int.ModelEntity>[
         id: const obx_int.IdUid(13, 662594160804806353),
         name: 'pinDateTime',
         type: 10,
+        flags: 0,
+      ),
+      obx_int.ModelProperty(
+        id: const obx_int.IdUid(14, 4886866342222916058),
+        name: 'imageKeywords',
+        type: 9,
+        flags: 0,
+      ),
+      obx_int.ModelProperty(
+        id: const obx_int.IdUid(15, 884317820286076131),
+        name: 'docExtractedTexts',
+        type: 9,
         flags: 0,
       ),
     ],
@@ -198,6 +204,7 @@ obx_int.ModelDefinition getObjectBoxModel() {
       6325179138622283954,
       7425859078920400728,
       5883576386038801653,
+      2791187969336182065,
     ],
     retiredRelationUids: const [],
     modelVersion: 5,
@@ -220,13 +227,16 @@ obx_int.ModelDefinition getObjectBoxModel() {
         final contentNameOffset = fbb.writeString(object.contentName);
         final extensionOffset = fbb.writeString(object.extension);
         final typeOffset = fbb.writeString(object.type);
-        final imageDescriptionOffset = object.imageDescription == null
-            ? null
-            : fbb.writeString(object.imageDescription!);
         final scannedImageTextsOffset = object.scannedImageTexts == null
             ? null
             : fbb.writeString(object.scannedImageTexts!);
-        fbb.startTable(14);
+        final imageKeywordsOffset = object.imageKeywords == null
+            ? null
+            : fbb.writeString(object.imageKeywords!);
+        final docExtractedTextsOffset = object.docExtractedTexts == null
+            ? null
+            : fbb.writeString(object.docExtractedTexts!);
+        fbb.startTable(16);
         fbb.addInt64(0, object.id);
         fbb.addOffset(1, contentIdOffset);
         fbb.addOffset(2, pathOffset);
@@ -236,10 +246,11 @@ obx_int.ModelDefinition getObjectBoxModel() {
         fbb.addInt32(6, object.contentSizeInBytes);
         fbb.addInt64(7, object.createdAt.millisecondsSinceEpoch);
         fbb.addInt64(8, object.updatedAt?.millisecondsSinceEpoch);
-        fbb.addOffset(9, imageDescriptionOffset);
         fbb.addOffset(10, scannedImageTextsOffset);
         fbb.addBool(11, object.isPinned);
         fbb.addInt64(12, object.pinDateTime?.millisecondsSinceEpoch);
+        fbb.addOffset(13, imageKeywordsOffset);
+        fbb.addOffset(14, docExtractedTextsOffset);
         fbb.finish(fbb.endTable());
         return object.id;
       },
@@ -265,12 +276,15 @@ obx_int.ModelDefinition getObjectBoxModel() {
         final contentNameParam = const fb.StringReader(
           asciiOptimization: true,
         ).vTableGet(buffer, rootOffset, 10, '');
-        final imageDescriptionParam = const fb.StringReader(
+        final imageKeywordsParam = const fb.StringReader(
           asciiOptimization: true,
-        ).vTableGetNullable(buffer, rootOffset, 22);
+        ).vTableGetNullable(buffer, rootOffset, 30);
         final scannedImageTextsParam = const fb.StringReader(
           asciiOptimization: true,
         ).vTableGetNullable(buffer, rootOffset, 24);
+        final docExtractedTextsParam = const fb.StringReader(
+          asciiOptimization: true,
+        ).vTableGetNullable(buffer, rootOffset, 32);
         final isPinnedParam = const fb.BoolReader().vTableGet(
           buffer,
           rootOffset,
@@ -300,8 +314,9 @@ obx_int.ModelDefinition getObjectBoxModel() {
                 contentId: contentIdParam,
                 path: pathParam,
                 contentName: contentNameParam,
-                imageDescription: imageDescriptionParam,
+                imageKeywords: imageKeywordsParam,
                 scannedImageTexts: scannedImageTextsParam,
+                docExtractedTexts: docExtractedTextsParam,
                 isPinned: isPinnedParam,
                 contentSizeInBytes: contentSizeInBytesParam,
                 extension: extensionParam,
@@ -413,24 +428,29 @@ class ContentsEntity_ {
     _entities[0].properties[8],
   );
 
-  /// See [ContentsEntity.imageDescription].
-  static final imageDescription = obx.QueryStringProperty<ContentsEntity>(
-    _entities[0].properties[9],
-  );
-
   /// See [ContentsEntity.scannedImageTexts].
   static final scannedImageTexts = obx.QueryStringProperty<ContentsEntity>(
-    _entities[0].properties[10],
+    _entities[0].properties[9],
   );
 
   /// See [ContentsEntity.isPinned].
   static final isPinned = obx.QueryBooleanProperty<ContentsEntity>(
-    _entities[0].properties[11],
+    _entities[0].properties[10],
   );
 
   /// See [ContentsEntity.pinDateTime].
   static final pinDateTime = obx.QueryDateProperty<ContentsEntity>(
+    _entities[0].properties[11],
+  );
+
+  /// See [ContentsEntity.imageKeywords].
+  static final imageKeywords = obx.QueryStringProperty<ContentsEntity>(
     _entities[0].properties[12],
+  );
+
+  /// See [ContentsEntity.docExtractedTexts].
+  static final docExtractedTexts = obx.QueryStringProperty<ContentsEntity>(
+    _entities[0].properties[13],
   );
 }
 

@@ -2,8 +2,9 @@ from fastapi import APIRouter, Body, UploadFile, File
 from typing import Annotated
 
 import uuid
-from src.schemas.content_operations_schemas import TextEmbeddingSchema
-from src.services.content_services import generate_text_embeddings_gemini, generate_image_embeddings_from_text, generate_pdf_embeddings
+from src.schemas.content_operations_schemas import TextEmbeddingSchema, PdfEmbeddingResponseSchema
+from src.services.content_services import generate_text_embeddings_gemini, generate_image_embeddings_from_text, \
+    generate_pdf_embeddings
 
 content_router = APIRouter(prefix="/content")
 
@@ -47,6 +48,13 @@ async def get_text_embeddings(textData: TextEmbeddingSchema):
     }
 
 
-@content_router.post("/embeddings/pdf")
-async def generate_pdf_embeddings_and_extract_content(pdf: UploadFile):
-    return await generate_pdf_embeddings(pdf)
+@content_router.post("/embeddings/pdf", response_model=PdfEmbeddingResponseSchema)
+async def generate_pdf_embeddings_and_extract_content(pdf: UploadFile,
+                                                      cid: str = Body(default=None),
+                                                      contentType: str = Body(default=None)):
+    result = await generate_pdf_embeddings(pdf)
+    return {
+        **result.model_dump(),
+        "cid": cid,
+        "contentType": contentType
+    }

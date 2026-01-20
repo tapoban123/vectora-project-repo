@@ -12,8 +12,9 @@ from google import genai
 from google.genai import types, errors
 from src.core.constants import VOYAGE_API_SECRET, IMAGE_EMBEDDING_MODEL, COHERE_API_KEY, GEMINI_API_KEY
 from src.core.prompts import IMAGE_DESCRIPTION_PROMPT
-from src.core.utils import clean_vision_text
+from src.core.utils import clean_content_text
 from src.repositories.pdf_data_and_embedding_repo import PdfDataAndEmbeddingRepository
+from src.schemas.content_operations_schemas import PdfEmbeddingResponseSchema
 
 voyage_client = voyageai.Client(api_key=VOYAGE_API_SECRET)
 co = cohere.ClientV2(api_key=COHERE_API_KEY)
@@ -24,7 +25,7 @@ async def generate_image_embeddings_from_text(image: UploadFile):
     """Image -> Image description -> Text Embedding of description -> Return cid, description, embeddings, file type."""
 
     image_description = await _generate_image_description(image)
-    clean_des = clean_vision_text(image_description)
+    clean_des = clean_content_text(image_description)
     embeddings = generate_text_embeddings_gemini(clean_des)
     return {"description": clean_des, "embeddings": embeddings}
 
@@ -66,43 +67,55 @@ def generate_text_embeddings_gemini(text: str):
             continue
 
 
-async def generate_pdf_embeddings(pdf: UploadFile):
+async def generate_pdf_embeddings(pdf: UploadFile) -> PdfEmbeddingResponseSchema:
     contents = await pdf.read()
     processor = PdfDataAndEmbeddingRepository(contents)
 
-    return {"text": processor.extract_text(),
-            "images": processor.extract_images()}
+    # return {"text": processor.extract_text(),
+    #         "images": processor.extract_images()}
+
+    text = processor.extract_text()
+    clean_text = clean_content_text(text)
+    embeddings = generate_text_embeddings_gemini(clean_text)
+
+    return PdfEmbeddingResponseSchema(
+        embeddings=embeddings,
+        extractedText=clean_text,
+    )
 
 
-async def generate_image_embeddings_voyageai(image: UploadFile):
-    """Returns multimodal embeddings of an image generated using the VoyageAI embedding model."""
-    image_contents = await image.read()
-    img = Image.open(BytesIO(image_contents)).convert("RGB")
-    inputs = [
-        [img]
-    ]
-    result = voyage_client.multimodal_embed(inputs, model=IMAGE_EMBEDDING_MODEL,
-                                            output_dimension=512,
-                                            input_type="document", )
-    return result
-
-
-def generate_text_embeddings_cohere(text: str):
-    """Returns embeddings of texts generated using the Cohere embedding model."""
-    error_count = 0
-    while True:
-        try:
-            text_inputs = ["i love soup", "soup is my favorite", "london is far away"]
-
-            response = co.embed(
-                texts=[text],
-                model="embed-v4.0",
-                input_type="search_document",
-                embedding_types=["float"],
-                output_dimension=512
-            )
-            return response
-        except cohere.errors.too_many_requests_error.TooManyRequestsError:
-            error_count += 1
-            print(f"[Cohere] TooManyRequestsError occurred; Count: {error_count}")
-            continue
+# --------------------------------------------------------------
+# | NOTE: BELOW FUNCTIONS ARE NOT REQUIRED ANYWHERE AS OF NOW. |
+# --------------------------------------------------------------
+# async def generate_image_embeddings_voyageai(image: UploadFile):
+#     """Returns multimodal embeddings of an image generated using the VoyageAI embedding model."""
+#     image_contents = await image.read()
+#     img = Image.open(BytesIO(image_contents)).convert("RGB")
+#     inputs = [
+#         [img]
+#     ]
+#     result = voyage_client.multimodal_embed(inputs, model=IMAGE_EMBEDDING_MODEL,
+#                                             output_dimension=512,
+#                                             input_type="document", )
+#     return result
+#
+#
+# def generate_text_embeddings_cohere(text: str):
+#     """Returns embeddings of texts generated using the Cohere embedding model."""
+#     error_count = 0
+#     while True:
+#         try:
+#             text_inputs = ["i love soup", "soup is my favorite", "london is far away"]
+#
+#             response = co.embed(
+#                 texts=[text],
+#                 model="embed-v4.0",
+#                 input_type="search_document",
+#                 embedding_types=["float"],
+#                 output_dimension=512
+#             )
+#             return response
+#         except cohere.errors.too_many_requests_error.TooManyRequestsError:
+#             error_count += 1
+#             print(f"[Cohere] TooManyRequestsError occurred; Count: {error_count}")
+#             continue

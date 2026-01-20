@@ -111,4 +111,54 @@ class EmbeddingGenerationService {
       return Left(CustomApiException(message: e.toString()));
     }
   }
+
+  Future<Either<ApiException, ContentEmbeddingResponseModel>>
+  generatePdfEmbeddings({
+    String? cid,
+    String? contentType,
+    required File pdf,
+    Function(int count, int total)? onReceiveProgress,
+  }) async {
+    try {
+      final formData = FormData.fromMap({
+        "cid": cid,
+        "contentType": contentType,
+        "pdf": await MultipartFile.fromFile(pdf.path),
+      });
+      final response = await _dio.post(
+        ApiRoutes.generatePdfEmbeddings,
+        data: formData,
+        onReceiveProgress: onReceiveProgress,
+      );
+
+      if (response.statusCode == 200) {
+        return Right(ContentEmbeddingResponseModel.fromJson(response.data));
+      }
+      return Left(
+        CustomApiException(
+          message: response.statusMessage ?? "An error has occurred.",
+          statusCode: response.statusCode,
+        ),
+      );
+    } on DioException catch (e) {
+      switch (e.type) {
+        case DioExceptionType.sendTimeout:
+          return Left(SendTimeoutException());
+        case DioExceptionType.receiveTimeout:
+          return Left(ReceiveTimeoutException());
+        default:
+          return Left(
+            CustomApiException(
+              message: e.message.toString(),
+              statusCode: e.response?.statusCode,
+            ),
+          );
+      }
+    } on SocketException catch (e) {
+      return Left(NoInternetConnectionException());
+    } catch (e, stk) {
+      logNetworkError("GENERATE PDF EMBEDDINGS ERROR", e.toString(), stk);
+      return Left(CustomApiException(message: e.toString()));
+    }
+  }
 }

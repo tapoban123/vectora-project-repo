@@ -15,7 +15,7 @@ from PIL import Image
 #     return base64.b64decode(buffer.getvalue()).decode("utf-8")
 
 
-def clean_vision_text(text: str) -> str:
+def clean_content_text(text: str) -> str:
     # Remove Markdown bold, italics, code ticks
     text = re.sub(r"[*_`]+", "", text)
 

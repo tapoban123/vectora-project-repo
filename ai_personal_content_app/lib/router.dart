@@ -23,6 +23,7 @@ class RouteNames {
   static const String searchContent = "/search-content";
   static const String contentLibrary = "/content-library";
   static const String viewPhoto = "/view-photo";
+  static const String viewPdf = "/view-pdf";
 }
 
 final router = GoRouter(
@@ -68,6 +69,13 @@ final router = GoRouter(
       builder: (context, state) {
         final data = state.extra as Map;
         return ViewPhotoScreen(path: data["path"], name: data["name"]);
+      },
+    ),
+    GoRoute(
+      path: RouteNames.viewPdf,
+      builder: (context, state) {
+        final data = state.extra as Map;
+        return PdfViewScreen(path: data["path"], name: data["name"]);
       },
     ),
   ],

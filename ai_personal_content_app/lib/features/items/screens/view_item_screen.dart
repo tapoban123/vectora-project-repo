@@ -7,9 +7,11 @@ import 'package:ai_personal_content_app/core/theme/app_colors.dart';
 import 'package:ai_personal_content_app/core/theme/app_svgs.dart';
 import 'package:ai_personal_content_app/core/utils/utils.dart';
 import 'package:ai_personal_content_app/features/items/controllers/cubits/pinned_items_cubit.dart';
+import 'package:ai_personal_content_app/features/items/usecases/is_content_pinned.dart';
 import 'package:ai_personal_content_app/features/search/controllers/contents_manager_bloc/contents_manager_bloc.dart';
 import 'package:ai_personal_content_app/features/search/controllers/contents_manager_bloc/contents_manager_events.dart';
 import 'package:ai_personal_content_app/features/search/entities/contents_entity.dart';
+import 'package:ai_personal_content_app/get_it.dart';
 import 'package:ai_personal_content_app/router.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -32,22 +34,27 @@ class _ViewItemScreenState extends State<ViewItemScreen> {
   late final ContentsEntity content;
   late final bool _contentIsNote;
   late final bool _contentIsImage;
-  late final bool contentIsPdf;
+  late final bool _contentIsPdf;
   late final ValueNotifier<bool> _isPinned;
+
   Widget? previewIcon;
   late final File contentFile;
 
   @override
   void initState() {
+    super.initState();
+
     content = widget.content;
     contentFile = File(content.path);
     _contentIsNote = content.type == ContentFileType.NOTE.name;
     _contentIsImage = content.type == ContentFileType.IMAGE.name;
-    contentIsPdf = content.type == ContentFileType.PDF.name;
-    _isPinned = ValueNotifier(
-      context.read<PinItemsCubit>().checkIsContentPinned(content.id),
-    );
+    _contentIsPdf = content.type == ContentFileType.PDF.name;
+    _isPinned = ValueNotifier(getIt<IsContentPinned>()(content.id));
+    _scaffoldKey = GlobalKey();
+  }
 
+  @override
+  Widget build(BuildContext context) {
     if (_contentIsNote) {
       final json = File(content.path).readAsStringSync();
       final String text = Document.fromJson(jsonDecode(json)).toPlainText();
@@ -61,20 +68,14 @@ class _ViewItemScreenState extends State<ViewItemScreen> {
           selectionColor: Colors.black,
         ),
       );
-    } else if (contentIsPdf) {
+    } else if (_contentIsPdf) {
       previewIcon = Icon(
         Icons.picture_as_pdf,
         color: AppColors.offWhiteColor,
-        size: 40.w,
+        size: getScreenWidth(context) * 0.6,
       );
     }
 
-    _scaffoldKey = GlobalKey();
-    super.initState();
-  }
-
-  @override
-  Widget build(BuildContext context) {
     final optionsData = [
       (
         icon: Icons.chat_outlined,
@@ -225,14 +226,24 @@ class _ViewItemScreenState extends State<ViewItemScreen> {
                 onTap: () async {
                   final fileExists = await contentFile.exists();
                   if (context.mounted) {
-                    if (_contentIsImage && fileExists) {
-                      context.push(
-                        RouteNames.viewPhoto,
-                        extra: {
-                          "path": content.path,
-                          "name": content.contentName,
-                        },
-                      );
+                    if (fileExists) {
+                      if (_contentIsImage) {
+                        context.push(
+                          RouteNames.viewPhoto,
+                          extra: {
+                            "path": content.path,
+                            "name": content.contentName,
+                          },
+                        );
+                      } else if (_contentIsPdf) {
+                        context.push(
+                          RouteNames.viewPdf,
+                          extra: {
+                            "path": content.path,
+                            "name": content.contentName,
+                          },
+                        );
+                      }
                     } else {
                       showSnackBarMessage(
                         context,
@@ -242,6 +253,7 @@ class _ViewItemScreenState extends State<ViewItemScreen> {
                   }
                 },
                 child: Container(
+                  width: double.infinity,
                   height: getScreenHeight(context) * 0.5,
                   padding: EdgeInsets.all(10.w),
                   decoration: BoxDecoration(

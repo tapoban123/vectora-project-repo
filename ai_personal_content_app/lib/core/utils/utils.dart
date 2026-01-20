@@ -1,11 +1,14 @@
+import 'dart:developer';
 import 'dart:io';
 
 import 'package:ai_personal_content_app/core/theme/app_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_pdfview/flutter_pdfview.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import 'package:photo_view/photo_view.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 final SystemUiOverlayStyle commonSystemUiOverlayStyle = SystemUiOverlayStyle(
   systemNavigationBarColor: AppColors.backgroundColor,
@@ -34,7 +37,7 @@ void showSnackBarMessage(
             spacing: 12.w,
             mainAxisSize: MainAxisSize.min,
             children: [
-              Icon(Icons.check_circle, color: AppColors.blueColor, size: 18.w,),
+              Icon(Icons.check_circle, color: AppColors.blueColor, size: 18.w),
               Text(
                 message,
                 style: TextStyle(
@@ -220,6 +223,79 @@ class ViewPhotoScreen extends StatelessWidget {
           alignment: Alignment.center,
           children: [
             PhotoView(imageProvider: FileImage(File(path))),
+            Positioned(
+              top: 0,
+              left: 0,
+              child: IconButton(
+                onPressed: () {
+                  context.pop();
+                },
+                icon: Icon(Icons.close),
+              ),
+            ),
+            Positioned(
+              top: kMaterialListPadding.top,
+              child: Text(
+                name,
+                style: TextStyle(
+                  fontSize: 16.sp,
+                  fontVariations: [FontVariation.weight(500)],
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class PdfViewScreen extends StatelessWidget {
+  final String name;
+  final String path;
+
+  const PdfViewScreen({super.key, required this.name, required this.path});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: Colors.black,
+      body: SafeArea(
+        child: Stack(
+          alignment: Alignment.center,
+          children: [
+            PDFView(
+              filePath: path,
+              enableSwipe: true,
+              swipeHorizontal: true,
+              autoSpacing: false,
+              pageFling: false,
+              backgroundColor: Colors.black,
+              onLinkHandler: (uri) async {
+                log(uri.toString());
+                if (uri != null) {
+                  final url = Uri.parse(uri);
+                    await launchUrl(url, mode: LaunchMode.inAppBrowserView);
+
+                }
+              },
+              onRender: (_pages) {
+                // setState(() {
+                //   pages = _pages;
+                //   isReady = true;
+                // });
+              },
+              onError: (error) {
+                print(error.toString());
+              },
+              onPageError: (page, error) {
+                print('$page: ${error.toString()}');
+              },
+              onViewCreated: (PDFViewController pdfViewController) {
+                // _controller.complete(pdfViewController);
+              },
+              onPageChanged: (page, total) {},
+            ),
             Positioned(
               top: 0,
               left: 0,

@@ -429,7 +429,10 @@ class _ImageCardWidget extends StatelessWidget {
       children: [
         GestureDetector(
           onTap: () {
-            context.push(RouteNames.viewItemOptions);
+            context.push(
+              RouteNames.viewItemOptions,
+              extra: {"content": contentData},
+            );
           },
           child: Container(
             width: isGridLayout ? null : 160.w,
@@ -518,109 +521,117 @@ class _DocumentCardWidget extends StatelessWidget {
     final isPdf = fileType == ContentFileType.PDF;
     log(contentWithDistance.distance.toString());
 
-    return Container(
-      width: double.infinity,
-      height: 105.h,
-      padding: EdgeInsets.all(12.w),
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(12.r),
-        color: AppColors.greyColor,
-      ),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        spacing: 12.w,
-        children: [
-          Container(
-            padding: EdgeInsetsGeometry.all(8.w),
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(8.r),
-              color: AppColors.lightBlueGreyColor.withValues(alpha: 0.5),
+    return GestureDetector(
+      onTap: () {
+        context.push(
+          RouteNames.viewItemOptions,
+          extra: {"content": contentData},
+        );
+      },
+      child: Container(
+        width: double.infinity,
+        height: 105.h,
+        padding: EdgeInsets.all(12.w),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(12.r),
+          color: AppColors.greyColor,
+        ),
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          spacing: 12.w,
+          children: [
+            Container(
+              padding: EdgeInsetsGeometry.all(8.w),
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(8.r),
+                color: AppColors.lightBlueGreyColor.withValues(alpha: 0.5),
+              ),
+              child: Icon(
+                isPdf ? Icons.picture_as_pdf_rounded : Icons.edit_note_outlined,
+                color: isPdf ? AppColors.blueColor : AppColors.violetColor,
+                size: 24.w,
+              ),
             ),
-            child: Icon(
-              isPdf ? Icons.picture_as_pdf_rounded : Icons.edit_note_outlined,
-              color: isPdf ? AppColors.blueColor : AppColors.violetColor,
-              size: 24.w,
-            ),
-          ),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    SizedBox(
-                      width: getScreenWidth(context) * 0.55,
-                      child: Text(
-                        contentData.contentName,
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 16.sp,
-                          fontVariations: [FontVariation.weight(800)],
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      SizedBox(
+                        width: getScreenWidth(context) * 0.55,
+                        child: Text(
+                          contentData.contentName,
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 16.sp,
+                            fontVariations: [FontVariation.weight(800)],
+                          ),
+                          overflow: TextOverflow.ellipsis,
                         ),
-                        overflow: TextOverflow.ellipsis,
                       ),
-                    ),
-                    Card(
-                      color: percentColor.withValues(alpha: 0.12),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(4.r),
-                      ),
-                      child: Padding(
-                        padding: EdgeInsets.symmetric(
-                          horizontal: 6.w,
-                          vertical: 2.w,
+                      Card(
+                        color: percentColor.withValues(alpha: 0.12),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(4.r),
                         ),
-                        child: Row(
-                          mainAxisSize: MainAxisSize.min,
-                          spacing: 4.w,
-                          children: [
-                            Icon(Icons.bolt, size: 12.w, color: percentColor),
-                            Text(
-                              "$matchPercent%",
-                              style: TextStyle(
-                                fontSize: 10.sp,
-                                color: percentColor,
-                                fontVariations: [FontVariation.weight(700)],
+                        child: Padding(
+                          padding: EdgeInsets.symmetric(
+                            horizontal: 6.w,
+                            vertical: 2.w,
+                          ),
+                          child: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            spacing: 4.w,
+                            children: [
+                              Icon(Icons.bolt, size: 12.w, color: percentColor),
+                              Text(
+                                "$matchPercent%",
+                                style: TextStyle(
+                                  fontSize: 10.sp,
+                                  color: percentColor,
+                                  fontVariations: [FontVariation.weight(700)],
+                                ),
                               ),
-                            ),
-                          ],
+                            ],
+                          ),
                         ),
                       ),
-                    ),
-                  ],
-                ),
-                SizedBox(
-                  width: getScreenWidth(context) * 0.7,
-                  child: Text(
-                    "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas at ipsum in nunc",
-                    style: TextStyle(
-                      color: AppColors.inactiveColor,
-                      fontSize: 14.sp,
-                      fontVariations: [FontVariation.weight(550)],
-                    ),
-                    overflow: TextOverflow.ellipsis,
+                    ],
                   ),
-                ),
-                8.verticalSpace,
-                Row(
-                  mainAxisSize: MainAxisSize.min,
-                  spacing: 14.w,
-                  children: [
-                    _fileMetadataWidget(
-                      Icons.calendar_today_sharp,
-                      DateFormat("MMM d").format(contentData.createdAt),
+                  SizedBox(
+                    width: getScreenWidth(context) * 0.7,
+                    child: Text(
+                      "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas at ipsum in nunc",
+                      style: TextStyle(
+                        color: AppColors.inactiveColor,
+                        fontSize: 14.sp,
+                        fontVariations: [FontVariation.weight(550)],
+                      ),
+                      overflow: TextOverflow.ellipsis,
                     ),
-                    _fileMetadataWidget(
-                      Icons.access_time_filled_rounded,
-                      DateFormat("h:mm a").format(contentData.createdAt),
-                    ),
-                  ],
-                ),
-              ],
+                  ),
+                  8.verticalSpace,
+                  Row(
+                    mainAxisSize: MainAxisSize.min,
+                    spacing: 14.w,
+                    children: [
+                      _fileMetadataWidget(
+                        Icons.calendar_today_sharp,
+                        DateFormat("MMM d").format(contentData.createdAt),
+                      ),
+                      _fileMetadataWidget(
+                        Icons.access_time_filled_rounded,
+                        DateFormat("h:mm a").format(contentData.createdAt),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

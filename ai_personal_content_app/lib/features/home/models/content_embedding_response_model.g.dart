@@ -11,8 +11,9 @@ _ContentEmbeddingResponseModel _$ContentEmbeddingResponseModelFromJson(
 ) => _ContentEmbeddingResponseModel(
   id: json['id'] as String?,
   cid: json['cid'] as String?,
-  description: json['description'] as String?,
+  keywords: json['keywords'] as String?,
   contentType: json['contentType'] as String?,
+  extractedText: json['extractedText'] as String?,
   embeddings: (json['embeddings'] as List<dynamic>)
       .map((e) => (e as num).toDouble())
       .toList(),
@@ -23,7 +24,8 @@ Map<String, dynamic> _$ContentEmbeddingResponseModelToJson(
 ) => <String, dynamic>{
   'id': instance.id,
   'cid': instance.cid,
-  'description': instance.description,
+  'keywords': instance.keywords,
   'contentType': instance.contentType,
+  'extractedText': instance.extractedText,
   'embeddings': instance.embeddings,
 };

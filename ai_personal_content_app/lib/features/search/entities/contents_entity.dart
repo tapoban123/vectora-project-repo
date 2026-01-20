@@ -11,10 +11,11 @@ class ContentsEntity {
 
   String path;
   String contentName;
-  String? imageDescription;
+  String? imageKeywords;
   String? scannedImageTexts;
   String extension;
   String type;
+  String? docExtractedTexts;
 
   @Index()
   bool isPinned = false;
@@ -34,8 +35,9 @@ class ContentsEntity {
     required this.contentId,
     required this.path,
     required this.contentName,
-    this.imageDescription,
+    this.imageKeywords,
     this.scannedImageTexts,
+    this.docExtractedTexts,
     this.isPinned = false,
     required this.contentSizeInBytes,
     required this.extension,

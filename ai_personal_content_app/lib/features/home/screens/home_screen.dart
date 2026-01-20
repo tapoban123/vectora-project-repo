@@ -167,7 +167,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                   crossAxisCount: 2,
                                   crossAxisSpacing: 14.w,
                                   mainAxisSpacing: 14.w,
-                                  childAspectRatio: 0.8,
+                                  childAspectRatio: 0.74,
                                 ),
                             itemBuilder: (context, index) =>
                                 ContentCardForGridLayout(content: state[index]),

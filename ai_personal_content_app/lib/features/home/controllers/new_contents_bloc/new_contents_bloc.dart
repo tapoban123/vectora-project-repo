@@ -123,7 +123,7 @@ class NewContentsBloc extends Bloc<NewContentsEvents, NewContentsStates> {
     FilePickerResult? result = await FilePicker.platform.pickFiles(
       allowMultiple: true,
       type: FileType.custom,
-      allowedExtensions: ["pdf", "svg", "jpg", "jpeg"],
+      allowedExtensions: ["pdf", "svg", "jpg", "jpeg", "png"],
     );
 
     if (result != null) {
@@ -185,7 +185,8 @@ class NewContentsBloc extends Bloc<NewContentsEvents, NewContentsStates> {
           contentId: embedding.cid!,
           path: path,
           contentName: file.name,
-          imageDescription: embedding.description,
+          imageKeywords: embedding.keywords,
+          docExtractedTexts: embedding.extractedText,
           contentSizeInBytes: file.sizeInBytes,
           extension: file.extension,
           type: file.fileType.name,
@@ -238,6 +239,15 @@ class NewContentsBloc extends Bloc<NewContentsEvents, NewContentsStates> {
       embeddingsResp = await _embeddingGenerationService.generateTextEmbeddings(
         cid: content.cid,
         text: content.scannedImageTexts!,
+        onReceiveProgress: (count, total) {
+          _onReceiveProgress(count, total, emit, content);
+        },
+      );
+    } else if (content.fileType == ContentFileType.PDF) {
+      embeddingsResp = await _embeddingGenerationService.generatePdfEmbeddings(
+        contentType: content.fileType.name,
+        cid: content.cid,
+        pdf: content.file,
         onReceiveProgress: (count, total) {
           _onReceiveProgress(count, total, emit, content);
         },

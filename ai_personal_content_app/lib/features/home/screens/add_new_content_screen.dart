@@ -91,6 +91,7 @@ class AddNewContentScreen extends StatelessWidget {
                       current.maybeWhen(
                         orElse: () => false,
                         error: (message) => true,
+                        success: () => true,
                       ),
                   listener: (context, state) {
                     state.maybeWhen(
