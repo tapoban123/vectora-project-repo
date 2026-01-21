@@ -1,4 +1,6 @@
-enum FilterFileType { PDF, IMAGE, TEXT, NOTE, ALL }
+// enum FilterFileType { PDF, IMAGE, TEXT, NOTE, ALL }
+
+import 'package:ai_personal_content_app/core/common/constants.dart';
 
 enum FilterTime { TODAY, LAST_7_DAYS, LAST_30_DAYS, RANDOM }
 
@@ -14,15 +16,15 @@ enum SortOption {
 }
 
 class FilterAndSortOptions {
-  final FilterFileType fileType;
-  final bool pinnedOnly;
-  final FilterTime time;
-  final SortOption sortOption;
+  final ContentFileType? fileType;
+  final bool? pinnedOnly;
+  final FilterTime? time;
+  final SortOption? sortOption;
 
   FilterAndSortOptions({
-    this.fileType = FilterFileType.ALL,
-    this.time = FilterTime.RANDOM,
-    this.pinnedOnly = false,
-    this.sortOption = SortOption.NONE,
+    this.fileType,
+    this.time,
+    this.pinnedOnly,
+    this.sortOption,
   });
 }

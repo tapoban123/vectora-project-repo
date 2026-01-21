@@ -24,16 +24,16 @@ class ContentsManagerBloc
   List<ContentsEntity> _contents = [];
 
   void _fetchAllContents(FetchAllContents event, Emitter emit) {
-    final contents = _contentsLocalStorageService.fetchAllContents();
-    _contents = contents;
-
+    _contents = _contentsLocalStorageService.fetchAllContents(
+      options: event.filterAndSortOptions,
+    );
     emit(
       ContentsManagerStates.allContents(contents: List.unmodifiable(_contents)),
     );
   }
 
   void _deleteContent(DeleteContent event, Emitter emit) async {
-    if (await event.file.exists()){
+    if (await event.file.exists()) {
       await event.file.delete();
     }
     _contents.removeWhere((element) => element.id == event.objectBoxId);
