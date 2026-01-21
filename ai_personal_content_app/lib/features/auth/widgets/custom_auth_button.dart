@@ -22,7 +22,7 @@ class CustomAuthButton extends StatelessWidget {
         minimumSize: Size(double.infinity, 56.w),
         backgroundColor: buttonColor,
         shape: RoundedRectangleBorder(
-          borderRadius: BorderRadiusGeometry.circular(12),
+          borderRadius: BorderRadiusGeometry.circular(12.r),
         ),
       ),
       child: Text(

@@ -60,6 +60,7 @@ dependencies:
   flutter_pdfview: ^1.4.4
   shared_preferences: ^2.5.4
   url_launcher: ^6.3.2
+  lottie: ^3.3.2
 
 dev_dependencies:
   flutter_test:
@@ -90,6 +91,7 @@ flutter:
   assets:
     - assets/images/
     - assets/images/svgs/
+    - assets/lottie/
   #   - images/a_dot_ham.jpeg
 
   # An image asset can refer to one or more resolution-specific "variants", see

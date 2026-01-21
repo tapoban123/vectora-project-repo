@@ -27,7 +27,7 @@ class RouteNames {
 }
 
 final router = GoRouter(
-  initialLocation: RouteNames.home,
+  initialLocation: RouteNames.onboarding,
   routes: [
     GoRoute(
       path: RouteNames.onboarding,
