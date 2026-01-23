@@ -8,7 +8,7 @@ part 'contents_manager_events.freezed.dart';
 @freezed
 abstract class ContentsManagerEvents with _$ContentsManagerEvents {
   factory ContentsManagerEvents.fetchAllContents({
-    FilterAndSortOptions? filterAndSortOptions,
+    required FilterAndSortOptions filterAndSortOptions,
   }) = FetchAllContents;
 
   factory ContentsManagerEvents.deleteContent({

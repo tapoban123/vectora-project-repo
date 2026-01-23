@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:developer';
 import 'dart:io';
 
 import 'package:ai_personal_content_app/core/common/constants.dart';
@@ -9,7 +10,9 @@ import 'package:ai_personal_content_app/core/theme/app_colors.dart';
 import 'package:ai_personal_content_app/features/search/controllers/contents_manager_bloc/contents_manager_bloc.dart';
 import 'package:ai_personal_content_app/features/search/controllers/contents_manager_bloc/contents_manager_events.dart';
 import 'package:ai_personal_content_app/features/search/controllers/contents_manager_bloc/contents_manager_states.dart';
+import 'package:ai_personal_content_app/features/search/controllers/filter_and_sort_preferences_cubit.dart';
 import 'package:ai_personal_content_app/features/search/entities/contents_entity.dart';
+import 'package:ai_personal_content_app/features/search/models/filter_and_sort_options.dart';
 import 'package:ai_personal_content_app/features/search/usecases/get_content_layout_pref.dart';
 import 'package:ai_personal_content_app/features/search/usecases/set_contents_layout_pref.dart';
 import 'package:ai_personal_content_app/get_it.dart';
@@ -32,14 +35,14 @@ class ContentLibraryScreen extends StatefulWidget {
 class _ContentLibraryScreenState extends State<ContentLibraryScreen> {
   late final ValueNotifier<ContentLayoutType> _layoutTypeNotifier;
   late final GlobalKey<ScaffoldState> _scaffoldKey;
-  final _sortOptions = [
-    (title: "Recently Added", status: true),
-    (title: "Oldest First", status: false),
-    (title: "Recently Updated", status: false),
-    (title: "Name (A-Z)", status: false),
-    (title: "Name (Z-A)", status: false),
-    (title: "File Size (Largest First)", status: false),
-    (title: "File Size (Smallest First)", status: false),
+  late final _sortOptions = [
+    "Recently Added",
+    "Oldest First",
+    "Recently Updated",
+    "Name (A-Z)",
+    "Name (Z-A)",
+    "File Size (Largest First)",
+    "File Size (Smallest First)",
   ];
 
   final _filterByFileTypeOptions = [
@@ -55,11 +58,43 @@ class _ContentLibraryScreenState extends State<ContentLibraryScreen> {
     (time: "Last 30 days", status: false),
   ];
 
+  // void _setSortOptions(FilterAndSortOptions options) {
+  //   final sortOption = options.sortOption;
+  //   _sortOptions = [
+  //     (
+  //       title: "Recently Added",
+  //       status: sortOption == SortOption.RECENTLY_ADDED,
+  //     ),
+  //     (title: "Oldest First", status: sortOption == SortOption.OLDEST_FIRST),
+  //     (
+  //       title: "Recently Updated",
+  //       status: sortOption == SortOption.RECENTLY_UPDATED,
+  //     ),
+  //     (title: "Name (A-Z)", status: sortOption == SortOption.NAME_A_Z),
+  //     (title: "Name (Z-A)", status: sortOption == SortOption.NAME_Z_A),
+  //     (
+  //       title: "File Size (Largest First)",
+  //       status: sortOption == SortOption.FILE_SIZE_DESC,
+  //     ),
+  //     (
+  //       title: "File Size (Smallest First)",
+  //       status: sortOption == SortOption.FILE_SIZE_ASC,
+  //     ),
+  //   ];
+  // }
+
   @override
   void initState() {
     _scaffoldKey = GlobalKey();
     _layoutTypeNotifier = ValueNotifier(getIt<GetContentLayoutPref>().call());
-    context.read<ContentsManagerBloc>().add(FetchAllContents());
+    context.read<FilterAndSortPreferencesCubit>().fetchUserFilterPrefs();
+    final filterAndSortOptions = context
+        .read<FilterAndSortPreferencesCubit>()
+        .state;
+    context.read<ContentsManagerBloc>().add(
+      FetchAllContents(filterAndSortOptions: filterAndSortOptions),
+    );
+    // _setSortOptions(filterAndSortOptions);
     super.initState();
   }
 
@@ -138,8 +173,11 @@ class _ContentLibraryScreenState extends State<ContentLibraryScreen> {
                             onTap: () {
                               if (_layoutTypeNotifier.value !=
                                   ContentLayoutType.GRID) {
-                                _layoutTypeNotifier.value = ContentLayoutType.GRID;
-                                getIt<SetContentsLayoutPref>().call(ContentLayoutType.GRID);
+                                _layoutTypeNotifier.value =
+                                    ContentLayoutType.GRID;
+                                getIt<SetContentsLayoutPref>().call(
+                                  ContentLayoutType.GRID,
+                                );
                               }
                             },
                           ),
@@ -152,8 +190,11 @@ class _ContentLibraryScreenState extends State<ContentLibraryScreen> {
                             onTap: () {
                               if (_layoutTypeNotifier.value !=
                                   ContentLayoutType.LIST) {
-                                _layoutTypeNotifier.value = ContentLayoutType.LIST;
-                                getIt<SetContentsLayoutPref>().call(ContentLayoutType.LIST);
+                                _layoutTypeNotifier.value =
+                                    ContentLayoutType.LIST;
+                                getIt<SetContentsLayoutPref>().call(
+                                  ContentLayoutType.LIST,
+                                );
                               }
                             },
                           ),
@@ -284,42 +325,60 @@ class _ContentLibraryScreenState extends State<ContentLibraryScreen> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Column(
-                      children: List.generate(
-                        _sortOptions.length,
-                        (index) => ListTile(
-                          contentPadding: EdgeInsets.zero,
-                          minTileHeight: 50.h,
-                          onTap: () {},
-                          title: Text(
-                            _sortOptions[index].title,
-                            style: TextStyle(
-                              color: AppColors.offWhiteColor,
-                              fontVariations: [FontVariation.weight(500)],
-                            ),
-                          ),
-                          trailing: Container(
-                            height: 17.w,
-                            width: 17.w,
-                            padding: EdgeInsets.all(3.5.w),
-                            decoration: BoxDecoration(
-                              shape: BoxShape.circle,
-                              border: Border.all(
-                                color: _sortOptions[index].status
-                                    ? AppColors.blueColor
-                                    : AppColors.lightBlueGreyColor,
+                    BlocBuilder<
+                      FilterAndSortPreferencesCubit,
+                      FilterAndSortOptions
+                    >(
+                      builder: (context, state) => Column(
+                        children: List.generate(
+                          _sortOptions.length,
+                          (index) => ListTile(
+                            contentPadding: EdgeInsets.zero,
+                            minTileHeight: 50.h,
+                            onTap: () {
+                              context
+                                  .read<FilterAndSortPreferencesCubit>()
+                                  .setSortBy(SortOption.values[index]);
+                              context.read<ContentsManagerBloc>().add(
+                                FetchAllContents(
+                                  filterAndSortOptions: state.copyWith(
+                                    sortOption: SortOption.values[index],
+                                  ),
+                                ),
+                              );
+                            },
+                            title: Text(
+                              _sortOptions[index],
+                              style: TextStyle(
+                                color: AppColors.offWhiteColor,
+                                fontVariations: [FontVariation.weight(500)],
                               ),
                             ),
-                            child: _sortOptions[index].status
-                                ? Expanded(
-                                    child: Container(
+                            trailing: Container(
+                              height: 17.w,
+                              width: 17.w,
+                              padding: EdgeInsets.all(3.5.w),
+                              decoration: BoxDecoration(
+                                shape: BoxShape.circle,
+                                border: Border.all(
+                                  // _sortOptions[index].status
+                                  color:
+                                      state.sortOption ==
+                                          SortOption.values[index]
+                                      ? AppColors.blueColor
+                                      : AppColors.lightBlueGreyColor,
+                                ),
+                              ),
+                              child:
+                                  state.sortOption == SortOption.values[index]
+                                  ? Container(
                                       decoration: BoxDecoration(
                                         shape: BoxShape.circle,
                                         color: AppColors.blueColor,
                                       ),
-                                    ),
-                                  )
-                                : null,
+                                    )
+                                  : null,
+                            ),
                           ),
                         ),
                       ),

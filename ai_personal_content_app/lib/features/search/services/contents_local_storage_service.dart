@@ -1,3 +1,4 @@
+import 'dart:developer';
 import 'dart:io';
 
 import 'package:ai_personal_content_app/core/common/constants.dart';
@@ -103,8 +104,9 @@ class ContentsLocalStorageService {
     return results;
   }
 
-  List<ContentsEntity> fetchAllContents({FilterAndSortOptions? options}) {
-    if (options == null) {
+  List<ContentsEntity> fetchAllContents({required FilterAndSortOptions options}) {
+    log(options.sortOption.toString());
+    if (options.isNull) {
       return _contentsBox.getAll();
     }
     QueryBuilder<ContentsEntity>? query;

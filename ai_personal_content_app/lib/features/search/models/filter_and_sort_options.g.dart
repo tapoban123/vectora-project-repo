@@ -40,7 +40,6 @@ const _$FilterTimeEnumMap = {
 };
 
 const _$SortOptionEnumMap = {
-  SortOption.NONE: 'NONE',
   SortOption.RECENTLY_ADDED: 'RECENTLY_ADDED',
   SortOption.OLDEST_FIRST: 'OLDEST_FIRST',
   SortOption.RECENTLY_UPDATED: 'RECENTLY_UPDATED',

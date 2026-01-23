@@ -10,7 +10,6 @@ part 'filter_and_sort_options.freezed.dart';
 enum FilterTime { TODAY, LAST_7_DAYS, LAST_30_DAYS, RANDOM }
 
 enum SortOption {
-  NONE,
   RECENTLY_ADDED,
   OLDEST_FIRST,
   RECENTLY_UPDATED,
@@ -31,4 +30,12 @@ abstract class FilterAndSortOptions with _$FilterAndSortOptions {
 
   factory FilterAndSortOptions.fromJson(Map<String, dynamic> json) =>
       _$FilterAndSortOptionsFromJson(json);
+}
+
+extension FilterExtension on FilterAndSortOptions {
+  bool get isNull =>
+      sortOption == null &&
+      pinnedOnly == null &&
+      fileType == null &&
+      time == null;
 }

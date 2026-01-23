@@ -1,7 +1,10 @@
+import 'dart:developer';
+
 import 'package:ai_personal_content_app/core/common/services/embeddings_storage_service.dart';
 import 'package:ai_personal_content_app/features/search/controllers/contents_manager_bloc/contents_manager_events.dart';
 import 'package:ai_personal_content_app/features/search/controllers/contents_manager_bloc/contents_manager_states.dart';
 import 'package:ai_personal_content_app/features/search/entities/contents_entity.dart';
+import 'package:ai_personal_content_app/features/search/models/filter_and_sort_options.dart';
 import 'package:ai_personal_content_app/features/search/services/contents_local_storage_service.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -24,6 +27,7 @@ class ContentsManagerBloc
   List<ContentsEntity> _contents = [];
 
   void _fetchAllContents(FetchAllContents event, Emitter emit) {
+    log(event.filterAndSortOptions.isNull.toString());
     _contents = _contentsLocalStorageService.fetchAllContents(
       options: event.filterAndSortOptions,
     );

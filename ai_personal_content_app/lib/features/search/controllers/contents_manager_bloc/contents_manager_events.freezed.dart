@@ -125,7 +125,7 @@ return removeMultipleContent(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>({TResult Function( FilterAndSortOptions? filterAndSortOptions)?  fetchAllContents,TResult Function( int objectBoxId,  String cid,  File file)?  deleteContent,TResult Function( List<int> ids)?  removeMultipleContent,required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>({TResult Function( FilterAndSortOptions filterAndSortOptions)?  fetchAllContents,TResult Function( int objectBoxId,  String cid,  File file)?  deleteContent,TResult Function( List<int> ids)?  removeMultipleContent,required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case FetchAllContents() when fetchAllContents != null:
 return fetchAllContents(_that.filterAndSortOptions);case DeleteContent() when deleteContent != null:
@@ -148,7 +148,7 @@ return removeMultipleContent(_that.ids);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>({required TResult Function( FilterAndSortOptions? filterAndSortOptions)  fetchAllContents,required TResult Function( int objectBoxId,  String cid,  File file)  deleteContent,required TResult Function( List<int> ids)  removeMultipleContent,}) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>({required TResult Function( FilterAndSortOptions filterAndSortOptions)  fetchAllContents,required TResult Function( int objectBoxId,  String cid,  File file)  deleteContent,required TResult Function( List<int> ids)  removeMultipleContent,}) {final _that = this;
 switch (_that) {
 case FetchAllContents():
 return fetchAllContents(_that.filterAndSortOptions);case DeleteContent():
@@ -170,7 +170,7 @@ return removeMultipleContent(_that.ids);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>({TResult? Function( FilterAndSortOptions? filterAndSortOptions)?  fetchAllContents,TResult? Function( int objectBoxId,  String cid,  File file)?  deleteContent,TResult? Function( List<int> ids)?  removeMultipleContent,}) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>({TResult? Function( FilterAndSortOptions filterAndSortOptions)?  fetchAllContents,TResult? Function( int objectBoxId,  String cid,  File file)?  deleteContent,TResult? Function( List<int> ids)?  removeMultipleContent,}) {final _that = this;
 switch (_that) {
 case FetchAllContents() when fetchAllContents != null:
 return fetchAllContents(_that.filterAndSortOptions);case DeleteContent() when deleteContent != null:
@@ -187,10 +187,10 @@ return removeMultipleContent(_that.ids);case _:
 
 
 class FetchAllContents implements ContentsManagerEvents {
-   FetchAllContents({this.filterAndSortOptions});
+   FetchAllContents({required this.filterAndSortOptions});
   
 
- final  FilterAndSortOptions? filterAndSortOptions;
+ final  FilterAndSortOptions filterAndSortOptions;
 
 /// Create a copy of ContentsManagerEvents
 /// with the given fields replaced by the non-null parameter values.
@@ -222,11 +222,11 @@ abstract mixin class $FetchAllContentsCopyWith<$Res> implements $ContentsManager
   factory $FetchAllContentsCopyWith(FetchAllContents value, $Res Function(FetchAllContents) _then) = _$FetchAllContentsCopyWithImpl;
 @useResult
 $Res call({
- FilterAndSortOptions? filterAndSortOptions
+ FilterAndSortOptions filterAndSortOptions
 });
 
 
-$FilterAndSortOptionsCopyWith<$Res>? get filterAndSortOptions;
+$FilterAndSortOptionsCopyWith<$Res> get filterAndSortOptions;
 
 }
 /// @nodoc
@@ -239,10 +239,10 @@ class _$FetchAllContentsCopyWithImpl<$Res>
 
 /// Create a copy of ContentsManagerEvents
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') $Res call({Object? filterAndSortOptions = freezed,}) {
+@pragma('vm:prefer-inline') $Res call({Object? filterAndSortOptions = null,}) {
   return _then(FetchAllContents(
-filterAndSortOptions: freezed == filterAndSortOptions ? _self.filterAndSortOptions : filterAndSortOptions // ignore: cast_nullable_to_non_nullable
-as FilterAndSortOptions?,
+filterAndSortOptions: null == filterAndSortOptions ? _self.filterAndSortOptions : filterAndSortOptions // ignore: cast_nullable_to_non_nullable
+as FilterAndSortOptions,
   ));
 }
 
@@ -250,12 +250,9 @@ as FilterAndSortOptions?,
 /// with the given fields replaced by the non-null parameter values.
 @override
 @pragma('vm:prefer-inline')
-$FilterAndSortOptionsCopyWith<$Res>? get filterAndSortOptions {
-    if (_self.filterAndSortOptions == null) {
-    return null;
-  }
-
-  return $FilterAndSortOptionsCopyWith<$Res>(_self.filterAndSortOptions!, (value) {
+$FilterAndSortOptionsCopyWith<$Res> get filterAndSortOptions {
+  
+  return $FilterAndSortOptionsCopyWith<$Res>(_self.filterAndSortOptions, (value) {
     return _then(_self.copyWith(filterAndSortOptions: value));
   });
 }
