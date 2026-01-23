@@ -61,6 +61,14 @@ class ContentsLocalStorageService {
     return false;
   }
 
+  bool isAnyContentPinned() {
+    final query = _contentsBox
+        .query(ContentsEntity_.isPinned.equals(true))
+        .build();
+    final results = query.find();
+    return results.isNotEmpty;
+  }
+
   List<ContentsEntity> getPinnedContents() {
     final query = _contentsBox
         .query(ContentsEntity_.isPinned.equals(true))

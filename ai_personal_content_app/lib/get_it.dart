@@ -11,6 +11,7 @@ import 'package:ai_personal_content_app/features/search/controllers/search_conte
 import 'package:ai_personal_content_app/features/search/services/contents_local_storage_service.dart';
 import 'package:ai_personal_content_app/features/search/services/content_library_user_prefs_localdb_service.dart';
 import 'package:ai_personal_content_app/features/search/usecases/get_content_layout_pref.dart';
+import 'package:ai_personal_content_app/features/search/usecases/is_pinned_content_exists.dart';
 import 'package:ai_personal_content_app/features/search/usecases/set_contents_layout_pref.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -42,11 +43,14 @@ void init() {
         () => ContentLibraryUserPrefsLocalDbService(prefs: getIt()),
         dependsOn: [SharedPreferences],
       );
-  getIt.registerLazySingleton(
+  getIt.registerLazySingleton<GetContentLayoutPref>(
     () => GetContentLayoutPref(contentLibraryUserPrefsLocalDbService: getIt()),
   );
-  getIt.registerLazySingleton(
+  getIt.registerLazySingleton<SetContentsLayoutPref>(
     () => SetContentsLayoutPref(contentLibraryUserPrefsLocalDbService: getIt()),
+  );
+  getIt.registerLazySingleton<IsPinnedContentExists>(
+    () => IsPinnedContentExists(contentsLocalStorageService: getIt()),
   );
 
   getIt.registerFactory<NewContentsBloc>(

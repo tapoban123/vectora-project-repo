@@ -7,6 +7,7 @@ import 'package:ai_personal_content_app/core/common/widgets/content_card_for_gri
 import 'package:ai_personal_content_app/core/common/widgets/custom_appbar.dart';
 import 'package:ai_personal_content_app/core/common/widgets/custom_button.dart';
 import 'package:ai_personal_content_app/core/theme/app_colors.dart';
+import 'package:ai_personal_content_app/core/utils/utils.dart';
 import 'package:ai_personal_content_app/features/search/controllers/contents_manager_bloc/contents_manager_bloc.dart';
 import 'package:ai_personal_content_app/features/search/controllers/contents_manager_bloc/contents_manager_events.dart';
 import 'package:ai_personal_content_app/features/search/controllers/contents_manager_bloc/contents_manager_states.dart';
@@ -14,6 +15,7 @@ import 'package:ai_personal_content_app/features/search/controllers/filter_and_s
 import 'package:ai_personal_content_app/features/search/entities/contents_entity.dart';
 import 'package:ai_personal_content_app/features/search/models/filter_and_sort_options.dart';
 import 'package:ai_personal_content_app/features/search/usecases/get_content_layout_pref.dart';
+import 'package:ai_personal_content_app/features/search/usecases/is_pinned_content_exists.dart';
 import 'package:ai_personal_content_app/features/search/usecases/set_contents_layout_pref.dart';
 import 'package:ai_personal_content_app/get_it.dart';
 import 'package:ai_personal_content_app/router.dart';
@@ -363,6 +365,12 @@ class _ContentLibraryScreenState extends State<ContentLibraryScreen> {
                     10.verticalSpace,
                     _clearSortOrFilterButton("Clear Sort", () {
                       context.read<FilterAndSortPreferencesCubit>().clearSort();
+                      context.read<ContentsManagerBloc>().add(
+                        FetchAllContents(
+                          filterAndSortOptions: FilterAndSortOptions(),
+                        ),
+                      );
+                      context.pop();
                     }),
                   ],
                 ),
@@ -462,6 +470,11 @@ class _ContentLibraryScreenState extends State<ContentLibraryScreen> {
                             trailing: CupertinoSwitch(
                               value: state.pinnedOnly ?? false,
                               onChanged: (value) {
+                                final isAnyContentPinned = getIt<IsPinnedContentExists>().call();
+                                if (!isAnyContentPinned){
+                                  showToastMessage("No pinned contents found to display.");
+                                  return;
+                                }
                                 context
                                     .read<FilterAndSortPreferencesCubit>()
                                     .setIsPinnedOnly(value);
@@ -543,7 +556,15 @@ class _ContentLibraryScreenState extends State<ContentLibraryScreen> {
                             onTap: () {},
                           ),
                           8.verticalSpace,
-                          _clearSortOrFilterButton("Clear Filters", () {}),
+                          _clearSortOrFilterButton("Clear Filters", () {
+                            context.read<FilterAndSortPreferencesCubit>().clearFilterOptions();
+                            context.read<ContentsManagerBloc>().add(
+                              FetchAllContents(
+                                filterAndSortOptions: state,
+                              ),
+                            );
+                            context.pop();
+                          }),
                         ],
                       ),
                     ),

@@ -2,10 +2,12 @@ import 'dart:developer';
 import 'dart:io';
 
 import 'package:ai_personal_content_app/core/theme/app_colors.dart';
+import 'package:ai_personal_content_app/core/theme/app_fonts.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_pdfview/flutter_pdfview.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:go_router/go_router.dart';
 import 'package:photo_view/photo_view.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -84,7 +86,15 @@ double getScreenHeight(BuildContext context) {
   return MediaQuery.sizeOf(context).height;
 }
 
-void showToastMessage() {}
+void showToastMessage(String message) {
+  Fluttertoast.cancel();
+  Fluttertoast.showToast(
+    msg: message,
+    backgroundColor: AppColors.blueGreyColor,
+    textColor: Colors.white,
+    fontSize: 16.sp,
+  );
+}
 
 enum DialogType { INFO, ERROR }
 
@@ -275,8 +285,7 @@ class PdfViewScreen extends StatelessWidget {
                 log(uri.toString());
                 if (uri != null) {
                   final url = Uri.parse(uri);
-                    await launchUrl(url, mode: LaunchMode.inAppBrowserView);
-
+                  await launchUrl(url, mode: LaunchMode.inAppBrowserView);
                 }
               },
               onRender: (_pages) {

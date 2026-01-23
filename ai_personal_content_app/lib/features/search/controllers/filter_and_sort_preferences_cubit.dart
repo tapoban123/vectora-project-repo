@@ -47,6 +47,11 @@ class FilterAndSortPreferencesCubit extends Cubit<FilterAndSortOptions> {
     _saveAndEmitPrefs(prefs);
   }
 
+  void clearFilterOptions() {
+    final prefs = state.copyWith(time: null, pinnedOnly: null, fileType: null);
+    _saveAndEmitPrefs(prefs);
+  }
+
   void clearFilterPrefs() async {
     await _filterAndSortPrefsLocaldbService.clearFilterPrefs();
     emit(FilterAndSortOptions());
