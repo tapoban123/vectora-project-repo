@@ -1,6 +1,11 @@
 // enum FilterFileType { PDF, IMAGE, TEXT, NOTE, ALL }
 
 import 'package:ai_personal_content_app/core/common/constants.dart';
+import 'package:freezed_annotation/freezed_annotation.dart';
+
+part 'filter_and_sort_options.g.dart';
+
+part 'filter_and_sort_options.freezed.dart';
 
 enum FilterTime { TODAY, LAST_7_DAYS, LAST_30_DAYS, RANDOM }
 
@@ -15,16 +20,15 @@ enum SortOption {
   FILE_SIZE_ASC,
 }
 
-class FilterAndSortOptions {
-  final ContentFileType? fileType;
-  final bool? pinnedOnly;
-  final FilterTime? time;
-  final SortOption? sortOption;
+@freezed
+abstract class FilterAndSortOptions with _$FilterAndSortOptions {
+  factory FilterAndSortOptions({
+    ContentFileType? fileType,
+    bool? pinnedOnly,
+    FilterTime? time,
+    SortOption? sortOption,
+  }) = _FilterAndSortOptions;
 
-  FilterAndSortOptions({
-    this.fileType,
-    this.time,
-    this.pinnedOnly,
-    this.sortOption,
-  });
+  factory FilterAndSortOptions.fromJson(Map<String, dynamic> json) =>
+      _$FilterAndSortOptionsFromJson(json);
 }

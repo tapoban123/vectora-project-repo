@@ -10,6 +10,9 @@ import 'package:ai_personal_content_app/features/search/controllers/contents_man
 import 'package:ai_personal_content_app/features/search/controllers/contents_manager_bloc/contents_manager_events.dart';
 import 'package:ai_personal_content_app/features/search/controllers/contents_manager_bloc/contents_manager_states.dart';
 import 'package:ai_personal_content_app/features/search/entities/contents_entity.dart';
+import 'package:ai_personal_content_app/features/search/usecases/get_content_layout_pref.dart';
+import 'package:ai_personal_content_app/features/search/usecases/set_contents_layout_pref.dart';
+import 'package:ai_personal_content_app/get_it.dart';
 import 'package:ai_personal_content_app/router.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -17,7 +20,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 
-enum _LayoutType { GRID, LIST }
+enum ContentLayoutType { GRID, LIST }
 
 class ContentLibraryScreen extends StatefulWidget {
   const ContentLibraryScreen({super.key});
@@ -27,7 +30,7 @@ class ContentLibraryScreen extends StatefulWidget {
 }
 
 class _ContentLibraryScreenState extends State<ContentLibraryScreen> {
-  late final ValueNotifier<_LayoutType> _layoutTypeNotifier;
+  late final ValueNotifier<ContentLayoutType> _layoutTypeNotifier;
   late final GlobalKey<ScaffoldState> _scaffoldKey;
   final _sortOptions = [
     (title: "Recently Added", status: true),
@@ -55,7 +58,7 @@ class _ContentLibraryScreenState extends State<ContentLibraryScreen> {
   @override
   void initState() {
     _scaffoldKey = GlobalKey();
-    _layoutTypeNotifier = ValueNotifier(_LayoutType.GRID);
+    _layoutTypeNotifier = ValueNotifier(getIt<GetContentLayoutPref>().call());
     context.read<ContentsManagerBloc>().add(FetchAllContents());
     super.initState();
   }
@@ -131,11 +134,12 @@ class _ContentLibraryScreenState extends State<ContentLibraryScreen> {
                           flex: 1,
                           child: _itemLayoutTypeButton(
                             buttonText: "Grid",
-                            layoutType: _LayoutType.GRID,
+                            layoutType: ContentLayoutType.GRID,
                             onTap: () {
                               if (_layoutTypeNotifier.value !=
-                                  _LayoutType.GRID) {
-                                _layoutTypeNotifier.value = _LayoutType.GRID;
+                                  ContentLayoutType.GRID) {
+                                _layoutTypeNotifier.value = ContentLayoutType.GRID;
+                                getIt<SetContentsLayoutPref>().call(ContentLayoutType.GRID);
                               }
                             },
                           ),
@@ -144,11 +148,12 @@ class _ContentLibraryScreenState extends State<ContentLibraryScreen> {
                           flex: 1,
                           child: _itemLayoutTypeButton(
                             buttonText: "List",
-                            layoutType: _LayoutType.LIST,
+                            layoutType: ContentLayoutType.LIST,
                             onTap: () {
                               if (_layoutTypeNotifier.value !=
-                                  _LayoutType.LIST) {
-                                _layoutTypeNotifier.value = _LayoutType.LIST;
+                                  ContentLayoutType.LIST) {
+                                _layoutTypeNotifier.value = ContentLayoutType.LIST;
+                                getIt<SetContentsLayoutPref>().call(ContentLayoutType.LIST);
                               }
                             },
                           ),
@@ -219,7 +224,7 @@ class _ContentLibraryScreenState extends State<ContentLibraryScreen> {
   Widget _itemLayoutTypeButton({
     required String buttonText,
     required VoidCallback onTap,
-    required _LayoutType layoutType,
+    required ContentLayoutType layoutType,
   }) {
     return ValueListenableBuilder(
       valueListenable: _layoutTypeNotifier,

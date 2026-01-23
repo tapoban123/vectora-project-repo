@@ -6,6 +6,7 @@ import 'package:ai_personal_content_app/features/home/controllers/cubits/recent_
 import 'package:ai_personal_content_app/features/home/controllers/new_contents_bloc/new_contents_bloc.dart';
 import 'package:ai_personal_content_app/features/items/controllers/cubits/pinned_items_cubit.dart';
 import 'package:ai_personal_content_app/features/search/controllers/contents_manager_bloc/contents_manager_bloc.dart';
+import 'package:ai_personal_content_app/features/search/controllers/filter_and_sort_preferences_cubit.dart';
 import 'package:ai_personal_content_app/features/search/controllers/search_contents_bloc/search_contents_bloc.dart';
 import 'package:ai_personal_content_app/get_it.dart';
 import 'package:ai_personal_content_app/router.dart';
@@ -22,7 +23,7 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   objectBoxInstance = await ObjectboxConfig.create();
 
-  init();
+  await init();
   runApp(const MyApp());
 }
 
@@ -43,6 +44,7 @@ class MyApp extends StatelessWidget {
           BlocProvider(create: (context) => getIt<SearchContentsBloc>()),
           BlocProvider(create: (context) => getIt<RecentItemsCubit>()),
           BlocProvider(create: (context) => getIt<PinItemsCubit>()),
+          BlocProvider(create: (context) => getIt<FilterAndSortPreferencesCubit>()),
         ],
         child: MaterialApp.router(
           title: "AI Personal Content Universe",

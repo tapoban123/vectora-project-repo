@@ -226,7 +226,7 @@ $Res call({
 });
 
 
-
+$FilterAndSortOptionsCopyWith<$Res>? get filterAndSortOptions;
 
 }
 /// @nodoc
@@ -246,7 +246,19 @@ as FilterAndSortOptions?,
   ));
 }
 
+/// Create a copy of ContentsManagerEvents
+/// with the given fields replaced by the non-null parameter values.
+@override
+@pragma('vm:prefer-inline')
+$FilterAndSortOptionsCopyWith<$Res>? get filterAndSortOptions {
+    if (_self.filterAndSortOptions == null) {
+    return null;
+  }
 
+  return $FilterAndSortOptionsCopyWith<$Res>(_self.filterAndSortOptions!, (value) {
+    return _then(_self.copyWith(filterAndSortOptions: value));
+  });
+}
 }
 
 /// @nodoc

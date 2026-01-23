@@ -6,13 +6,49 @@ import 'package:ai_personal_content_app/features/home/services/recent_contents_l
 import 'package:ai_personal_content_app/features/items/controllers/cubits/pinned_items_cubit.dart';
 import 'package:ai_personal_content_app/features/items/usecases/is_content_pinned.dart';
 import 'package:ai_personal_content_app/features/search/controllers/contents_manager_bloc/contents_manager_bloc.dart';
+import 'package:ai_personal_content_app/features/search/controllers/filter_and_sort_preferences_cubit.dart';
 import 'package:ai_personal_content_app/features/search/controllers/search_contents_bloc/search_contents_bloc.dart';
 import 'package:ai_personal_content_app/features/search/services/contents_local_storage_service.dart';
+import 'package:ai_personal_content_app/features/search/services/content_library_user_prefs_localdb_service.dart';
+import 'package:ai_personal_content_app/features/search/usecases/get_content_layout_pref.dart';
+import 'package:ai_personal_content_app/features/search/usecases/set_contents_layout_pref.dart';
 import 'package:get_it/get_it.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 final getIt = GetIt.instance;
 
-void init() {
+Future<void> init() async {
+  getIt.registerSingletonAsync<SharedPreferences>(
+    () async => await SharedPreferences.getInstance(),
+  );
+
+  getIt.registerLazySingleton<IsContentPinned>(() => IsContentPinned(getIt()));
+
+  getIt.registerSingletonWithDependencies<RecentContentsLocalDbService>(
+    () => RecentContentsLocalDbService(prefs: getIt<SharedPreferences>()),
+    dependsOn: [SharedPreferences],
+  );
+  getIt.registerLazySingleton<EmbeddingGenerationService>(
+    () => EmbeddingGenerationService(),
+  );
+  getIt.registerLazySingleton<EmbeddingsLocalStorageService>(
+    () => EmbeddingsLocalStorageService(),
+  );
+  getIt.registerLazySingleton<ContentsLocalStorageService>(
+    () => ContentsLocalStorageService(),
+  );
+  getIt
+      .registerSingletonWithDependencies<ContentLibraryUserPrefsLocalDbService>(
+        () => ContentLibraryUserPrefsLocalDbService(prefs: getIt()),
+        dependsOn: [SharedPreferences],
+      );
+  getIt.registerLazySingleton(
+    () => GetContentLayoutPref(contentLibraryUserPrefsLocalDbService: getIt()),
+  );
+  getIt.registerLazySingleton(
+    () => SetContentsLayoutPref(contentLibraryUserPrefsLocalDbService: getIt()),
+  );
+
   getIt.registerFactory<NewContentsBloc>(
     () => NewContentsBloc(
       embeddingGenerationService: getIt(),
@@ -42,19 +78,9 @@ void init() {
   getIt.registerFactory<PinItemsCubit>(
     () => PinItemsCubit(contentsLocalStorageService: getIt()),
   );
-
-  getIt.registerLazySingleton<IsContentPinned>(() => IsContentPinned(getIt()));
-
-  getIt.registerSingleton<RecentContentsLocalDbService>(
-    RecentContentsLocalDbService(),
-  );
-  getIt.registerSingleton<EmbeddingGenerationService>(
-    EmbeddingGenerationService(),
-  );
-  getIt.registerSingleton<EmbeddingsLocalStorageService>(
-    EmbeddingsLocalStorageService(),
-  );
-  getIt.registerSingleton<ContentsLocalStorageService>(
-    ContentsLocalStorageService(),
+  getIt.registerFactory<FilterAndSortPreferencesCubit>(
+    () => FilterAndSortPreferencesCubit(
+      filterAndSortPrefsLocaldbService: getIt(),
+    ),
   );
 }
