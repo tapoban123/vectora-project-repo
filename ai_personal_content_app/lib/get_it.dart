@@ -17,7 +17,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 final getIt = GetIt.instance;
 
-Future<void> init() async {
+void init() {
   getIt.registerSingletonAsync<SharedPreferences>(
     () async => await SharedPreferences.getInstance(),
   );

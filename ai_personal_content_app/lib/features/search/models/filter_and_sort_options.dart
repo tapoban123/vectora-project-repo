@@ -7,7 +7,7 @@ part 'filter_and_sort_options.g.dart';
 
 part 'filter_and_sort_options.freezed.dart';
 
-enum FilterTime { TODAY, LAST_7_DAYS, LAST_30_DAYS, RANDOM }
+enum FilterTime { TODAY, LAST_7_DAYS, LAST_30_DAYS }
 
 enum SortOption {
   RECENTLY_ADDED,

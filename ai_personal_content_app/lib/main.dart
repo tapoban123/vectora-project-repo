@@ -23,7 +23,8 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   objectBoxInstance = await ObjectboxConfig.create();
 
-  await init();
+  init();
+  await getIt.allReady();
   runApp(const MyApp());
 }
 

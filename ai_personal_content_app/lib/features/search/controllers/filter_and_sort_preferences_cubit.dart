@@ -7,7 +7,8 @@ class FilterAndSortPreferencesCubit extends Cubit<FilterAndSortOptions> {
   final ContentLibraryUserPrefsLocalDbService _filterAndSortPrefsLocaldbService;
 
   FilterAndSortPreferencesCubit({
-    required ContentLibraryUserPrefsLocalDbService filterAndSortPrefsLocaldbService,
+    required ContentLibraryUserPrefsLocalDbService
+    filterAndSortPrefsLocaldbService,
   }) : _filterAndSortPrefsLocaldbService = filterAndSortPrefsLocaldbService,
        super(FilterAndSortOptions());
 
@@ -38,6 +39,11 @@ class FilterAndSortPreferencesCubit extends Cubit<FilterAndSortOptions> {
 
   void setSortBy(SortOption sortOption) {
     final prefs = state.copyWith(sortOption: sortOption);
+    _saveAndEmitPrefs(prefs);
+  }
+
+  void clearSort() {
+    final prefs = state.copyWith(sortOption: null);
     _saveAndEmitPrefs(prefs);
   }
 

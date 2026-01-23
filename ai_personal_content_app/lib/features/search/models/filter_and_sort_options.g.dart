@@ -36,7 +36,6 @@ const _$FilterTimeEnumMap = {
   FilterTime.TODAY: 'TODAY',
   FilterTime.LAST_7_DAYS: 'LAST_7_DAYS',
   FilterTime.LAST_30_DAYS: 'LAST_30_DAYS',
-  FilterTime.RANDOM: 'RANDOM',
 };
 
 const _$SortOptionEnumMap = {

@@ -104,7 +104,9 @@ class ContentsLocalStorageService {
     return results;
   }
 
-  List<ContentsEntity> fetchAllContents({required FilterAndSortOptions options}) {
+  List<ContentsEntity> fetchAllContents({
+    required FilterAndSortOptions options,
+  }) {
     log(options.sortOption.toString());
     if (options.isNull) {
       return _contentsBox.getAll();
@@ -139,13 +141,17 @@ class ContentsLocalStorageService {
 
         default:
           final today = DateTime.now();
-          timeCondition = ContentsEntity_.createdAt.equalsDate(today);
+          timeCondition = ContentsEntity_.createdAt.greaterOrEqualDate(
+            DateTime(today.year, today.month, today.day),
+          );
           break;
       }
     }
 
     if (options.pinnedOnly != null) {
-      pinnedOnlyCondition = ContentsEntity_.isPinned.equals(true);
+      pinnedOnlyCondition = ContentsEntity_.isPinned.equals(
+        options.pinnedOnly ?? false,
+      );
     }
 
     if (options.sortOption != null) {
@@ -169,16 +175,21 @@ class ContentsLocalStorageService {
           );
           break;
         case SortOption.OLDEST_FIRST:
+          log("DESCENDING");
+          sortOrder = (property: ContentsEntity_.createdAt, flag: 0);
+          break;
+        case SortOption.RECENTLY_ADDED:
+          log("ASCENDING");
           sortOrder = (
             property: ContentsEntity_.createdAt,
             flag: Order.descending,
           );
           break;
-        case SortOption.RECENTLY_ADDED:
-          sortOrder = (property: ContentsEntity_.createdAt, flag: 0);
-          break;
         case SortOption.RECENTLY_UPDATED:
-          sortOrder = (property: ContentsEntity_.updatedAt, flag: 0);
+          sortOrder = (
+            property: ContentsEntity_.updatedAt,
+            flag: Order.descending,
+          );
           break;
         default:
           break;
@@ -212,6 +223,8 @@ class ContentsLocalStorageService {
 
     if (query != null) {
       final finalQuery = query.build();
+      // finalQuery.limit = 10;
+      // finalQuery.offset = 10;
       final results = finalQuery.find();
       return results;
     }
