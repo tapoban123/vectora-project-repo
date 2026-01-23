@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$FilterAndSortOptions {
 
- ContentFileType? get fileType; bool? get pinnedOnly; FilterTime? get time; SortOption? get sortOption;
+ List<FilterFileType>? get fileType; bool? get pinnedOnly; FilterTime? get time; SortOption? get sortOption;
 /// Create a copy of FilterAndSortOptions
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -28,12 +28,12 @@ $FilterAndSortOptionsCopyWith<FilterAndSortOptions> get copyWith => _$FilterAndS
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is FilterAndSortOptions&&(identical(other.fileType, fileType) || other.fileType == fileType)&&(identical(other.pinnedOnly, pinnedOnly) || other.pinnedOnly == pinnedOnly)&&(identical(other.time, time) || other.time == time)&&(identical(other.sortOption, sortOption) || other.sortOption == sortOption));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is FilterAndSortOptions&&const DeepCollectionEquality().equals(other.fileType, fileType)&&(identical(other.pinnedOnly, pinnedOnly) || other.pinnedOnly == pinnedOnly)&&(identical(other.time, time) || other.time == time)&&(identical(other.sortOption, sortOption) || other.sortOption == sortOption));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,fileType,pinnedOnly,time,sortOption);
+int get hashCode => Object.hash(runtimeType,const DeepCollectionEquality().hash(fileType),pinnedOnly,time,sortOption);
 
 @override
 String toString() {
@@ -48,7 +48,7 @@ abstract mixin class $FilterAndSortOptionsCopyWith<$Res>  {
   factory $FilterAndSortOptionsCopyWith(FilterAndSortOptions value, $Res Function(FilterAndSortOptions) _then) = _$FilterAndSortOptionsCopyWithImpl;
 @useResult
 $Res call({
- ContentFileType? fileType, bool? pinnedOnly, FilterTime? time, SortOption? sortOption
+ List<FilterFileType>? fileType, bool? pinnedOnly, FilterTime? time, SortOption? sortOption
 });
 
 
@@ -68,7 +68,7 @@ class _$FilterAndSortOptionsCopyWithImpl<$Res>
 @pragma('vm:prefer-inline') @override $Res call({Object? fileType = freezed,Object? pinnedOnly = freezed,Object? time = freezed,Object? sortOption = freezed,}) {
   return _then(_self.copyWith(
 fileType: freezed == fileType ? _self.fileType : fileType // ignore: cast_nullable_to_non_nullable
-as ContentFileType?,pinnedOnly: freezed == pinnedOnly ? _self.pinnedOnly : pinnedOnly // ignore: cast_nullable_to_non_nullable
+as List<FilterFileType>?,pinnedOnly: freezed == pinnedOnly ? _self.pinnedOnly : pinnedOnly // ignore: cast_nullable_to_non_nullable
 as bool?,time: freezed == time ? _self.time : time // ignore: cast_nullable_to_non_nullable
 as FilterTime?,sortOption: freezed == sortOption ? _self.sortOption : sortOption // ignore: cast_nullable_to_non_nullable
 as SortOption?,
@@ -156,7 +156,7 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( ContentFileType? fileType,  bool? pinnedOnly,  FilterTime? time,  SortOption? sortOption)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( List<FilterFileType>? fileType,  bool? pinnedOnly,  FilterTime? time,  SortOption? sortOption)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _FilterAndSortOptions() when $default != null:
 return $default(_that.fileType,_that.pinnedOnly,_that.time,_that.sortOption);case _:
@@ -177,7 +177,7 @@ return $default(_that.fileType,_that.pinnedOnly,_that.time,_that.sortOption);cas
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( ContentFileType? fileType,  bool? pinnedOnly,  FilterTime? time,  SortOption? sortOption)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( List<FilterFileType>? fileType,  bool? pinnedOnly,  FilterTime? time,  SortOption? sortOption)  $default,) {final _that = this;
 switch (_that) {
 case _FilterAndSortOptions():
 return $default(_that.fileType,_that.pinnedOnly,_that.time,_that.sortOption);case _:
@@ -197,7 +197,7 @@ return $default(_that.fileType,_that.pinnedOnly,_that.time,_that.sortOption);cas
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( ContentFileType? fileType,  bool? pinnedOnly,  FilterTime? time,  SortOption? sortOption)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( List<FilterFileType>? fileType,  bool? pinnedOnly,  FilterTime? time,  SortOption? sortOption)?  $default,) {final _that = this;
 switch (_that) {
 case _FilterAndSortOptions() when $default != null:
 return $default(_that.fileType,_that.pinnedOnly,_that.time,_that.sortOption);case _:
@@ -212,10 +212,18 @@ return $default(_that.fileType,_that.pinnedOnly,_that.time,_that.sortOption);cas
 @JsonSerializable()
 
 class _FilterAndSortOptions implements FilterAndSortOptions {
-   _FilterAndSortOptions({this.fileType, this.pinnedOnly, this.time, this.sortOption});
+   _FilterAndSortOptions({final  List<FilterFileType>? fileType, this.pinnedOnly, this.time, this.sortOption}): _fileType = fileType;
   factory _FilterAndSortOptions.fromJson(Map<String, dynamic> json) => _$FilterAndSortOptionsFromJson(json);
 
-@override final  ContentFileType? fileType;
+ final  List<FilterFileType>? _fileType;
+@override List<FilterFileType>? get fileType {
+  final value = _fileType;
+  if (value == null) return null;
+  if (_fileType is EqualUnmodifiableListView) return _fileType;
+  // ignore: implicit_dynamic_type
+  return EqualUnmodifiableListView(value);
+}
+
 @override final  bool? pinnedOnly;
 @override final  FilterTime? time;
 @override final  SortOption? sortOption;
@@ -233,12 +241,12 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _FilterAndSortOptions&&(identical(other.fileType, fileType) || other.fileType == fileType)&&(identical(other.pinnedOnly, pinnedOnly) || other.pinnedOnly == pinnedOnly)&&(identical(other.time, time) || other.time == time)&&(identical(other.sortOption, sortOption) || other.sortOption == sortOption));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _FilterAndSortOptions&&const DeepCollectionEquality().equals(other._fileType, _fileType)&&(identical(other.pinnedOnly, pinnedOnly) || other.pinnedOnly == pinnedOnly)&&(identical(other.time, time) || other.time == time)&&(identical(other.sortOption, sortOption) || other.sortOption == sortOption));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,fileType,pinnedOnly,time,sortOption);
+int get hashCode => Object.hash(runtimeType,const DeepCollectionEquality().hash(_fileType),pinnedOnly,time,sortOption);
 
 @override
 String toString() {
@@ -253,7 +261,7 @@ abstract mixin class _$FilterAndSortOptionsCopyWith<$Res> implements $FilterAndS
   factory _$FilterAndSortOptionsCopyWith(_FilterAndSortOptions value, $Res Function(_FilterAndSortOptions) _then) = __$FilterAndSortOptionsCopyWithImpl;
 @override @useResult
 $Res call({
- ContentFileType? fileType, bool? pinnedOnly, FilterTime? time, SortOption? sortOption
+ List<FilterFileType>? fileType, bool? pinnedOnly, FilterTime? time, SortOption? sortOption
 });
 
 
@@ -272,8 +280,8 @@ class __$FilterAndSortOptionsCopyWithImpl<$Res>
 /// with the given fields replaced by the non-null parameter values.
 @override @pragma('vm:prefer-inline') $Res call({Object? fileType = freezed,Object? pinnedOnly = freezed,Object? time = freezed,Object? sortOption = freezed,}) {
   return _then(_FilterAndSortOptions(
-fileType: freezed == fileType ? _self.fileType : fileType // ignore: cast_nullable_to_non_nullable
-as ContentFileType?,pinnedOnly: freezed == pinnedOnly ? _self.pinnedOnly : pinnedOnly // ignore: cast_nullable_to_non_nullable
+fileType: freezed == fileType ? _self._fileType : fileType // ignore: cast_nullable_to_non_nullable
+as List<FilterFileType>?,pinnedOnly: freezed == pinnedOnly ? _self.pinnedOnly : pinnedOnly // ignore: cast_nullable_to_non_nullable
 as bool?,time: freezed == time ? _self.time : time // ignore: cast_nullable_to_non_nullable
 as FilterTime?,sortOption: freezed == sortOption ? _self.sortOption : sortOption // ignore: cast_nullable_to_non_nullable
 as SortOption?,

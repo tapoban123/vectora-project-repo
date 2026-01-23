@@ -9,7 +9,9 @@ part of 'filter_and_sort_options.dart';
 _FilterAndSortOptions _$FilterAndSortOptionsFromJson(
   Map<String, dynamic> json,
 ) => _FilterAndSortOptions(
-  fileType: $enumDecodeNullable(_$ContentFileTypeEnumMap, json['fileType']),
+  fileType: (json['fileType'] as List<dynamic>?)
+      ?.map((e) => $enumDecode(_$FilterFileTypeEnumMap, e))
+      .toList(),
   pinnedOnly: json['pinnedOnly'] as bool?,
   time: $enumDecodeNullable(_$FilterTimeEnumMap, json['time']),
   sortOption: $enumDecodeNullable(_$SortOptionEnumMap, json['sortOption']),
@@ -18,18 +20,18 @@ _FilterAndSortOptions _$FilterAndSortOptionsFromJson(
 Map<String, dynamic> _$FilterAndSortOptionsToJson(
   _FilterAndSortOptions instance,
 ) => <String, dynamic>{
-  'fileType': _$ContentFileTypeEnumMap[instance.fileType],
+  'fileType': instance.fileType
+      ?.map((e) => _$FilterFileTypeEnumMap[e]!)
+      .toList(),
   'pinnedOnly': instance.pinnedOnly,
   'time': _$FilterTimeEnumMap[instance.time],
   'sortOption': _$SortOptionEnumMap[instance.sortOption],
 };
 
-const _$ContentFileTypeEnumMap = {
-  ContentFileType.IMAGE: 'IMAGE',
-  ContentFileType.PDF: 'PDF',
-  ContentFileType.SCANNED_PDF: 'SCANNED_PDF',
-  ContentFileType.NOTE: 'NOTE',
-  ContentFileType.UNKNOWN: 'UNKNOWN',
+const _$FilterFileTypeEnumMap = {
+  FilterFileType.IMAGE: 'IMAGE',
+  FilterFileType.PDF: 'PDF',
+  FilterFileType.NOTE: 'NOTE',
 };
 
 const _$FilterTimeEnumMap = {

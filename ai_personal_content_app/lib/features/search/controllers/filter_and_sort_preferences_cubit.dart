@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:ai_personal_content_app/core/common/constants.dart';
 import 'package:ai_personal_content_app/features/search/models/filter_and_sort_options.dart';
 import 'package:ai_personal_content_app/features/search/services/content_library_user_prefs_localdb_service.dart';
@@ -22,9 +24,17 @@ class FilterAndSortPreferencesCubit extends Cubit<FilterAndSortOptions> {
     emit(prefs);
   }
 
-  void setFileType(ContentFileType type) {
-    final prefs = state.copyWith(fileType: type);
+  List<FilterFileType> setFileType(FilterFileType type) {
+    late final FilterAndSortOptions prefs;
+    final List<FilterFileType> fileTypes = List.from(state.fileType ?? []);
+    if (fileTypes.contains(type)) {
+      fileTypes.remove(type);
+      prefs = state.copyWith(fileType: fileTypes);
+    } else {
+      prefs = state.copyWith(fileType: [...fileTypes, type]);
+    }
     _saveAndEmitPrefs(prefs);
+    return prefs.fileType ?? [];
   }
 
   void setIsPinnedOnly(bool val) {

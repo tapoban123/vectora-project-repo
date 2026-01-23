@@ -47,12 +47,7 @@ class _ContentLibraryScreenState extends State<ContentLibraryScreen> {
     "File Size (Smallest First)",
   ];
 
-  final _filterByFileTypeOptions = [
-    (fileType: "PDF", status: true),
-    (fileType: "Image", status: false),
-    (fileType: "Text", status: true),
-    (fileType: "Note", status: false),
-  ];
+  final _filterByFileTypeOptions = ["Image", "PDF", "Note"];
 
   final _filterByTimeOptions = ["Today", "Last 7 days", "Last 30 days"];
 
@@ -408,165 +403,206 @@ class _ContentLibraryScreenState extends State<ContentLibraryScreen> {
                       FilterAndSortPreferencesCubit,
                       FilterAndSortOptions
                     >(
-                      builder: (context, state) => Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            "File Type",
-                            style: TextStyle(
-                              fontSize: 14.sp,
-                              color: AppColors.offWhiteColor,
-                              fontVariations: [FontVariation.weight(600)],
-                            ),
-                          ),
-                          10.verticalSpace,
-                          Row(
-                            children: List.generate(
-                              _filterByFileTypeOptions.length,
-                              (index) => Card(
-                                color: _filterByFileTypeOptions[index].status
-                                    ? AppColors.blueColor
-                                    : AppColors.deepBlueColor,
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(50.r),
-                                  side: !_filterByFileTypeOptions[index].status
-                                      ? BorderSide(
-                                          color: Colors.white10,
-                                          width: 1.5,
-                                        )
-                                      : BorderSide.none,
-                                ),
-                                child: Padding(
-                                  padding: EdgeInsets.symmetric(
-                                    horizontal: 15.w,
-                                    vertical: 8.w,
-                                  ),
-                                  child: Text(
-                                    _filterByFileTypeOptions[index].fileType,
-                                    style: TextStyle(
-                                      color:
-                                          _filterByFileTypeOptions[index].status
-                                          ? Colors.white
-                                          : AppColors.lightGreyColor,
-                                      fontSize: 15.sp,
-                                      fontVariations: [
-                                        FontVariation.weight(600),
-                                      ],
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ),
-                          16.verticalSpace,
-                          ListTile(
-                            contentPadding: EdgeInsets.zero,
-                            title: Text(
-                              "Pinned only",
+                      builder: (context, state) {
+                        return Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              "File Type",
                               style: TextStyle(
-                                fontVariations: [FontVariation.weight(500)],
+                                fontSize: 14.sp,
+                                color: AppColors.offWhiteColor,
+                                fontVariations: [FontVariation.weight(600)],
                               ),
                             ),
-                            trailing: CupertinoSwitch(
-                              value: state.pinnedOnly ?? false,
-                              onChanged: (value) {
-                                final isAnyContentPinned = getIt<IsPinnedContentExists>().call();
-                                if (!isAnyContentPinned){
-                                  showToastMessage("No pinned contents found to display.");
-                                  return;
-                                }
-                                context
-                                    .read<FilterAndSortPreferencesCubit>()
-                                    .setIsPinnedOnly(value);
-                                context.read<ContentsManagerBloc>().add(
-                                  FetchAllContents(
-                                    filterAndSortOptions: state.copyWith(
-                                      pinnedOnly: value,
+                            10.verticalSpace,
+                            Row(
+                              children: List.generate(
+                                _filterByFileTypeOptions.length,
+                                (index) => GestureDetector(
+                                  onTap: () {
+                                    final contentTypes = context
+                                        .read<FilterAndSortPreferencesCubit>()
+                                        .setFileType(
+                                          FilterFileType.values[index],
+                                        );
+                                    context.read<ContentsManagerBloc>().add(
+                                      FetchAllContents(
+                                        filterAndSortOptions: state.copyWith(
+                                          fileType: contentTypes,
+                                        ),
+                                      ),
+                                    );
+                                  },
+                                  child: Card(
+                                    color:
+                                        state.fileType != null &&
+                                            state.fileType!.contains(
+                                              FilterFileType.values[index],
+                                            )
+                                        ? AppColors.blueColor
+                                        : AppColors.deepBlueColor,
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(50.r),
+                                      side:
+                                          (state.fileType != null &&
+                                              state.fileType!.contains(
+                                                FilterFileType.values[index],
+                                              ))
+                                          ? BorderSide.none
+                                          : BorderSide(
+                                              color: Colors.white10,
+                                              width: 1.5,
+                                            ),
+                                    ),
+                                    child: Padding(
+                                      padding: EdgeInsets.symmetric(
+                                        horizontal: 15.w,
+                                        vertical: 8.w,
+                                      ),
+                                      child: Text(
+                                        _filterByFileTypeOptions[index],
+                                        style: TextStyle(
+                                          color:
+                                              state.fileType != null &&
+                                                  state.fileType!.contains(
+                                                    FilterFileType
+                                                        .values[index],
+                                                  )
+                                              ? Colors.white
+                                              : AppColors.lightGreyColor,
+                                          fontSize: 15.sp,
+                                          fontVariations: [
+                                            FontVariation.weight(600),
+                                          ],
+                                        ),
+                                      ),
                                     ),
                                   ),
-                                );
-                              },
+                                ),
+                              ),
                             ),
-                          ),
-                          16.verticalSpace,
-                          Text(
-                            "Time",
-                            style: TextStyle(
-                              fontSize: 14.sp,
-                              color: AppColors.offWhiteColor,
-                              fontVariations: [FontVariation.weight(600)],
-                            ),
-                          ),
-                          10.verticalSpace,
-                          Row(
-                            children: List.generate(
-                              _filterByTimeOptions.length,
-                              (index) => GestureDetector(
-                                onTap: () {
-                                  context.read<FilterAndSortPreferencesCubit>().setTime(FilterTime.values[index]);
+                            16.verticalSpace,
+                            ListTile(
+                              contentPadding: EdgeInsets.zero,
+                              title: Text(
+                                "Pinned only",
+                                style: TextStyle(
+                                  fontVariations: [FontVariation.weight(500)],
+                                ),
+                              ),
+                              trailing: CupertinoSwitch(
+                                value: state.pinnedOnly ?? false,
+                                onChanged: (value) {
+                                  final isAnyContentPinned =
+                                      getIt<IsPinnedContentExists>().call();
+                                  if (!isAnyContentPinned) {
+                                    showToastMessage(
+                                      "No pinned contents found to display.",
+                                    );
+                                    return;
+                                  }
+                                  context
+                                      .read<FilterAndSortPreferencesCubit>()
+                                      .setIsPinnedOnly(value);
                                   context.read<ContentsManagerBloc>().add(
                                     FetchAllContents(
                                       filterAndSortOptions: state.copyWith(
-                                        time: FilterTime.values[index],
+                                        pinnedOnly: value,
                                       ),
                                     ),
                                   );
                                 },
-                                child: Card(
-                                  color: state.time == FilterTime.values[index]
-                                      ? AppColors.blueColor
-                                      : AppColors.deepBlueColor,
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(50.r),
-                                    side: (state.time == FilterTime.values[index])
-                                        ? BorderSide.none
-                                        : BorderSide(
-                                            color: Colors.white10,
-                                            width: 1.5,
-                                          ),
-                                  ),
-                                  child: Padding(
-                                    padding: EdgeInsets.symmetric(
-                                      horizontal: 15.w,
-                                      vertical: 8.w,
+                              ),
+                            ),
+                            16.verticalSpace,
+                            Text(
+                              "Time",
+                              style: TextStyle(
+                                fontSize: 14.sp,
+                                color: AppColors.offWhiteColor,
+                                fontVariations: [FontVariation.weight(600)],
+                              ),
+                            ),
+                            10.verticalSpace,
+                            Row(
+                              children: List.generate(
+                                _filterByTimeOptions.length,
+                                (index) => GestureDetector(
+                                  onTap: () {
+                                    context
+                                        .read<FilterAndSortPreferencesCubit>()
+                                        .setTime(FilterTime.values[index]);
+                                    context.read<ContentsManagerBloc>().add(
+                                      FetchAllContents(
+                                        filterAndSortOptions: state.copyWith(
+                                          time: FilterTime.values[index],
+                                        ),
+                                      ),
+                                    );
+                                  },
+                                  child: Card(
+                                    color:
+                                        state.time == FilterTime.values[index]
+                                        ? AppColors.blueColor
+                                        : AppColors.deepBlueColor,
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(50.r),
+                                      side:
+                                          (state.time ==
+                                              FilterTime.values[index])
+                                          ? BorderSide.none
+                                          : BorderSide(
+                                              color: Colors.white10,
+                                              width: 1.5,
+                                            ),
                                     ),
-                                    child: Text(
-                                      _filterByTimeOptions[index],
-                                      style: TextStyle(
-                                        color:
-                                            state.time == FilterTime.values[index]
-                                            ? Colors.white
-                                            : AppColors.lightGreyColor,
-                                        fontSize: 15.sp,
-                                        fontVariations: [
-                                          FontVariation.weight(600),
-                                        ],
+                                    child: Padding(
+                                      padding: EdgeInsets.symmetric(
+                                        horizontal: 15.w,
+                                        vertical: 8.w,
+                                      ),
+                                      child: Text(
+                                        _filterByTimeOptions[index],
+                                        style: TextStyle(
+                                          color:
+                                              state.time ==
+                                                  FilterTime.values[index]
+                                              ? Colors.white
+                                              : AppColors.lightGreyColor,
+                                          fontSize: 15.sp,
+                                          fontVariations: [
+                                            FontVariation.weight(600),
+                                          ],
+                                        ),
                                       ),
                                     ),
                                   ),
                                 ),
                               ),
                             ),
-                          ),
-                          40.verticalSpace,
-                          CustomAppButton(
-                            buttonText: "Apply",
-                            fontSize: 15.sp,
-                            minimumSize: Size(double.infinity, 50.h),
-                            onTap: () {},
-                          ),
-                          8.verticalSpace,
-                          _clearSortOrFilterButton("Clear Filters", () {
-                            context.read<FilterAndSortPreferencesCubit>().clearFilterOptions();
-                            context.read<ContentsManagerBloc>().add(
-                              FetchAllContents(
-                                filterAndSortOptions: state,
-                              ),
-                            );
-                            context.pop();
-                          }),
-                        ],
-                      ),
+                            40.verticalSpace,
+                            CustomAppButton(
+                              buttonText: "Apply",
+                              fontSize: 15.sp,
+                              minimumSize: Size(double.infinity, 50.h),
+                              onTap: () {},
+                            ),
+                            8.verticalSpace,
+                            _clearSortOrFilterButton("Clear Filters", () {
+                              context
+                                  .read<FilterAndSortPreferencesCubit>()
+                                  .clearFilterOptions();
+                              context.read<ContentsManagerBloc>().add(
+                                FetchAllContents(
+                                  filterAndSortOptions: FilterAndSortOptions(),
+                                ),
+                              );
+                              context.pop();
+                            }),
+                          ],
+                        );
+                      },
                     ),
               ),
             ],

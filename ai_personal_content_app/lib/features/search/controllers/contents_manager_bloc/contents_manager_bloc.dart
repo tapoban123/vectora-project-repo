@@ -27,7 +27,7 @@ class ContentsManagerBloc
   List<ContentsEntity> _contents = [];
 
   void _fetchAllContents(FetchAllContents event, Emitter emit) {
-    log(event.filterAndSortOptions.isNull.toString());
+    log(event.filterAndSortOptions.fileType.toString());
     _contents = _contentsLocalStorageService.fetchAllContents(
       options: event.filterAndSortOptions,
     );

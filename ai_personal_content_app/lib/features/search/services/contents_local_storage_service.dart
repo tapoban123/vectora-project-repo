@@ -115,7 +115,6 @@ class ContentsLocalStorageService {
   List<ContentsEntity> fetchAllContents({
     required FilterAndSortOptions options,
   }) {
-    log(options.sortOption.toString());
     if (options.isNull) {
       return _contentsBox.getAll();
     }
@@ -127,9 +126,11 @@ class ContentsLocalStorageService {
     ({QueryProperty<ContentsEntity, dynamic> property, int flag})? sortOrder;
 
     if (options.fileType != null) {
-      fileTypeCondition = ContentsEntity_.type.oneOf(
-        ContentFileType.values.map((e) => e.toString()).toList(),
-      );
+      if (options.fileType!.isNotEmpty){
+        fileTypeCondition = ContentsEntity_.type.oneOf(
+          options.fileType!.map((e) => e.name).toList(),
+        );
+      }
     }
     if (options.time != null) {
       switch (options.time) {
@@ -183,11 +184,9 @@ class ContentsLocalStorageService {
           );
           break;
         case SortOption.OLDEST_FIRST:
-          log("DESCENDING");
           sortOrder = (property: ContentsEntity_.createdAt, flag: 0);
           break;
         case SortOption.RECENTLY_ADDED:
-          log("ASCENDING");
           sortOrder = (
             property: ContentsEntity_.createdAt,
             flag: Order.descending,

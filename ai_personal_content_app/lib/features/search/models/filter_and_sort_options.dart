@@ -1,11 +1,11 @@
-// enum FilterFileType { PDF, IMAGE, TEXT, NOTE, ALL }
-
 import 'package:ai_personal_content_app/core/common/constants.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 part 'filter_and_sort_options.g.dart';
 
 part 'filter_and_sort_options.freezed.dart';
+
+enum FilterFileType { IMAGE, PDF, NOTE }
 
 enum FilterTime { TODAY, LAST_7_DAYS, LAST_30_DAYS }
 
@@ -22,7 +22,7 @@ enum SortOption {
 @freezed
 abstract class FilterAndSortOptions with _$FilterAndSortOptions {
   factory FilterAndSortOptions({
-    ContentFileType? fileType,
+    List<FilterFileType>? fileType,
     bool? pinnedOnly,
     FilterTime? time,
     SortOption? sortOption,
