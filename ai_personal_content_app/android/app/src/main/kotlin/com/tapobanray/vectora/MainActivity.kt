@@ -1,4 +1,4 @@
-package com.example.ai_personal_content_app
+package com.tapobanray.vectora
 
 import io.flutter.embedding.android.FlutterActivity
 

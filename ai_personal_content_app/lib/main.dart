@@ -8,8 +8,10 @@ import 'package:ai_personal_content_app/features/items/controllers/cubits/pinned
 import 'package:ai_personal_content_app/features/search/controllers/contents_manager_bloc/contents_manager_bloc.dart';
 import 'package:ai_personal_content_app/features/search/controllers/filter_and_sort_preferences_cubit.dart';
 import 'package:ai_personal_content_app/features/search/controllers/search_contents_bloc/search_contents_bloc.dart';
+import 'package:ai_personal_content_app/firebase_options.dart';
 import 'package:ai_personal_content_app/get_it.dart';
 import 'package:ai_personal_content_app/router.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -21,6 +23,7 @@ late final ObjectboxConfig objectBoxInstance;
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   objectBoxInstance = await ObjectboxConfig.create();
 
   init();
@@ -45,10 +48,12 @@ class MyApp extends StatelessWidget {
           BlocProvider(create: (context) => getIt<SearchContentsBloc>()),
           BlocProvider(create: (context) => getIt<RecentItemsCubit>()),
           BlocProvider(create: (context) => getIt<PinItemsCubit>()),
-          BlocProvider(create: (context) => getIt<FilterAndSortPreferencesCubit>()),
+          BlocProvider(
+            create: (context) => getIt<FilterAndSortPreferencesCubit>(),
+          ),
         ],
         child: MaterialApp.router(
-          title: "AI Personal Content Universe",
+          title: "Vectora",
           debugShowCheckedModeBanner: false,
           localizationsDelegates: const [
             GlobalMaterialLocalizations.delegate,

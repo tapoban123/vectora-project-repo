@@ -9,7 +9,7 @@ class UserAuthBloc extends Bloc<UserAuthEvents, UserAuthStates> {
   }
 
   void _signIn(SignIn event, Emitter emit) async {
-    
+
   }
 
   void _signOut(SignOut event, Emitter emit) async {}
