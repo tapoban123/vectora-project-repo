@@ -3,10 +3,13 @@ import 'package:ai_personal_content_app/core/theme/app_colors.dart';
 import 'package:ai_personal_content_app/core/theme/app_fonts.dart';
 import 'package:ai_personal_content_app/core/theme/app_svgs.dart';
 import 'package:ai_personal_content_app/core/utils/utils.dart';
+import 'package:ai_personal_content_app/features/auth/controllers/user_auth_bloc/user_auth_bloc.dart';
+import 'package:ai_personal_content_app/features/auth/controllers/user_auth_bloc/user_auth_events.dart';
 import 'package:ai_personal_content_app/features/auth/widgets/custom_auth_button.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:lottie/lottie.dart';
 
@@ -90,7 +93,9 @@ class _OnboardingScreenState extends State<OnboardingScreen>
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     ElevatedButton(
-                      onPressed: () {},
+                      onPressed: () {
+                        context.read<UserAuthBloc>().add(SignIn());
+                      },
                       style: ElevatedButton.styleFrom(
                         minimumSize: Size(double.infinity, 56.w),
                         backgroundColor: Colors.white,

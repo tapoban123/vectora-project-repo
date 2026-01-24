@@ -2,6 +2,7 @@ import 'package:ai_personal_content_app/core/configs/objectbox_config.dart';
 import 'package:ai_personal_content_app/core/theme/app_colors.dart';
 import 'package:ai_personal_content_app/core/theme/app_fonts.dart';
 import 'package:ai_personal_content_app/core/utils/utils.dart';
+import 'package:ai_personal_content_app/features/auth/controllers/user_auth_bloc/user_auth_bloc.dart';
 import 'package:ai_personal_content_app/features/home/controllers/cubits/recent_items_cubit.dart';
 import 'package:ai_personal_content_app/features/home/controllers/new_contents_bloc/new_contents_bloc.dart';
 import 'package:ai_personal_content_app/features/items/controllers/cubits/pinned_items_cubit.dart';
@@ -18,12 +19,14 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_quill/flutter_quill.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 late final ObjectboxConfig objectBoxInstance;
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+  await dotenv.load(fileName: ".env");
   objectBoxInstance = await ObjectboxConfig.create();
 
   init();
@@ -43,6 +46,7 @@ class MyApp extends StatelessWidget {
       splitScreenMode: true,
       child: MultiBlocProvider(
         providers: [
+          BlocProvider(create: (context) => getIt<UserAuthBloc>()),
           BlocProvider(create: (context) => getIt<NewContentsBloc>()),
           BlocProvider(create: (context) => getIt<ContentsManagerBloc>()),
           BlocProvider(create: (context) => getIt<SearchContentsBloc>()),

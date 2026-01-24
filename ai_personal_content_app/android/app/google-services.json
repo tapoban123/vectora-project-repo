@@ -14,6 +14,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "576532236412-juh5nt6ogut3m467kio0oq7h6rtko07n.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.tapobanray.vectora",
+            "certificate_hash": "4342bf7ad71b91205cc45db264abef3295f9a068"
+          }
+        },
+        {
           "client_id": "576532236412-11im6q48e2bqpjcqv29uab25hup9pt7o.apps.googleusercontent.com",
           "client_type": 3
         }
