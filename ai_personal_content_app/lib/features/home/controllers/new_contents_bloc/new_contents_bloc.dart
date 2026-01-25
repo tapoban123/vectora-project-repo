@@ -2,7 +2,7 @@ import 'dart:convert';
 import 'dart:developer';
 import 'dart:io';
 
-import 'package:ai_personal_content_app/core/api/exceptions.dart';
+import 'package:ai_personal_content_app/core/api/api_exceptions.dart';
 import 'package:ai_personal_content_app/core/common/constants.dart';
 import 'package:ai_personal_content_app/core/common/services/embedding_generation_service.dart';
 import 'package:ai_personal_content_app/core/common/services/embeddings_storage_service.dart';

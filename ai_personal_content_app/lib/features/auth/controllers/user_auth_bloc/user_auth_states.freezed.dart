@@ -131,14 +131,14 @@ return error(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>({TResult Function()?  initial,TResult Function()?  authenticated,TResult Function()?  unauthenticated,TResult Function()?  loading,TResult Function()?  error,required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>({TResult Function()?  initial,TResult Function()?  authenticated,TResult Function()?  unauthenticated,TResult Function()?  loading,TResult Function( ApiException exception)?  error,required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _Initial() when initial != null:
 return initial();case _Authenticated() when authenticated != null:
 return authenticated();case _Unauthenticated() when unauthenticated != null:
 return unauthenticated();case _Loading() when loading != null:
 return loading();case _Error() when error != null:
-return error();case _:
+return error(_that.exception);case _:
   return orElse();
 
 }
@@ -156,14 +156,14 @@ return error();case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>({required TResult Function()  initial,required TResult Function()  authenticated,required TResult Function()  unauthenticated,required TResult Function()  loading,required TResult Function()  error,}) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>({required TResult Function()  initial,required TResult Function()  authenticated,required TResult Function()  unauthenticated,required TResult Function()  loading,required TResult Function( ApiException exception)  error,}) {final _that = this;
 switch (_that) {
 case _Initial():
 return initial();case _Authenticated():
 return authenticated();case _Unauthenticated():
 return unauthenticated();case _Loading():
 return loading();case _Error():
-return error();case _:
+return error(_that.exception);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -180,14 +180,14 @@ return error();case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>({TResult? Function()?  initial,TResult? Function()?  authenticated,TResult? Function()?  unauthenticated,TResult? Function()?  loading,TResult? Function()?  error,}) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>({TResult? Function()?  initial,TResult? Function()?  authenticated,TResult? Function()?  unauthenticated,TResult? Function()?  loading,TResult? Function( ApiException exception)?  error,}) {final _that = this;
 switch (_that) {
 case _Initial() when initial != null:
 return initial();case _Authenticated() when authenticated != null:
 return authenticated();case _Unauthenticated() when unauthenticated != null:
 return unauthenticated();case _Loading() when loading != null:
 return loading();case _Error() when error != null:
-return error();case _:
+return error(_that.exception);case _:
   return null;
 
 }
@@ -327,32 +327,66 @@ String toString() {
 
 
 class _Error implements UserAuthStates {
-   _Error();
+   _Error(this.exception);
   
 
+ final  ApiException exception;
 
-
+/// Create a copy of UserAuthStates
+/// with the given fields replaced by the non-null parameter values.
+@JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+_$ErrorCopyWith<_Error> get copyWith => __$ErrorCopyWithImpl<_Error>(this, _$identity);
 
 
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _Error);
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _Error&&(identical(other.exception, exception) || other.exception == exception));
 }
 
 
 @override
-int get hashCode => runtimeType.hashCode;
+int get hashCode => Object.hash(runtimeType,exception);
 
 @override
 String toString() {
-  return 'UserAuthStates.error()';
+  return 'UserAuthStates.error(exception: $exception)';
 }
 
 
 }
 
+/// @nodoc
+abstract mixin class _$ErrorCopyWith<$Res> implements $UserAuthStatesCopyWith<$Res> {
+  factory _$ErrorCopyWith(_Error value, $Res Function(_Error) _then) = __$ErrorCopyWithImpl;
+@useResult
+$Res call({
+ ApiException exception
+});
 
 
+
+
+}
+/// @nodoc
+class __$ErrorCopyWithImpl<$Res>
+    implements _$ErrorCopyWith<$Res> {
+  __$ErrorCopyWithImpl(this._self, this._then);
+
+  final _Error _self;
+  final $Res Function(_Error) _then;
+
+/// Create a copy of UserAuthStates
+/// with the given fields replaced by the non-null parameter values.
+@pragma('vm:prefer-inline') $Res call({Object? exception = null,}) {
+  return _then(_Error(
+null == exception ? _self.exception : exception // ignore: cast_nullable_to_non_nullable
+as ApiException,
+  ));
+}
+
+
+}
 
 // dart format on

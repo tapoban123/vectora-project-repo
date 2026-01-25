@@ -11,6 +11,10 @@ VOYAGE_API_SECRET = os.getenv("VOYAGE_AI_API_SECRET")
 COHERE_API_KEY = os.getenv("COHERE_API_KEY")
 GEMINI_API_KEY = os.getenv("GEMINI_API_KEY")
 OPEN_ROUTER_API_KEY = os.getenv("OPEN_ROUTER_API_KEY")
+JWT_SECRET_KEY = os.getenv("JWT_SECRET_KEY")
+EXPIRE_MINUTES_ACCESS_TOKEN = os.getenv("ACCESS_TOKEN_EXPIRE_MINUTES")
+EXPIRE_DAYS_REFRESH_TOKEN = os.getenv("REFRESH_TOKEN_EXPIRE_DAYS")
+JWT_HASH_ALGORITHM = "HS256"
 
 IMAGE_EMBEDDING_MODEL = "voyage-multimodal-3.5"
 
@@ -42,3 +46,12 @@ def get_gemini_model():
         # other params...
     )
     return model
+
+
+class SubscriptionPlans:
+    free: str = "FREE"
+    basic: str = "BASIC"
+    premium: str = "PREMIUM"
+
+
+SUBSCRIPTION_PLANS_LIST: list[str] = [SubscriptionPlans.free, SubscriptionPlans.basic, SubscriptionPlans.premium]

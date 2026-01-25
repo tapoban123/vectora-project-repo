@@ -1,10 +1,9 @@
 import 'dart:convert';
-import 'dart:developer';
 import 'dart:io';
 
 import 'package:ai_personal_content_app/core/api/api_client.dart';
 import 'package:ai_personal_content_app/core/api/api_routes.dart';
-import 'package:ai_personal_content_app/core/api/exceptions.dart';
+import 'package:ai_personal_content_app/core/api/api_exceptions.dart';
 import 'package:ai_personal_content_app/core/api/logger.dart';
 import 'package:ai_personal_content_app/features/home/models/content_embedding_response_model.dart';
 import 'package:dio/dio.dart';
