@@ -8,6 +8,7 @@ import 'package:ai_personal_content_app/core/api/api_routes.dart';
 import 'package:ai_personal_content_app/core/api/logger.dart';
 import 'package:ai_personal_content_app/core/constants/env_values.dart';
 import 'package:ai_personal_content_app/features/auth/models/auth_tokens.dart';
+import 'package:ai_personal_content_app/features/auth/models/user_profile_details.dart';
 import 'package:dio/dio.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:fpdart/fpdart.dart';
@@ -17,7 +18,19 @@ class UserAuthenticationServices {
   final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
   final Dio _dio = ApiClient().dio;
 
-  User? get currentUser => _firebaseAuth.currentUser;
+  UserProfileDetails? getCurrentUser() {
+    final currentUser = _firebaseAuth.currentUser;
+    if (currentUser != null) {
+      return UserProfileDetails(
+        userId: currentUser.uid,
+        name: currentUser.displayName!,
+        profilePicture: currentUser.photoURL!,
+        creationTime: currentUser.metadata.creationTime!,
+        email: currentUser.email!,
+      );
+    }
+    return null;
+  }
 
   Future<Either<ApiException, AuthTokens>> signInUser() async {
     try {

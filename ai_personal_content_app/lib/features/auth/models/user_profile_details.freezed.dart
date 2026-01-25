@@ -11,33 +11,30 @@ part of 'user_profile_details.dart';
 
 // dart format off
 T _$identity<T>(T value) => value;
-
 /// @nodoc
 mixin _$UserProfileDetails {
 
- String get userId; String get name; String get profilePicture; int get creationTime; String get email; SubscriptionTypes get subscriptionType; String? get paymentDate;
+ String get userId; String get name; String get profilePicture; DateTime get creationTime; String get email;
 /// Create a copy of UserProfileDetails
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
 @pragma('vm:prefer-inline')
 $UserProfileDetailsCopyWith<UserProfileDetails> get copyWith => _$UserProfileDetailsCopyWithImpl<UserProfileDetails>(this as UserProfileDetails, _$identity);
 
-  /// Serializes this UserProfileDetails to a JSON map.
-  Map<String, dynamic> toJson();
 
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is UserProfileDetails&&(identical(other.userId, userId) || other.userId == userId)&&(identical(other.name, name) || other.name == name)&&(identical(other.profilePicture, profilePicture) || other.profilePicture == profilePicture)&&(identical(other.creationTime, creationTime) || other.creationTime == creationTime)&&(identical(other.email, email) || other.email == email)&&(identical(other.subscriptionType, subscriptionType) || other.subscriptionType == subscriptionType)&&(identical(other.paymentDate, paymentDate) || other.paymentDate == paymentDate));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is UserProfileDetails&&(identical(other.userId, userId) || other.userId == userId)&&(identical(other.name, name) || other.name == name)&&(identical(other.profilePicture, profilePicture) || other.profilePicture == profilePicture)&&(identical(other.creationTime, creationTime) || other.creationTime == creationTime)&&(identical(other.email, email) || other.email == email));
 }
 
-@JsonKey(includeFromJson: false, includeToJson: false)
+
 @override
-int get hashCode => Object.hash(runtimeType,userId,name,profilePicture,creationTime,email,subscriptionType,paymentDate);
+int get hashCode => Object.hash(runtimeType,userId,name,profilePicture,creationTime,email);
 
 @override
 String toString() {
-  return 'UserProfileDetails(userId: $userId, name: $name, profilePicture: $profilePicture, creationTime: $creationTime, email: $email, subscriptionType: $subscriptionType, paymentDate: $paymentDate)';
+  return 'UserProfileDetails(userId: $userId, name: $name, profilePicture: $profilePicture, creationTime: $creationTime, email: $email)';
 }
 
 
@@ -48,7 +45,7 @@ abstract mixin class $UserProfileDetailsCopyWith<$Res>  {
   factory $UserProfileDetailsCopyWith(UserProfileDetails value, $Res Function(UserProfileDetails) _then) = _$UserProfileDetailsCopyWithImpl;
 @useResult
 $Res call({
- String userId, String name, String profilePicture, int creationTime, String email, SubscriptionTypes subscriptionType, String? paymentDate
+ String userId, String name, String profilePicture, DateTime creationTime, String email
 });
 
 
@@ -65,16 +62,14 @@ class _$UserProfileDetailsCopyWithImpl<$Res>
 
 /// Create a copy of UserProfileDetails
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? userId = null,Object? name = null,Object? profilePicture = null,Object? creationTime = null,Object? email = null,Object? subscriptionType = null,Object? paymentDate = freezed,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? userId = null,Object? name = null,Object? profilePicture = null,Object? creationTime = null,Object? email = null,}) {
   return _then(_self.copyWith(
 userId: null == userId ? _self.userId : userId // ignore: cast_nullable_to_non_nullable
 as String,name: null == name ? _self.name : name // ignore: cast_nullable_to_non_nullable
 as String,profilePicture: null == profilePicture ? _self.profilePicture : profilePicture // ignore: cast_nullable_to_non_nullable
 as String,creationTime: null == creationTime ? _self.creationTime : creationTime // ignore: cast_nullable_to_non_nullable
-as int,email: null == email ? _self.email : email // ignore: cast_nullable_to_non_nullable
-as String,subscriptionType: null == subscriptionType ? _self.subscriptionType : subscriptionType // ignore: cast_nullable_to_non_nullable
-as SubscriptionTypes,paymentDate: freezed == paymentDate ? _self.paymentDate : paymentDate // ignore: cast_nullable_to_non_nullable
-as String?,
+as DateTime,email: null == email ? _self.email : email // ignore: cast_nullable_to_non_nullable
+as String,
   ));
 }
 
@@ -159,10 +154,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String userId,  String name,  String profilePicture,  int creationTime,  String email,  SubscriptionTypes subscriptionType,  String? paymentDate)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String userId,  String name,  String profilePicture,  DateTime creationTime,  String email)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _UserProfileDetails() when $default != null:
-return $default(_that.userId,_that.name,_that.profilePicture,_that.creationTime,_that.email,_that.subscriptionType,_that.paymentDate);case _:
+return $default(_that.userId,_that.name,_that.profilePicture,_that.creationTime,_that.email);case _:
   return orElse();
 
 }
@@ -180,10 +175,10 @@ return $default(_that.userId,_that.name,_that.profilePicture,_that.creationTime,
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String userId,  String name,  String profilePicture,  int creationTime,  String email,  SubscriptionTypes subscriptionType,  String? paymentDate)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String userId,  String name,  String profilePicture,  DateTime creationTime,  String email)  $default,) {final _that = this;
 switch (_that) {
 case _UserProfileDetails():
-return $default(_that.userId,_that.name,_that.profilePicture,_that.creationTime,_that.email,_that.subscriptionType,_that.paymentDate);case _:
+return $default(_that.userId,_that.name,_that.profilePicture,_that.creationTime,_that.email);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -200,10 +195,10 @@ return $default(_that.userId,_that.name,_that.profilePicture,_that.creationTime,
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String userId,  String name,  String profilePicture,  int creationTime,  String email,  SubscriptionTypes subscriptionType,  String? paymentDate)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String userId,  String name,  String profilePicture,  DateTime creationTime,  String email)?  $default,) {final _that = this;
 switch (_that) {
 case _UserProfileDetails() when $default != null:
-return $default(_that.userId,_that.name,_that.profilePicture,_that.creationTime,_that.email,_that.subscriptionType,_that.paymentDate);case _:
+return $default(_that.userId,_that.name,_that.profilePicture,_that.creationTime,_that.email);case _:
   return null;
 
 }
@@ -212,19 +207,17 @@ return $default(_that.userId,_that.name,_that.profilePicture,_that.creationTime,
 }
 
 /// @nodoc
-@JsonSerializable()
+
 
 class _UserProfileDetails implements UserProfileDetails {
-   _UserProfileDetails({required this.userId, required this.name, required this.profilePicture, required this.creationTime, required this.email, required this.subscriptionType, this.paymentDate});
-  factory _UserProfileDetails.fromJson(Map<String, dynamic> json) => _$UserProfileDetailsFromJson(json);
+   _UserProfileDetails({required this.userId, required this.name, required this.profilePicture, required this.creationTime, required this.email});
+  
 
 @override final  String userId;
 @override final  String name;
 @override final  String profilePicture;
-@override final  int creationTime;
+@override final  DateTime creationTime;
 @override final  String email;
-@override final  SubscriptionTypes subscriptionType;
-@override final  String? paymentDate;
 
 /// Create a copy of UserProfileDetails
 /// with the given fields replaced by the non-null parameter values.
@@ -232,23 +225,20 @@ class _UserProfileDetails implements UserProfileDetails {
 @pragma('vm:prefer-inline')
 _$UserProfileDetailsCopyWith<_UserProfileDetails> get copyWith => __$UserProfileDetailsCopyWithImpl<_UserProfileDetails>(this, _$identity);
 
-@override
-Map<String, dynamic> toJson() {
-  return _$UserProfileDetailsToJson(this, );
-}
+
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _UserProfileDetails&&(identical(other.userId, userId) || other.userId == userId)&&(identical(other.name, name) || other.name == name)&&(identical(other.profilePicture, profilePicture) || other.profilePicture == profilePicture)&&(identical(other.creationTime, creationTime) || other.creationTime == creationTime)&&(identical(other.email, email) || other.email == email)&&(identical(other.subscriptionType, subscriptionType) || other.subscriptionType == subscriptionType)&&(identical(other.paymentDate, paymentDate) || other.paymentDate == paymentDate));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _UserProfileDetails&&(identical(other.userId, userId) || other.userId == userId)&&(identical(other.name, name) || other.name == name)&&(identical(other.profilePicture, profilePicture) || other.profilePicture == profilePicture)&&(identical(other.creationTime, creationTime) || other.creationTime == creationTime)&&(identical(other.email, email) || other.email == email));
 }
 
-@JsonKey(includeFromJson: false, includeToJson: false)
+
 @override
-int get hashCode => Object.hash(runtimeType,userId,name,profilePicture,creationTime,email,subscriptionType,paymentDate);
+int get hashCode => Object.hash(runtimeType,userId,name,profilePicture,creationTime,email);
 
 @override
 String toString() {
-  return 'UserProfileDetails(userId: $userId, name: $name, profilePicture: $profilePicture, creationTime: $creationTime, email: $email, subscriptionType: $subscriptionType, paymentDate: $paymentDate)';
+  return 'UserProfileDetails(userId: $userId, name: $name, profilePicture: $profilePicture, creationTime: $creationTime, email: $email)';
 }
 
 
@@ -259,7 +249,7 @@ abstract mixin class _$UserProfileDetailsCopyWith<$Res> implements $UserProfileD
   factory _$UserProfileDetailsCopyWith(_UserProfileDetails value, $Res Function(_UserProfileDetails) _then) = __$UserProfileDetailsCopyWithImpl;
 @override @useResult
 $Res call({
- String userId, String name, String profilePicture, int creationTime, String email, SubscriptionTypes subscriptionType, String? paymentDate
+ String userId, String name, String profilePicture, DateTime creationTime, String email
 });
 
 
@@ -276,16 +266,14 @@ class __$UserProfileDetailsCopyWithImpl<$Res>
 
 /// Create a copy of UserProfileDetails
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? userId = null,Object? name = null,Object? profilePicture = null,Object? creationTime = null,Object? email = null,Object? subscriptionType = null,Object? paymentDate = freezed,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? userId = null,Object? name = null,Object? profilePicture = null,Object? creationTime = null,Object? email = null,}) {
   return _then(_UserProfileDetails(
 userId: null == userId ? _self.userId : userId // ignore: cast_nullable_to_non_nullable
 as String,name: null == name ? _self.name : name // ignore: cast_nullable_to_non_nullable
 as String,profilePicture: null == profilePicture ? _self.profilePicture : profilePicture // ignore: cast_nullable_to_non_nullable
 as String,creationTime: null == creationTime ? _self.creationTime : creationTime // ignore: cast_nullable_to_non_nullable
-as int,email: null == email ? _self.email : email // ignore: cast_nullable_to_non_nullable
-as String,subscriptionType: null == subscriptionType ? _self.subscriptionType : subscriptionType // ignore: cast_nullable_to_non_nullable
-as SubscriptionTypes,paymentDate: freezed == paymentDate ? _self.paymentDate : paymentDate // ignore: cast_nullable_to_non_nullable
-as String?,
+as DateTime,email: null == email ? _self.email : email // ignore: cast_nullable_to_non_nullable
+as String,
   ));
 }
 

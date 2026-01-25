@@ -1,7 +1,10 @@
 import 'package:ai_personal_content_app/core/common/services/embedding_generation_service.dart';
 import 'package:ai_personal_content_app/core/common/services/embeddings_storage_service.dart';
+import 'package:ai_personal_content_app/core/common/services/jwt_token_storage_service.dart';
 import 'package:ai_personal_content_app/features/auth/controllers/user_auth_bloc/user_auth_bloc.dart';
 import 'package:ai_personal_content_app/features/auth/services/user_authentication_services.dart';
+import 'package:ai_personal_content_app/features/auth/usecases/read_access_token.dart';
+import 'package:ai_personal_content_app/features/auth/usecases/read_refresh_token.dart';
 import 'package:ai_personal_content_app/features/home/controllers/cubits/recent_items_cubit.dart';
 import 'package:ai_personal_content_app/features/home/controllers/new_contents_bloc/new_contents_bloc.dart';
 import 'package:ai_personal_content_app/features/home/services/recent_contents_local_db_service.dart';
@@ -37,6 +40,9 @@ void init() {
   getIt.registerLazySingleton<UserAuthenticationServices>(
     () => UserAuthenticationServices(),
   );
+  getIt.registerLazySingleton<JwtTokenStorageService>(
+    () => JwtTokenStorageService(),
+  );
   getIt.registerLazySingleton<EmbeddingsLocalStorageService>(
     () => EmbeddingsLocalStorageService(),
   );
@@ -57,9 +63,18 @@ void init() {
   getIt.registerLazySingleton<IsPinnedContentExists>(
     () => IsPinnedContentExists(contentsLocalStorageService: getIt()),
   );
+  getIt.registerLazySingleton<ReadAccessToken>(
+    () => ReadAccessToken(jwtTokenStorageService: getIt()),
+  );
+  getIt.registerLazySingleton<ReadRefreshToken>(
+    () => ReadRefreshToken(jwtTokenStorageService: getIt()),
+  );
 
   getIt.registerFactory<UserAuthBloc>(
-    () => UserAuthBloc(userAuthenticationServices: getIt()),
+    () => UserAuthBloc(
+      userAuthenticationServices: getIt(),
+      jwtTokenStorageService: getIt(),
+    ),
   );
   getIt.registerFactory<NewContentsBloc>(
     () => NewContentsBloc(
