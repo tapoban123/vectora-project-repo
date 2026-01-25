@@ -235,16 +235,16 @@ class _SearchContentsScreenState extends State<SearchContentsScreen> {
                           valueListenable: _selectedFilter,
                           builder: (context, selectedFilter, child) {
                             final double farthestDocument = documents.isNotEmpty
-                                ? documents.first.distance
-                                : 0;
-                            final double nearestDocument = documents.isNotEmpty
                                 ? documents.last.distance
                                 : 0;
+                            final double nearestDocument = documents.isNotEmpty
+                                ? documents.first.distance
+                                : 0;
                             final double farthestNote = notes.isNotEmpty
-                                ? notes.first.distance
+                                ? notes.last.distance
                                 : 0;
                             final double nearestNote = notes.isNotEmpty
-                                ? notes.last.distance
+                                ? notes.first.distance
                                 : 0;
 
                             return CustomScrollView(
@@ -402,13 +402,9 @@ int _calculateSimilarityPercent({
   required double farthest,
   required double nearest,
 }) {
-  if (farthest <= nearest) {
-    return 100;
-  }
+  final double normalised = 1 - (distance - nearest) / (farthest - nearest);
 
-  final double normalised = 1.0 - ((distance - nearest) / (farthest - nearest));
-  final matchDegree = normalised.clamp(0.0, 1.0);
-  return (matchDegree * 100).round();
+  return (normalised * 100).round();
 }
 
 class _ImageCardWidget extends StatelessWidget {
@@ -517,9 +513,9 @@ class _DocumentCardWidget extends StatelessWidget {
       farthest: farthestDistance,
       nearest: nearestDistance,
     );
+
     final percentColor = _getMatchPercentColor(matchPercent);
     final isPdf = fileType == ContentFileType.PDF;
-    log(contentWithDistance.distance.toString());
 
     return GestureDetector(
       onTap: () {
