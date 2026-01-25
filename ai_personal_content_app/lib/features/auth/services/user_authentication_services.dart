@@ -1,7 +1,9 @@
 import 'dart:async';
 import 'dart:developer';
+import 'dart:io';
 
 import 'package:ai_personal_content_app/core/api/api_client.dart';
+import 'package:ai_personal_content_app/core/api/api_routes.dart';
 import 'package:ai_personal_content_app/core/constants/env_values.dart';
 import 'package:dio/dio.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -28,9 +30,15 @@ class UserAuthenticationServices {
       );
       final String? firebaseIdToken = await userCredential.user?.getIdToken();
       log(firebaseIdToken.toString());
-      log(userCredential.user!.displayName.toString());
-      log(userCredential.user!.email.toString());
-      log(userCredential.user!.photoURL.toString());
+      final response = await _dio.get(
+        ApiRoutes.signIn,
+        options: Options(
+          headers: {HttpHeaders.authorizationHeader: "Bearer $firebaseIdToken"},
+        ),
+      );
+      if (response.statusCode == 200) {
+        log(response.data.toString());
+      }
     } on GoogleSignInException catch (e) {
       switch (e.code) {
         case GoogleSignInExceptionCode.canceled:

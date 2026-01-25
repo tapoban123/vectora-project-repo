@@ -1,7 +1,16 @@
+from typing import Annotated
+
 from fastapi import APIRouter
+from fastapi.params import Depends
+from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
+
+from src.services.auth_services import sign_in_user_service
 
 auth_router = APIRouter(prefix="/auth", tags=["Authentication"])
 
-@auth_router.get("/sign-up")
-def sign_up_user():
-    return
+security = HTTPBearer()
+
+
+@auth_router.get("/sign-in")
+def sign_in_user(credentials: Annotated[HTTPAuthorizationCredentials, Depends(security)]):
+    return sign_in_user_service(token=credentials.credentials)
