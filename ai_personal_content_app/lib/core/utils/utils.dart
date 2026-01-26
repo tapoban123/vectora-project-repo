@@ -103,6 +103,7 @@ void showAppDialog(
   required String title,
   required String message,
   String? buttonText,
+  IconData? dialogIcon,
   VoidCallback? onConfirmTap,
   Color? confirmButtonColor,
   bool includeCancelButton = false,
@@ -159,7 +160,7 @@ void showAppDialog(
             CircleAvatar(
               backgroundColor: color.withValues(alpha: 0.1),
               radius: 30.r,
-              child: Icon(icon, color: color, size: 28),
+              child: Icon(dialogIcon ?? icon, color: color, size: 28),
             ),
             Text(
               title,

@@ -22,7 +22,7 @@ REFRESH_TOKEN_EXPIRE_DAYS = int(EXPIRE_DAYS_REFRESH_TOKEN)
 
 def sign_in_user_service(token: str):
     try:
-        claims = auth.verify_id_token(token)
+        claims = auth.verify_id_token(token, clock_skew_seconds=5)
         user_details: UserProfileDetailsSchema = UserProfileDetailsSchema.model_validate(claims)
         refresh_token = generate_jwt_token(user_details.internal_id,
                                            expires_delta=timedelta(days=REFRESH_TOKEN_EXPIRE_DAYS))
