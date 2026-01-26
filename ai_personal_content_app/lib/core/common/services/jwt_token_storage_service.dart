@@ -1,3 +1,4 @@
+import 'package:ai_personal_content_app/features/auth/models/auth_tokens.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 class JwtTokenStorageService {
@@ -6,6 +7,18 @@ class JwtTokenStorageService {
   );
   final String _ACCESS_TOKEN_KEY = "ACCESS-TOKEN";
   final String _REFRESH_TOKEN_KEY = "REFRESH-TOKEN";
+
+  Future<void> writeAuthTokens(AuthTokens tokens) async {
+    final future1 = _storage.write(
+      key: _REFRESH_TOKEN_KEY,
+      value: tokens.refreshToken,
+    );
+    final future2 = _storage.write(
+      key: _ACCESS_TOKEN_KEY,
+      value: tokens.accessToken,
+    );
+    await Future.wait([future1, future2]);
+  }
 
   Future<void> writeAccessToken(String accessToken) async {
     await _storage.write(key: _ACCESS_TOKEN_KEY, value: accessToken);

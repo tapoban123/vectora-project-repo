@@ -27,7 +27,7 @@ def sign_in_user_service(token: str):
         refresh_token = generate_jwt_token(user_details.internal_id,
                                            expires_delta=timedelta(days=REFRESH_TOKEN_EXPIRE_DAYS))
         access_token = generate_jwt_token(user_details.internal_id,
-                                          expires_delta=timedelta(days=ACCESS_TOKEN_EXPIRE_MINUTES))
+                                          expires_delta=timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES))
         return AuthTokensSchema(access_token=access_token, refresh_token=refresh_token)
 
     except ValueError as e:
@@ -36,6 +36,8 @@ def sign_in_user_service(token: str):
     except auth.InvalidIdTokenError as e:
         print(f"Token verification failed:{e}")
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail=e)
+    except Exception as e:
+        raise HTTPException(status_code=status.HTTP_422_UNPROCESSABLE_CONTENT, detail=e)
 
 
 def generate_jwt_token(internal_uid: str, expires_delta: timedelta):

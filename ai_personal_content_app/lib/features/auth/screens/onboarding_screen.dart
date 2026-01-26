@@ -7,11 +7,13 @@ import 'package:ai_personal_content_app/features/auth/controllers/user_auth_bloc
 import 'package:ai_personal_content_app/features/auth/controllers/user_auth_bloc/user_auth_events.dart';
 import 'package:ai_personal_content_app/features/auth/controllers/user_auth_bloc/user_auth_states.dart';
 import 'package:ai_personal_content_app/features/auth/widgets/custom_auth_button.dart';
+import 'package:ai_personal_content_app/router.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:go_router/go_router.dart';
 import 'package:lottie/lottie.dart';
 
 class OnboardingScreen extends StatefulWidget {
@@ -34,6 +36,12 @@ class _OnboardingScreenState extends State<OnboardingScreen>
       duration: Duration(seconds: 8),
     )..repeat();
     super.initState();
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
   }
 
   @override
@@ -112,6 +120,9 @@ class _OnboardingScreenState extends State<OnboardingScreen>
                         listener: (context, state) {
                           state.maybeWhen(
                             orElse: () => null,
+                            authenticated: (user) {
+                              context.go(RouteNames.home);
+                            },
                             error: (exception) =>
                                 showToastMessage(exception.message),
                           );

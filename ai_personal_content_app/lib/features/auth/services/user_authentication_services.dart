@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:convert';
 import 'dart:developer';
 import 'dart:io';
 
@@ -55,7 +56,7 @@ class UserAuthenticationServices {
       final response = await _dio.get(
         ApiRoutes.signIn,
         options: Options(
-          headers: {HttpHeaders.authorizationHeader: "Bearer $firebaseIdToken"},
+          headers: {"Authorization": "Bearer $firebaseIdToken"},
         ),
       );
       if (response.statusCode == 200) {
