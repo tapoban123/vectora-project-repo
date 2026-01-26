@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:ai_personal_content_app/core/theme/app_assets.dart';
 import 'package:ai_personal_content_app/core/theme/app_colors.dart';
 import 'package:ai_personal_content_app/core/theme/app_fonts.dart';
@@ -121,10 +123,13 @@ class _OnboardingScreenState extends State<OnboardingScreen>
                           state.maybeWhen(
                             orElse: () => null,
                             authenticated: (user) {
-                              context.go(RouteNames.home);
+                              WidgetsBinding.instance.addPostFrameCallback((_) {
+                                if (context.mounted) {
+                                  context.go(RouteNames.home);
+                                }
+                              });
                             },
-                            error: (exception) =>
-                                showToastMessage(exception.message),
+                            error: (exception) => showToastMessage(exception.message),
                           );
                         },
                         builder: (context, state) => state.maybeWhen(
@@ -144,8 +149,13 @@ class _OnboardingScreenState extends State<OnboardingScreen>
                               ),
                             ],
                           ),
-                          loading: () =>
-                              CircularProgressIndicator(color: Colors.black),
+                          loading: () => SizedBox.square(
+                            dimension: 32.w,
+                            child: CircularProgressIndicator(
+                              color: Colors.black,
+                              strokeWidth: 2.8.w,
+                            ),
+                          ),
                         ),
                       ),
                     ),

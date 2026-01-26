@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:developer';
 import 'dart:io';
 
 import 'package:ai_personal_content_app/core/utils/utils.dart';
@@ -13,7 +14,6 @@ import 'package:ai_personal_content_app/features/profile-and-settings/screens/us
 import 'package:ai_personal_content_app/features/search/screens/content_library_screen.dart';
 import 'package:ai_personal_content_app/features/search/screens/search_contents_screen.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 
 class _GoRouterRefreshStream extends ChangeNotifier {
@@ -47,7 +47,7 @@ abstract class RouteNames {
 
 GoRouter goRouter(UserAuthBloc authBloc) => GoRouter(
   refreshListenable: _GoRouterRefreshStream(authBloc.stream),
-  redirect: (context, state) async {
+  redirect: (context, state) {
     return authBloc.state.maybeWhen(
       orElse: () => null,
       unauthenticated: () => RouteNames.onboarding,

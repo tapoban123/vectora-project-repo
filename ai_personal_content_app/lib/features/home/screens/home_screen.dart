@@ -48,7 +48,7 @@ class _HomeScreenState extends State<HomeScreen> {
           );
         },
         builder: (context, state) => state.maybeWhen(
-          orElse: () => SizedBox.shrink(),
+          orElse: () => Scaffold(),
           authenticated: (user) => Scaffold(
             appBar: CustomAppbar(
               title: "Home",
