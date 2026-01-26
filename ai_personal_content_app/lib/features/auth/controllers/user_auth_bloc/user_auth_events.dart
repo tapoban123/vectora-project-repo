@@ -4,6 +4,8 @@ part 'user_auth_events.freezed.dart';
 
 @freezed
 abstract class UserAuthEvents with _$UserAuthEvents {
+  factory UserAuthEvents.checkAuthStatus() = CheckAuthStatus;
+
   factory UserAuthEvents.signIn() = SignIn;
 
   factory UserAuthEvents.signOut() = SignOut;

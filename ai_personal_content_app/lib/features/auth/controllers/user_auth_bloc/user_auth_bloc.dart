@@ -16,8 +16,19 @@ class UserAuthBloc extends Bloc<UserAuthEvents, UserAuthStates> {
   }) : _userAuthenticationServices = userAuthenticationServices,
        _jwtTokenStorageService = jwtTokenStorageService,
        super(UserAuthStates.initial()) {
+    on<CheckAuthStatus>(_checkAuthStatus);
     on<SignIn>(_signIn);
     on<SignOut>(_signOut);
+  }
+
+  void _checkAuthStatus(CheckAuthStatus event, Emitter emit) async {
+    final accessToken = await _jwtTokenStorageService.readAccessToken();
+    final user = _userAuthenticationServices.getCurrentUser();
+    if (accessToken != null && user != null) {
+      emit(UserAuthStates.authenticated(user: user));
+    } else {
+      emit(UserAuthStates.unauthenticated());
+    }
   }
 
   void _signIn(SignIn event, Emitter emit) async {

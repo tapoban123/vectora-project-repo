@@ -1,11 +1,10 @@
+import 'dart:async';
 import 'dart:io';
 
 import 'package:ai_personal_content_app/core/utils/utils.dart';
 import 'package:ai_personal_content_app/features/auth/controllers/user_auth_bloc/user_auth_bloc.dart';
 import 'package:ai_personal_content_app/features/auth/controllers/user_auth_bloc/user_auth_states.dart';
 import 'package:ai_personal_content_app/features/auth/screens/onboarding_screen.dart';
-import 'package:ai_personal_content_app/features/auth/usecases/read_access_token.dart';
-import 'package:ai_personal_content_app/features/auth/usecases/read_refresh_token.dart';
 import 'package:ai_personal_content_app/features/home/screens/add_new_content_screen.dart';
 import 'package:ai_personal_content_app/features/home/screens/home_screen.dart';
 import 'package:ai_personal_content_app/features/home/screens/notes_edit_or_create_screen.dart';
@@ -13,9 +12,25 @@ import 'package:ai_personal_content_app/features/items/screens/view_item_screen.
 import 'package:ai_personal_content_app/features/profile-and-settings/screens/user_profile_screen.dart';
 import 'package:ai_personal_content_app/features/search/screens/content_library_screen.dart';
 import 'package:ai_personal_content_app/features/search/screens/search_contents_screen.dart';
-import 'package:ai_personal_content_app/get_it.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+
+class _GoRouterRefreshStream extends ChangeNotifier {
+  late final StreamSubscription<UserAuthStates> _authStream;
+
+  _GoRouterRefreshStream(Stream<UserAuthStates> stream) {
+    _authStream = stream.asBroadcastStream().listen((event) {
+      notifyListeners();
+    });
+  }
+
+  @override
+  void dispose() {
+    _authStream.cancel();
+    super.dispose();
+  }
+}
 
 abstract class RouteNames {
   static const String home = "/";
@@ -30,10 +45,11 @@ abstract class RouteNames {
   static const String viewPdf = "/view-pdf";
 }
 
-final router = GoRouter(
-  initialLocation: RouteNames.onboarding,
+GoRouter goRouter(UserAuthBloc authBloc) => GoRouter(
+  refreshListenable: _GoRouterRefreshStream(authBloc.stream),
+  initialLocation: RouteNames.home,
   redirect: (context, state) async {
-    return context.read<UserAuthBloc>().state.maybeWhen(
+    return context.read()<UserAuthBloc>().state.maybeWhen(
       orElse: () => null,
       unauthenticated: () => RouteNames.onboarding,
     );

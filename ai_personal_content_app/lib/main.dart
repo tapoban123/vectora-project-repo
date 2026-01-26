@@ -3,6 +3,7 @@ import 'package:ai_personal_content_app/core/theme/app_colors.dart';
 import 'package:ai_personal_content_app/core/theme/app_fonts.dart';
 import 'package:ai_personal_content_app/core/utils/utils.dart';
 import 'package:ai_personal_content_app/features/auth/controllers/user_auth_bloc/user_auth_bloc.dart';
+import 'package:ai_personal_content_app/features/auth/controllers/user_auth_bloc/user_auth_events.dart';
 import 'package:ai_personal_content_app/features/home/controllers/cubits/recent_items_cubit.dart';
 import 'package:ai_personal_content_app/features/home/controllers/new_contents_bloc/new_contents_bloc.dart';
 import 'package:ai_personal_content_app/features/items/controllers/cubits/pinned_items_cubit.dart';
@@ -20,6 +21,7 @@ import 'package:flutter_quill/flutter_quill.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:go_router/go_router.dart';
 
 late final ObjectboxConfig objectBoxInstance;
 
@@ -28,14 +30,19 @@ void main() async {
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   await dotenv.load(fileName: ".env");
   objectBoxInstance = await ObjectboxConfig.create();
-
   init();
   await getIt.allReady();
-  runApp(const MyApp());
+
+  final authBloc = getIt<UserAuthBloc>();
+  authBloc.add(CheckAuthStatus());
+
+  runApp(MyApp(router: goRouter(authBloc)));
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+  final GoRouter router;
+
+  const MyApp({super.key, required this.router});
 
   @override
   Widget build(BuildContext context) {

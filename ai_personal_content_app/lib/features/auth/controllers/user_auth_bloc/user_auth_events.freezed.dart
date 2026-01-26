@@ -55,10 +55,11 @@ extension UserAuthEventsPatterns on UserAuthEvents {
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeMap<TResult extends Object?>({TResult Function( SignIn value)?  signIn,TResult Function( SignOut value)?  signOut,required TResult orElse(),}){
+@optionalTypeArgs TResult maybeMap<TResult extends Object?>({TResult Function( CheckAuthStatus value)?  checkAuthStatus,TResult Function( SignIn value)?  signIn,TResult Function( SignOut value)?  signOut,required TResult orElse(),}){
 final _that = this;
 switch (_that) {
-case SignIn() when signIn != null:
+case CheckAuthStatus() when checkAuthStatus != null:
+return checkAuthStatus(_that);case SignIn() when signIn != null:
 return signIn(_that);case SignOut() when signOut != null:
 return signOut(_that);case _:
   return orElse();
@@ -78,10 +79,11 @@ return signOut(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult map<TResult extends Object?>({required TResult Function( SignIn value)  signIn,required TResult Function( SignOut value)  signOut,}){
+@optionalTypeArgs TResult map<TResult extends Object?>({required TResult Function( CheckAuthStatus value)  checkAuthStatus,required TResult Function( SignIn value)  signIn,required TResult Function( SignOut value)  signOut,}){
 final _that = this;
 switch (_that) {
-case SignIn():
+case CheckAuthStatus():
+return checkAuthStatus(_that);case SignIn():
 return signIn(_that);case SignOut():
 return signOut(_that);case _:
   throw StateError('Unexpected subclass');
@@ -100,10 +102,11 @@ return signOut(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>({TResult? Function( SignIn value)?  signIn,TResult? Function( SignOut value)?  signOut,}){
+@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>({TResult? Function( CheckAuthStatus value)?  checkAuthStatus,TResult? Function( SignIn value)?  signIn,TResult? Function( SignOut value)?  signOut,}){
 final _that = this;
 switch (_that) {
-case SignIn() when signIn != null:
+case CheckAuthStatus() when checkAuthStatus != null:
+return checkAuthStatus(_that);case SignIn() when signIn != null:
 return signIn(_that);case SignOut() when signOut != null:
 return signOut(_that);case _:
   return null;
@@ -122,9 +125,10 @@ return signOut(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>({TResult Function()?  signIn,TResult Function()?  signOut,required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>({TResult Function()?  checkAuthStatus,TResult Function()?  signIn,TResult Function()?  signOut,required TResult orElse(),}) {final _that = this;
 switch (_that) {
-case SignIn() when signIn != null:
+case CheckAuthStatus() when checkAuthStatus != null:
+return checkAuthStatus();case SignIn() when signIn != null:
 return signIn();case SignOut() when signOut != null:
 return signOut();case _:
   return orElse();
@@ -144,9 +148,10 @@ return signOut();case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>({required TResult Function()  signIn,required TResult Function()  signOut,}) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>({required TResult Function()  checkAuthStatus,required TResult Function()  signIn,required TResult Function()  signOut,}) {final _that = this;
 switch (_that) {
-case SignIn():
+case CheckAuthStatus():
+return checkAuthStatus();case SignIn():
 return signIn();case SignOut():
 return signOut();case _:
   throw StateError('Unexpected subclass');
@@ -165,9 +170,10 @@ return signOut();case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>({TResult? Function()?  signIn,TResult? Function()?  signOut,}) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>({TResult? Function()?  checkAuthStatus,TResult? Function()?  signIn,TResult? Function()?  signOut,}) {final _that = this;
 switch (_that) {
-case SignIn() when signIn != null:
+case CheckAuthStatus() when checkAuthStatus != null:
+return checkAuthStatus();case SignIn() when signIn != null:
 return signIn();case SignOut() when signOut != null:
 return signOut();case _:
   return null;
@@ -176,6 +182,38 @@ return signOut();case _:
 }
 
 }
+
+/// @nodoc
+
+
+class CheckAuthStatus implements UserAuthEvents {
+   CheckAuthStatus();
+  
+
+
+
+
+
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is CheckAuthStatus);
+}
+
+
+@override
+int get hashCode => runtimeType.hashCode;
+
+@override
+String toString() {
+  return 'UserAuthEvents.checkAuthStatus()';
+}
+
+
+}
+
+
+
 
 /// @nodoc
 
