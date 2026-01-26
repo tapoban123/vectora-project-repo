@@ -1,7 +1,10 @@
 import 'package:ai_personal_content_app/core/common/widgets/custom_appbar.dart';
 import 'package:ai_personal_content_app/core/theme/app_colors.dart';
 import 'package:ai_personal_content_app/core/utils/utils.dart';
+import 'package:ai_personal_content_app/features/auth/controllers/user_auth_bloc/user_auth_bloc.dart';
+import 'package:ai_personal_content_app/features/auth/controllers/user_auth_bloc/user_auth_events.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:intl/intl.dart';
 
@@ -99,7 +102,9 @@ class UserProfileScreen extends StatelessWidget {
             _ProfileCustomButton(
               title: "Logout",
               icon: Icons.logout,
-              onTap: () {},
+              onTap: () {
+                context.read<UserAuthBloc>().add(SignOut());
+              },
               isLogoutButton: true,
             ),
             12.verticalSpace,

@@ -2,6 +2,9 @@ import 'package:ai_personal_content_app/core/common/constants.dart';
 import 'package:ai_personal_content_app/core/common/widgets/custom_appbar.dart';
 import 'package:ai_personal_content_app/core/theme/app_colors.dart';
 import 'package:ai_personal_content_app/core/utils/utils.dart';
+import 'package:ai_personal_content_app/features/auth/controllers/user_auth_bloc/user_auth_bloc.dart';
+import 'package:ai_personal_content_app/features/auth/controllers/user_auth_bloc/user_auth_events.dart';
+import 'package:ai_personal_content_app/features/auth/controllers/user_auth_bloc/user_auth_states.dart';
 import 'package:ai_personal_content_app/features/home/controllers/cubits/recent_items_cubit.dart';
 import 'package:ai_personal_content_app/core/common/widgets/content_card_for_grid_layout.dart';
 import 'package:ai_personal_content_app/features/items/controllers/cubits/pinned_items_cubit.dart';
@@ -24,6 +27,7 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   void initState() {
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      context.read<UserAuthBloc>().add(CheckAuthStatus());
       context.read<RecentItemsCubit>().fetchRecentItems();
       context.read<PinItemsCubit>().fetchPinnedContents();
     });
@@ -34,152 +38,168 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     return AnnotatedRegion<SystemUiOverlayStyle>(
       value: commonSystemUiOverlayStyle,
-      child: Scaffold(
-        appBar: CustomAppbar(
-          title: "Home",
-          actions: [
-            GestureDetector(
-              onTap: () {
-                context.push(RouteNames.contentLibrary);
+      child: BlocConsumer<UserAuthBloc, UserAuthStates>(
+        listener: (context, state) {
+          state.maybeWhen(
+            orElse: () => null,
+            unauthenticated: () {
+              context.go(RouteNames.onboarding);
+            },
+          );
+        },
+        builder: (context, state) => state.maybeWhen(
+          orElse: () => SizedBox.shrink(),
+          authenticated: (user) => Scaffold(
+            appBar: CustomAppbar(
+              title: "Home",
+              actions: [
+                GestureDetector(
+                  onTap: () {
+                    context.push(RouteNames.contentLibrary);
+                  },
+                  child: Icon(Icons.local_library, color: Colors.white),
+                ),
+              ],
+              leading: Icon(Icons.account_circle, color: Colors.white),
+              onLeadingTap: () {
+                context.push(RouteNames.userProfile);
               },
-              child: Icon(Icons.local_library, color: Colors.white),
             ),
-          ],
-          leading: Icon(Icons.account_circle, color: Colors.white),
-          onLeadingTap: () {
-            context.push(RouteNames.userProfile);
-          },
-        ),
-        floatingActionButton: FloatingActionButton(
-          onPressed: () {
-            context.push(RouteNames.addNewContent);
-          },
-          backgroundColor: AppColors.blueColor,
-          shape: CircleBorder(),
-          child: Icon(Icons.add, color: Colors.white, size: 28.w),
-        ),
-        body: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            18.verticalSpace,
-            Padding(
-              padding: EdgeInsets.symmetric(horizontal: 12.w),
-              child: ElevatedButton(
-                onPressed: () {
-                  context.push(RouteNames.searchContent);
-                },
-                style: ElevatedButton.styleFrom(
-                  minimumSize: Size(double.infinity, 52.h),
-                  backgroundColor: AppColors.blueGreyColor,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(14.r),
-                  ),
+            floatingActionButton: FloatingActionButton(
+              onPressed: () {
+                context.push(RouteNames.addNewContent);
+              },
+              backgroundColor: AppColors.blueColor,
+              shape: CircleBorder(),
+              child: Icon(Icons.add, color: Colors.white, size: 28.w),
+            ),
+            body: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                18.verticalSpace,
+                Padding(
                   padding: EdgeInsets.symmetric(horizontal: 12.w),
-                ),
-                child: Row(
-                  spacing: 8.w,
-                  children: [
-                    Icon(
-                      Icons.search_rounded,
-                      color: AppColors.inactiveColor,
-                      size: 24.w,
+                  child: ElevatedButton(
+                    onPressed: () {
+                      context.push(RouteNames.searchContent);
+                    },
+                    style: ElevatedButton.styleFrom(
+                      minimumSize: Size(double.infinity, 52.h),
+                      backgroundColor: AppColors.blueGreyColor,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(14.r),
+                      ),
+                      padding: EdgeInsets.symmetric(horizontal: 12.w),
                     ),
-                    Text(
-                      "Search images, docs and notes...",
-                      style: TextStyle(
-                        color: AppColors.inactiveColor,
-                        fontSize: 16.sp,
-                        fontVariations: [FontVariation.weight(400)],
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-            24.verticalSpace,
-            Padding(
-              padding: EdgeInsets.only(left: 12.w),
-              child: BlocBuilder<PinItemsCubit, List<ContentsEntity>>(
-                builder: (context, state) {
-                  if (state.isEmpty) {
-                    return SizedBox.shrink();
-                  }
-                  return Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisSize: MainAxisSize.min,
-                    spacing: 10.w,
-                    children: [
-                      _sectionHeadingRow(
-                        title: "Pinned",
-                        dialogTitle: "Unpin All Items",
-                        message: "Are you sure you want to unpin all contents?",
-                        onConfirmDelete: () {
-                          context.read<PinItemsCubit>().unPinAllContents();
-                          context.pop();
-                        },
-                      ),
-                      SizedBox(
-                        height: 88.h,
-                        child: ListView.builder(
-                          itemCount: state.length,
-                          scrollDirection: Axis.horizontal,
-                          itemBuilder: (context, index) => Padding(
-                            padding: EdgeInsets.only(right: 12.w),
-                            child: _PinnedItemCard(content: state[index]),
-                          ),
-                        ),
-                      ),
-                    ],
-                  );
-                },
-              ),
-            ),
-            24.verticalSpace,
-            Expanded(
-              child: Padding(
-                padding: EdgeInsets.symmetric(horizontal: 12.w),
-                child: BlocBuilder<RecentItemsCubit, List<ContentsEntity>>(
-                  builder: (context, state) {
-                    if (state.isEmpty) {
-                      return SizedBox.shrink();
-                    }
-                    return Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      spacing: 10.w,
+                    child: Row(
+                      spacing: 8.w,
                       children: [
-                        _sectionHeadingRow(
-                          title: "Recent",
-                          dialogTitle: "Remove Recent Items",
-                          message:
-                              "Are you sure you want to remove recently accessed items?\n\nNOTE: This won't affect your contents present in the content library.",
-                          onConfirmDelete: () {
-                            context
-                                .read<RecentItemsCubit>()
-                                .clearAllRecentItems();
-                            context.pop();
-                          },
+                        Icon(
+                          Icons.search_rounded,
+                          color: AppColors.inactiveColor,
+                          size: 24.w,
                         ),
-                        Expanded(
-                          child: GridView.builder(
-                            itemCount: state.length,
-                            gridDelegate:
-                                SliverGridDelegateWithFixedCrossAxisCount(
-                                  crossAxisCount: 2,
-                                  crossAxisSpacing: 14.w,
-                                  mainAxisSpacing: 14.w,
-                                  childAspectRatio: 0.74,
-                                ),
-                            itemBuilder: (context, index) =>
-                                ContentCardForGridLayout(content: state[index]),
+                        Text(
+                          "Search images, docs and notes...",
+                          style: TextStyle(
+                            color: AppColors.inactiveColor,
+                            fontSize: 16.sp,
+                            fontVariations: [FontVariation.weight(400)],
                           ),
                         ),
                       ],
-                    );
-                  },
+                    ),
+                  ),
                 ),
-              ),
+                24.verticalSpace,
+                Padding(
+                  padding: EdgeInsets.only(left: 12.w),
+                  child: BlocBuilder<PinItemsCubit, List<ContentsEntity>>(
+                    builder: (context, state) {
+                      if (state.isEmpty) {
+                        return SizedBox.shrink();
+                      }
+                      return Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisSize: MainAxisSize.min,
+                        spacing: 10.w,
+                        children: [
+                          _sectionHeadingRow(
+                            title: "Pinned",
+                            dialogTitle: "Unpin All Items",
+                            message:
+                                "Are you sure you want to unpin all contents?",
+                            onConfirmDelete: () {
+                              context.read<PinItemsCubit>().unPinAllContents();
+                              context.pop();
+                            },
+                          ),
+                          SizedBox(
+                            height: 88.h,
+                            child: ListView.builder(
+                              itemCount: state.length,
+                              scrollDirection: Axis.horizontal,
+                              itemBuilder: (context, index) => Padding(
+                                padding: EdgeInsets.only(right: 12.w),
+                                child: _PinnedItemCard(content: state[index]),
+                              ),
+                            ),
+                          ),
+                        ],
+                      );
+                    },
+                  ),
+                ),
+                24.verticalSpace,
+                Expanded(
+                  child: Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 12.w),
+                    child: BlocBuilder<RecentItemsCubit, List<ContentsEntity>>(
+                      builder: (context, state) {
+                        if (state.isEmpty) {
+                          return SizedBox.shrink();
+                        }
+                        return Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          spacing: 10.w,
+                          children: [
+                            _sectionHeadingRow(
+                              title: "Recent",
+                              dialogTitle: "Remove Recent Items",
+                              message:
+                                  "Are you sure you want to remove recently accessed items?\n\nNOTE: This won't affect your contents present in the content library.",
+                              onConfirmDelete: () {
+                                context
+                                    .read<RecentItemsCubit>()
+                                    .clearAllRecentItems();
+                                context.pop();
+                              },
+                            ),
+                            Expanded(
+                              child: GridView.builder(
+                                itemCount: state.length,
+                                gridDelegate:
+                                    SliverGridDelegateWithFixedCrossAxisCount(
+                                      crossAxisCount: 2,
+                                      crossAxisSpacing: 14.w,
+                                      mainAxisSpacing: 14.w,
+                                      childAspectRatio: 0.74,
+                                    ),
+                                itemBuilder: (context, index) =>
+                                    ContentCardForGridLayout(
+                                      content: state[index],
+                                    ),
+                              ),
+                            ),
+                          ],
+                        );
+                      },
+                    ),
+                  ),
+                ),
+              ],
             ),
-          ],
+          ),
         ),
       ),
     );

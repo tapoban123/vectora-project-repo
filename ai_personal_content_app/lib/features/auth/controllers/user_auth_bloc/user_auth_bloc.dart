@@ -33,6 +33,7 @@ class UserAuthBloc extends Bloc<UserAuthEvents, UserAuthStates> {
 
   void _signIn(SignIn event, Emitter emit) async {
     emit(UserAuthStates.loading());
+    await _userAuthenticationServices.signOutUser();
     final response = await _userAuthenticationServices.signInUser();
 
     response.fold((l) => emit(UserAuthStates.error(l)), (r) async {

@@ -5,6 +5,7 @@ import 'package:ai_personal_content_app/core/theme/app_svgs.dart';
 import 'package:ai_personal_content_app/core/utils/utils.dart';
 import 'package:ai_personal_content_app/features/auth/controllers/user_auth_bloc/user_auth_bloc.dart';
 import 'package:ai_personal_content_app/features/auth/controllers/user_auth_bloc/user_auth_events.dart';
+import 'package:ai_personal_content_app/features/auth/controllers/user_auth_bloc/user_auth_states.dart';
 import 'package:ai_personal_content_app/features/auth/widgets/custom_auth_button.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
@@ -107,21 +108,34 @@ class _OnboardingScreenState extends State<OnboardingScreen>
                           borderRadius: BorderRadiusGeometry.circular(12.r),
                         ),
                       ),
-                      child: Row(
-                        spacing: 12.w,
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          googleLogoSvg(),
-                          Text(
-                            "Continue with Google",
-                            style: TextStyle(
-                              fontSize: 16.sp,
-                              fontFamily: APP_FONT_FAMILY,
-                              color: Colors.black,
-                              fontVariations: [FontVariation.weight(650)],
-                            ),
+                      child: BlocConsumer<UserAuthBloc, UserAuthStates>(
+                        listener: (context, state) {
+                          state.maybeWhen(
+                            orElse: () => null,
+                            error: (exception) =>
+                                showToastMessage(exception.message),
+                          );
+                        },
+                        builder: (context, state) => state.maybeWhen(
+                          orElse: () => Row(
+                            spacing: 12.w,
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              googleLogoSvg(),
+                              Text(
+                                "Continue with Google",
+                                style: TextStyle(
+                                  fontSize: 16.sp,
+                                  fontFamily: APP_FONT_FAMILY,
+                                  color: Colors.black,
+                                  fontVariations: [FontVariation.weight(650)],
+                                ),
+                              ),
+                            ],
                           ),
-                        ],
+                          loading: () =>
+                              CircularProgressIndicator(color: Colors.black),
+                        ),
                       ),
                     ),
                     20.verticalSpace,

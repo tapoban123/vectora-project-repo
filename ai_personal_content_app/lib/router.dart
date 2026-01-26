@@ -47,9 +47,8 @@ abstract class RouteNames {
 
 GoRouter goRouter(UserAuthBloc authBloc) => GoRouter(
   refreshListenable: _GoRouterRefreshStream(authBloc.stream),
-  initialLocation: RouteNames.home,
   redirect: (context, state) async {
-    return context.read()<UserAuthBloc>().state.maybeWhen(
+    return authBloc.state.maybeWhen(
       orElse: () => null,
       unauthenticated: () => RouteNames.onboarding,
     );
