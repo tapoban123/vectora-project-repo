@@ -5,6 +5,7 @@ description = "An AI-powered personal content vault that lets you save images, d
 readme = "README.md"
 requires-python = ">=3.13"
 dependencies = [
+    "boto3>=1.42.35",
     "cohere>=5.20.1",
     "easyocr>=1.7.2",
     "fastapi[standard]>=0.124.0",
