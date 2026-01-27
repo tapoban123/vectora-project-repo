@@ -55,9 +55,7 @@ class UserAuthenticationServices {
       // send firebase token to backend.
       final response = await _dio.get(
         ApiRoutes.signIn,
-        options: Options(
-          headers: {"Authorization": "Bearer $firebaseIdToken"},
-        ),
+        options: Options(headers: {"Authorization": "Bearer $firebaseIdToken"}),
       );
       if (response.statusCode == 200) {
         // return profile details from server on successful authentication.
@@ -77,9 +75,11 @@ class UserAuthenticationServices {
           return Left(
             CustomApiException(message: "Sign in process cancelled."),
           );
+        case GoogleSignInExceptionCode.clientConfigurationError:
+          return Left(CustomApiException(message: e.description.toString()));
         default:
           return Left(
-            CustomApiException(message: "Failed to continue sign in process."),
+            CustomApiException(message: e.description.toString()),
           );
       }
     } on DioException catch (e) {

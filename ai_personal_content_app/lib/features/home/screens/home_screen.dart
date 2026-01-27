@@ -27,7 +27,7 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   void initState() {
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-      context.read<UserAuthBloc>().add(CheckAuthStatus());
+      // context.read<UserAuthBloc>().add(CheckAuthStatus());
       context.read<RecentItemsCubit>().fetchRecentItems();
       context.read<PinItemsCubit>().fetchPinnedContents();
     });

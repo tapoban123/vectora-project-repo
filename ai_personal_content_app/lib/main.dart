@@ -36,7 +36,12 @@ void main() async {
   final authBloc = getIt<UserAuthBloc>();
   authBloc.add(CheckAuthStatus());
 
-  runApp(MyApp(router: goRouter(authBloc)));
+  runApp(
+    BlocProvider(
+      create: (context) => authBloc,
+      child: MyApp(router: goRouter(authBloc)),
+    ),
+  );
 }
 
 class MyApp extends StatelessWidget {
@@ -53,7 +58,6 @@ class MyApp extends StatelessWidget {
       splitScreenMode: true,
       child: MultiBlocProvider(
         providers: [
-          BlocProvider(create: (context) => getIt<UserAuthBloc>()),
           BlocProvider(create: (context) => getIt<NewContentsBloc>()),
           BlocProvider(create: (context) => getIt<ContentsManagerBloc>()),
           BlocProvider(create: (context) => getIt<SearchContentsBloc>()),
