@@ -1,11 +1,13 @@
 import 'dart:developer';
 
+import 'package:ai_personal_content_app/core/common/models/nearest_embedding_contents_model.dart';
 import 'package:ai_personal_content_app/core/common/services/embedding_generation_service.dart';
 import 'package:ai_personal_content_app/core/common/services/embeddings_storage_service.dart';
 import 'package:ai_personal_content_app/features/search/controllers/search_contents_bloc/search_contents_events.dart';
 import 'package:ai_personal_content_app/features/search/controllers/search_contents_bloc/search_contents_states.dart';
 import 'package:ai_personal_content_app/features/search/models/contents_with_scrore_model.dart';
 import 'package:ai_personal_content_app/features/search/services/contents_local_storage_service.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class SearchContentsBloc
@@ -34,84 +36,30 @@ class SearchContentsBloc
       text: event.query,
     );
 
-    response.fold(
-      (l) => emit(
+    await response.fold(
+      (l) async => emit(
         SearchContentsStates.error(
           message: l.message,
           statusCode: l.statusCode,
         ),
       ),
-      (r) {
+      (r) async {
         try {
           final matchedEmbeddings = _embeddingsLocalStorageService
               .fetchNearestEmbeddings(r.embeddings);
-
-          final matchedImageEmbeddings = matchedEmbeddings.images;
-          final matchedDocumentsEmbeddings = matchedEmbeddings.documents;
-          final matchedNotesEmbeddings = matchedEmbeddings.notes;
-
-          final matchedImages = _contentsLocalStorageService.fetchContentsByCid(
-            matchedImageEmbeddings.map((e) => e.cid).toList(),
+          final organisedContents = _organiseAllMatchedContents(
+            matchedEmbeddings,
           );
-          final matchedDocuments = _contentsLocalStorageService
-              .fetchContentsByCid(
-                matchedDocumentsEmbeddings.map((e) => e.cid).toList(),
-              );
-          final matchedNotes = _contentsLocalStorageService.fetchContentsByCid(
-            matchedNotesEmbeddings.map((e) => e.cid).toList(),
-          );
-
-          final List<ContentWithScroreModel> imagesWithDistance =
-              matchedImageEmbeddings.isNotEmpty
-              ? matchedImages
-                    .map(
-                      (e) => ContentWithScroreModel(
-                        distance: matchedImageEmbeddings
-                            .firstWhere((element) => e.contentId == element.cid)
-                            .distance,
-                        content: e,
-                      ),
-                    )
-                    .toList()
-              : [];
-          final List<ContentWithScroreModel> documentsWithDistance =
-              matchedDocumentsEmbeddings.isNotEmpty
-              ? matchedDocuments
-                    .map(
-                      (e) => ContentWithScroreModel(
-                        distance: matchedDocumentsEmbeddings
-                            .firstWhere((element) => e.contentId == element.cid)
-                            .distance,
-                        content: e,
-                      ),
-                    )
-                    .toList()
-              : [];
-          final List<ContentWithScroreModel> notesWithDistance =
-              matchedNotesEmbeddings.isNotEmpty
-              ? matchedNotes
-                    .map(
-                      (e) => ContentWithScroreModel(
-                        distance: matchedNotesEmbeddings
-                            .firstWhere((element) => e.contentId == element.cid)
-                            .distance,
-                        content: e,
-                      ),
-                    )
-                    .toList()
-              : [];
-
-          documentsWithDistance.sort(
-            (a, b) => a.distance.compareTo(b.distance),
-          );
-          imagesWithDistance.sort((a, b) => a.distance.compareTo(b.distance));
-          notesWithDistance.sort((a, b) => a.distance.compareTo(b.distance));
+          // final organisedContents = await compute(
+          //   _organiseAllMatchedContents,
+          //   matchedEmbeddings,
+          // );
 
           emit(
             SearchContentsStates.embeddingsGenerated(
-              documents: documentsWithDistance,
-              images: imagesWithDistance,
-              notes: notesWithDistance,
+              documents: organisedContents.documents,
+              images: organisedContents.images,
+              notes: organisedContents.notes,
             ),
           );
         } catch (e, stk) {
@@ -119,6 +67,77 @@ class SearchContentsBloc
           emit(SearchContentsStates.error(message: e.toString()));
         }
       },
+    );
+  }
+
+  ({
+    List<ContentWithScroreModel> images,
+    List<ContentWithScroreModel> documents,
+    List<ContentWithScroreModel> notes,
+  })
+  _organiseAllMatchedContents(NearestContentsByTypeModel matchedEmbeddings) {
+    final matchedImageEmbeddings = matchedEmbeddings.images;
+    final matchedDocumentsEmbeddings = matchedEmbeddings.documents;
+    final matchedNotesEmbeddings = matchedEmbeddings.notes;
+
+    final matchedImages = _contentsLocalStorageService.fetchContentsByCid(
+      matchedImageEmbeddings.map((e) => e.cid).toList(),
+    );
+    final matchedDocuments = _contentsLocalStorageService.fetchContentsByCid(
+      matchedDocumentsEmbeddings.map((e) => e.cid).toList(),
+    );
+    final matchedNotes = _contentsLocalStorageService.fetchContentsByCid(
+      matchedNotesEmbeddings.map((e) => e.cid).toList(),
+    );
+
+    final List<ContentWithScroreModel> imagesWithDistance =
+        matchedImageEmbeddings.isNotEmpty
+        ? matchedImages
+              .map(
+                (e) => ContentWithScroreModel(
+                  distance: matchedImageEmbeddings
+                      .firstWhere((element) => e.contentId == element.cid)
+                      .distance,
+                  content: e,
+                ),
+              )
+              .toList()
+        : [];
+    final List<ContentWithScroreModel> documentsWithDistance =
+        matchedDocumentsEmbeddings.isNotEmpty
+        ? matchedDocuments
+              .map(
+                (e) => ContentWithScroreModel(
+                  distance: matchedDocumentsEmbeddings
+                      .firstWhere((element) => e.contentId == element.cid)
+                      .distance,
+                  content: e,
+                ),
+              )
+              .toList()
+        : [];
+    final List<ContentWithScroreModel> notesWithDistance =
+        matchedNotesEmbeddings.isNotEmpty
+        ? matchedNotes
+              .map(
+                (e) => ContentWithScroreModel(
+                  distance: matchedNotesEmbeddings
+                      .firstWhere((element) => e.contentId == element.cid)
+                      .distance,
+                  content: e,
+                ),
+              )
+              .toList()
+        : [];
+
+    documentsWithDistance.sort((a, b) => a.distance.compareTo(b.distance));
+    imagesWithDistance.sort((a, b) => a.distance.compareTo(b.distance));
+    notesWithDistance.sort((a, b) => a.distance.compareTo(b.distance));
+
+    return (
+      images: imagesWithDistance,
+      documents: documentsWithDistance,
+      notes: notesWithDistance,
     );
   }
 }
