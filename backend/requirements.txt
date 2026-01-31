@@ -1,0 +1,13 @@
+boto3
+fastapi[standard]
+firebase-admin
+google-genai
+mangum
+pyjwt
+pymupdf
+langchain
+langchain-google-genai
+langchain-openai
+python-dotenv
+requests
+pillow

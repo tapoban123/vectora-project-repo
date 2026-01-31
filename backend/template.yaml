@@ -1,0 +1,37 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: FastAPI backend for Vectora Project
+
+Globals:
+  Function:
+    Runtime: python3.13
+    Timeout: 60
+    MemorySize: 1024
+    Architectures:
+      - x86_64
+
+Resources:
+  VectoraBackendLambda:
+    Type: AWS::Serverless::Function
+    Properties:
+      Handler: src.main.handler
+      CodeUri: .
+      Policies:
+        - AWSLambdaBasicExecutionRole
+        - AmazonDynamoDBFullAccess
+        - AmazonS3FullAccess
+      Environment:
+        Variables:
+          REFRESH_TOKEN_EXPIRE_DAYS: "0"
+          ACCESS_TOKEN_EXPIRE_MINUTES: "0"
+          VOYAGE_AI_API_SECRET: ""
+          JWT_SECRET_KEY: ""
+          GEMINI_API_KEY: ""
+          OPEN_ROUTER_API_KEY: ""
+          COHERE_API_KEY: ""
+      Events:
+        Api:
+          Type: Api
+          Properties:
+            Path: /{proxy+}
+            Method: ANY

@@ -1,2 +1,8 @@
 # Firebase Admin secrets
 vectora-firebase-private-key.json
+
+# test secrets
+env.json
+
+# aws artifacts
+.aws-sam/
