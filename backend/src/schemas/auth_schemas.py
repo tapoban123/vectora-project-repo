@@ -1,5 +1,5 @@
 import uuid
-from typing import Optional, Literal, Union
+from typing import Optional, Literal
 
 from pydantic import BaseModel, Field
 
@@ -13,7 +13,9 @@ class UserProfileDetailsSchema(BaseModel):
     profile_picture: str = Field(..., validation_alias="picture")
     creation_time: int = Field(..., validation_alias="auth_time")
     email: str = Field(...)
-    subscription_type: Literal[*SUBSCRIPTION_PLANS_LIST] = Field(default=SubscriptionPlans.free)
+    subscription_type: Literal[*SUBSCRIPTION_PLANS_LIST] = Field(
+        default=SubscriptionPlans.free
+    )
     payment_date: Optional[int] = Field(default=None)
 
 

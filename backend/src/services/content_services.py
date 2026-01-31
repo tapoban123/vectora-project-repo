@@ -1,23 +1,15 @@
-from io import BytesIO
-
-import fitz
-import pymupdf
-
 from fastapi import UploadFile
-import voyageai
-from PIL import Image
-import cohere
 from fastapi import HTTPException
 from google import genai
 from google.genai import types, errors
-from src.core.constants import VOYAGE_API_SECRET, IMAGE_EMBEDDING_MODEL, COHERE_API_KEY, GEMINI_API_KEY
+from src.core.constants import GEMINI_API_KEY
 from src.core.prompts import IMAGE_DESCRIPTION_PROMPT
 from src.core.utils import clean_content_text
 from src.core.pdf_data_and_embedding_helper import PdfDataAndEmbeddingHelper
 from src.schemas.content_operations_schemas import PdfEmbeddingResponseSchema
 
-voyage_client = voyageai.Client(api_key=VOYAGE_API_SECRET)
-co = cohere.ClientV2(api_key=COHERE_API_KEY)
+# voyage_client = voyageai.Client(api_key=VOYAGE_API_SECRET)
+# co = cohere.ClientV2(api_key=COHERE_API_KEY)
 client = genai.Client(api_key=GEMINI_API_KEY)
 
 
@@ -58,7 +50,7 @@ def generate_text_embeddings_gemini(text: str):
             response = client.models.embed_content(
                 model="gemini-embedding-001",
                 contents=text,
-                config=types.EmbedContentConfig(output_dimensionality=512)
+                config=types.EmbedContentConfig(output_dimensionality=512),
             )
             return response.embeddings[0].values
         except errors.APIError:

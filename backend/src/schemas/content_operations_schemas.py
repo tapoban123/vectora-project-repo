@@ -1,7 +1,7 @@
 from typing import Annotated
 
 from fastapi import UploadFile, File
-from pydantic import BaseModel, Field
+from pydantic import BaseModel
 
 
 class ImageEmbeddingSchema(BaseModel):

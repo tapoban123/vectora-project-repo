@@ -5,6 +5,7 @@ from pymupdf import Document
 class PdfDataAndEmbeddingHelper:
     """Open a PDF document in memory and extract the texts from each page.
     Returns a string combined of the texts from each page of the PDF document."""
+
     def __init__(self, pdf_contents: bytes):
         self.contents: bytes = pdf_contents
         self.doc: Document = fitz.open(stream=self.contents, filetype="pdf")

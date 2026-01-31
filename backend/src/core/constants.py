@@ -54,4 +54,8 @@ class SubscriptionPlans:
     premium: str = "PREMIUM"
 
 
-SUBSCRIPTION_PLANS_LIST: list[str] = [SubscriptionPlans.free, SubscriptionPlans.basic, SubscriptionPlans.premium]
+SUBSCRIPTION_PLANS_LIST: list[str] = [
+    SubscriptionPlans.free,
+    SubscriptionPlans.basic,
+    SubscriptionPlans.premium,
+]

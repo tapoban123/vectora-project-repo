@@ -1,8 +1,4 @@
-import base64
-from io import BytesIO
 import re
-
-from PIL import Image
 
 
 # def normalise_image_to_jpg(image_bytes: bytes) -> str:
