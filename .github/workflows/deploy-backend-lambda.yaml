@@ -1,0 +1,38 @@
+name: Deploy Backend (SAM)
+
+on:
+  push:
+    branches:
+      - main
+
+permissions:
+  id-token: write
+  contents: read
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Configure AWS credentials (OIDC)
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: arn:aws:iam::636052469132:role/GitHubDeployRole
+          aws-region: ap-south-2
+
+      - name: Install SAM CLI
+        run: |
+          pip install aws-sam-cli
+
+      - name: Build
+        working-directory: backend
+        run: |
+          sam build --use-container
+
+      - name: Deploy
+        working-directory: backend
+        run: |
+          sam deploy --no-confirm-changeset --no-fail-on-empty-changeset

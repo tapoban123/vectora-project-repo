@@ -6,15 +6,15 @@ import firebase_admin
 from firebase_admin import credentials
 from firebase_admin import auth
 
-from src.core.constants import (
+from src.core.secrets import (
     JWT_SECRET_KEY,
     JWT_HASH_ALGORITHM,
     EXPIRE_MINUTES_ACCESS_TOKEN,
-    EXPIRE_DAYS_REFRESH_TOKEN,
+    EXPIRE_DAYS_REFRESH_TOKEN, FIREBASE_PRIVATE_KEY,
 )
 from src.schemas.auth_schemas import UserProfileDetailsSchema, AuthTokensSchema
 
-cred = credentials.Certificate("vectora-firebase-private-key.json")
+cred = credentials.Certificate(FIREBASE_PRIVATE_KEY)
 firebase_admin.initialize_app(cred)
 
 SECRET_KEY = JWT_SECRET_KEY
@@ -41,12 +41,12 @@ def sign_in_user_service(token: str):
 
     except ValueError as e:
         print(f"Invalid Token: {e}")
-        raise HTTPException(status_code=status.HTTP_422_UNPROCESSABLE_CONTENT, detail=e)
+        raise HTTPException(status_code=status.HTTP_422_UNPROCESSABLE_CONTENT, detail=str(e))
     except auth.InvalidIdTokenError as e:
         print(f"Token verification failed:{e}")
-        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail=e)
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail=str(e))
     except Exception as e:
-        raise HTTPException(status_code=status.HTTP_422_UNPROCESSABLE_CONTENT, detail=e)
+        raise HTTPException(status_code=status.HTTP_422_UNPROCESSABLE_CONTENT, detail=str(e))
 
 
 def generate_jwt_token(internal_uid: str, expires_delta: timedelta):

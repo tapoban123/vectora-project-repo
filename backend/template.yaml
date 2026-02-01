@@ -11,6 +11,16 @@ Globals:
       - x86_64
 
 Resources:
+  VectoraApi:
+    Type: AWS::Serverless::Api
+    Properties:
+      StageName: Prod
+      BinaryMediaTypes:
+        - multipart/form-data
+        - image/png
+        - image/jpeg
+        - image/jpg
+
   VectoraBackendLambda:
     Type: AWS::Serverless::Function
     Properties:
@@ -35,3 +45,5 @@ Resources:
           Properties:
             Path: /{proxy+}
             Method: ANY
+
+
