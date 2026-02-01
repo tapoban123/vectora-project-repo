@@ -1,13 +1,16 @@
 version = 0.1
 
-[default]
-[default.deploy]
-[default.deploy.parameters]
-stack_name = "vectora-backend-lambda"
+[prod]
+[prod.deploy]
+[prod.deploy.parameters]
+stack_name = "vectora-backend-lambda-prod"
 region = "ap-south-2"
-confirm_changeset = false
+confirm_changeset = true
 capabilities = "CAPABILITY_IAM"
 resolve_s3 = true
-s3_prefix = "vectora-backend-lambda"
+s3_prefix = "vectora-backend-lambda-prod"
 disable_rollback = false
 image_repositories = []
+
+[prod.global.parameters]
+region = "ap-south-2"

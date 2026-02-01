@@ -38,4 +38,4 @@ jobs:
       - name: Deploy
         working-directory: backend
         run: |
-          sam deploy --no-confirm-changeset --no-fail-on-empty-changeset
+          sam deploy --config-env prod --no-confirm-changeset --no-fail-on-empty-changeset

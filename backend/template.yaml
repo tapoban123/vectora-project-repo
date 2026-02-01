@@ -11,7 +11,7 @@ Globals:
       - x86_64
 
 Resources:
-  VectoraApi:
+  VectoraProjectApi:
     Type: AWS::Serverless::Api
     Properties:
       StageName: Prod
@@ -40,10 +40,10 @@ Resources:
           OPEN_ROUTER_API_KEY: ""
           COHERE_API_KEY: ""
       Events:
-        Api:
+        ProxyApi:
           Type: Api
           Properties:
+            RestApiId: !Ref VectoraProjectApi
             Path: /{proxy+}
             Method: ANY
-
 
