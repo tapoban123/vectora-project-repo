@@ -30,6 +30,7 @@ Resources:
         - AWSLambdaBasicExecutionRole
         - AmazonDynamoDBFullAccess
         - AmazonS3FullAccess
+        - arn:aws:iam::636052469132:policy/VectoraProdReadSSMParameters
       Environment:
         Variables:
           REFRESH_TOKEN_EXPIRE_DAYS: "0"
@@ -40,10 +41,15 @@ Resources:
           OPEN_ROUTER_API_KEY: ""
           COHERE_API_KEY: ""
       Events:
-        ProxyApi:
+        Root:
+          Type: Api
+          Properties:
+            RestApiId: !Ref VectoraProjectApi
+            Path: /
+            Method: ANY
+        Proxy:
           Type: Api
           Properties:
             RestApiId: !Ref VectoraProjectApi
             Path: /{proxy+}
             Method: ANY
-

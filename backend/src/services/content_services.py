@@ -2,7 +2,7 @@ from fastapi import UploadFile
 from fastapi import HTTPException
 from google import genai
 from google.genai import types, errors
-from src.core.constants import GEMINI_API_KEY
+from src.core.secrets import GEMINI_API_KEY
 from src.core.prompts import IMAGE_DESCRIPTION_PROMPT
 from src.core.utils import clean_content_text
 from src.core.pdf_data_and_embedding_helper import PdfDataAndEmbeddingHelper
