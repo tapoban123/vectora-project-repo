@@ -36,6 +36,11 @@ class SubscriptionPlans:
     premium: str = "PREMIUM"
 
 
+class UserAccountStatus:
+    active: str = "ACTIVE"
+    pending_deletion: str = "PENDING_DELETION"
+
+
 SUBSCRIPTION_PLANS_LIST: list[str] = [
     SubscriptionPlans.free,
     SubscriptionPlans.basic,
