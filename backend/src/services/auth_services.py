@@ -67,7 +67,7 @@ def validate_id_token_and_generate_access_key(token: str):
         claims = auth.verify_id_token(id_token=token, clock_skew_seconds=5)
         user_details: UserProfileDetailsSchema = UserProfileDetailsSchema.model_validate(claims)
         access_token: str = generate_jwt_token(internal_uid=user_details.internal_id,
-                                               expires_delta=timedelta(minutes=EXPIRE_MINUTES_ACCESS_TOKEN))
+                                               expires_delta=timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES))
         return access_token
     except auth.InvalidIdTokenError:
         raise InvalidIdTokenException()
