@@ -1,4 +1,5 @@
 import re
+import time
 
 
 # def normalise_image_to_jpg(image_bytes: bytes) -> str:
@@ -9,6 +10,9 @@ import re
 #     buffer = BytesIO()
 #     img.save(buffer, format="JPEG")
 #     return base64.b64decode(buffer.getvalue()).decode("utf-8")
+
+def get_current_time_milliseconds_epoch():
+    return int(time.time() * 1000)
 
 
 def clean_content_text(text: str) -> str:
