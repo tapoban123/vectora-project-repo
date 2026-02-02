@@ -18,6 +18,7 @@ import 'package:ai_personal_content_app/features/search/services/content_library
 import 'package:ai_personal_content_app/features/search/usecases/get_content_layout_pref.dart';
 import 'package:ai_personal_content_app/features/search/usecases/is_pinned_content_exists.dart';
 import 'package:ai_personal_content_app/features/search/usecases/set_contents_layout_pref.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -37,8 +38,9 @@ void init() {
   getIt.registerLazySingleton<EmbeddingGenerationService>(
     () => EmbeddingGenerationService(),
   );
+  getIt.registerLazySingleton<FirebaseAuth>(() => FirebaseAuth.instance);
   getIt.registerLazySingleton<UserAuthenticationServices>(
-    () => UserAuthenticationServices(),
+    () => UserAuthenticationServices(firebaseAuth: getIt()),
   );
   getIt.registerLazySingleton<JwtTokenStorageService>(
     () => JwtTokenStorageService(),
@@ -67,7 +69,7 @@ void init() {
     () => ReadAccessToken(jwtTokenStorageService: getIt()),
   );
   getIt.registerLazySingleton<ReadRefreshToken>(
-    () => ReadRefreshToken(jwtTokenStorageService: getIt()),
+    () => ReadRefreshToken(firebaseAuth: getIt()),
   );
 
   getIt.registerFactory<UserAuthBloc>(

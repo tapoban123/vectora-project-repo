@@ -38,7 +38,7 @@ class UserAuthBloc extends Bloc<UserAuthEvents, UserAuthStates> {
     final response = await _userAuthenticationServices.signInUser();
 
     await response.fold((l) async => emit(UserAuthStates.error(l)), (r) async {
-      await _jwtTokenStorageService.writeAuthTokens(r);
+      await _jwtTokenStorageService.writeAccessToken(r);
       final user = _userAuthenticationServices.getCurrentUser();
       if (user != null) {
         emit(UserAuthStates.authenticated(user: user));

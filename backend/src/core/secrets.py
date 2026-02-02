@@ -27,5 +27,4 @@ FIREBASE_PRIVATE_KEY = json.loads(get_param("/vectora/firebase/service-account")
 
 # Constant Strings
 EXPIRE_MINUTES_ACCESS_TOKEN = os.environ.get("ACCESS_TOKEN_EXPIRE_MINUTES")
-EXPIRE_DAYS_REFRESH_TOKEN = os.environ.get("REFRESH_TOKEN_EXPIRE_DAYS")
 JWT_HASH_ALGORITHM = "HS256"

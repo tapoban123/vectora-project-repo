@@ -7,4 +7,5 @@ abstract class ApiRoutes {
 
   static const String auth =  "/auth";
   static const String signIn =  "$auth/sign-in";
+  static const String generateNewAccessToken =  "$auth/access-token/generate";
 }

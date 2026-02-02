@@ -1,7 +1,7 @@
 from datetime import timedelta, datetime, timezone
 
 import jwt
-from fastapi import HTTPException, status
+from jwt.exceptions import PyJWTError, ExpiredSignatureError
 import firebase_admin
 from firebase_admin import credentials
 from firebase_admin import auth
@@ -10,9 +10,11 @@ from src.core.secrets import (
     JWT_SECRET_KEY,
     JWT_HASH_ALGORITHM,
     EXPIRE_MINUTES_ACCESS_TOKEN,
-    EXPIRE_DAYS_REFRESH_TOKEN, FIREBASE_PRIVATE_KEY,
+    FIREBASE_PRIVATE_KEY,
 )
-from src.schemas.auth_schemas import UserProfileDetailsSchema, AuthTokensSchema
+from src.exceptions import InvalidIdTokenException, UserSignInException, \
+    InvalidAccessTokenException, ExpiredAccessTokenException
+from src.schemas.auth_schemas import UserProfileDetailsSchema
 
 cred = credentials.Certificate(FIREBASE_PRIVATE_KEY)
 firebase_admin.initialize_app(cred)
@@ -20,36 +22,35 @@ firebase_admin.initialize_app(cred)
 SECRET_KEY = JWT_SECRET_KEY
 ALGORITHM = JWT_HASH_ALGORITHM
 ACCESS_TOKEN_EXPIRE_MINUTES = int(EXPIRE_MINUTES_ACCESS_TOKEN)
-REFRESH_TOKEN_EXPIRE_DAYS = int(EXPIRE_DAYS_REFRESH_TOKEN)
 
 
 def sign_in_user_service(token: str):
+    """Verifies firebase id token received from client.
+    If id token is valid,
+     - Stores user data to dynamodb if not exists already.
+     - Generates and returns access key.
+     Else, raise 401 error"""
     try:
         claims = auth.verify_id_token(token, clock_skew_seconds=5)
         user_details: UserProfileDetailsSchema = (
             UserProfileDetailsSchema.model_validate(claims)
         )
-        refresh_token = generate_jwt_token(
-            user_details.internal_id,
-            expires_delta=timedelta(days=REFRESH_TOKEN_EXPIRE_DAYS),
-        )
         access_token = generate_jwt_token(
             user_details.internal_id,
             expires_delta=timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES),
         )
-        return AuthTokensSchema(access_token=access_token, refresh_token=refresh_token)
+        return {"access_token": access_token}
 
-    except ValueError as e:
-        print(f"Invalid Token: {e}")
-        raise HTTPException(status_code=status.HTTP_422_UNPROCESSABLE_CONTENT, detail=str(e))
     except auth.InvalidIdTokenError as e:
-        print(f"Token verification failed:{e}")
-        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail=str(e))
+        print(f"Token verification failed: {e}")
+        raise InvalidIdTokenException()
     except Exception as e:
-        raise HTTPException(status_code=status.HTTP_422_UNPROCESSABLE_CONTENT, detail=str(e))
+        print(f"Sign In Failed: {e}")
+        raise UserSignInException()
 
 
 def generate_jwt_token(internal_uid: str, expires_delta: timedelta):
+    """Generates and return a JWT token with uid, issued_at and expiration as payload."""
     payload: dict = {"uid": internal_uid}
     issued_at = datetime.now(tz=timezone.utc)
     expire = issued_at + expires_delta
@@ -58,5 +59,30 @@ def generate_jwt_token(internal_uid: str, expires_delta: timedelta):
     return encoded_jwt
 
 
-def validate_jwt_token(token: str):
-    pass
+def validate_id_token_and_generate_access_key(token: str):
+    """Validates the client id token
+     If id token is valid, generates and returns new access token.
+     Else, raises 401 error."""
+    try:
+        claims = auth.verify_id_token(id_token=token, clock_skew_seconds=5)
+        user_details: UserProfileDetailsSchema = UserProfileDetailsSchema.model_validate(claims)
+        access_token: str = generate_jwt_token(internal_uid=user_details.internal_id,
+                                               expires_delta=timedelta(minutes=EXPIRE_MINUTES_ACCESS_TOKEN))
+        return access_token
+    except auth.InvalidIdTokenError:
+        raise InvalidIdTokenException()
+
+
+def validate_access_token(token: str):
+    """Validates the client access token
+    If token is valid, returns uid.
+    Else, raises 401 error."""
+    try:
+        payload = jwt.decode(token, key=JWT_SECRET_KEY, algorithms=[ALGORITHM])
+        if payload:
+            return payload["uid"]
+        raise InvalidAccessTokenException()
+    except ExpiredSignatureError:
+        raise ExpiredAccessTokenException()
+    except PyJWTError:
+        raise InvalidAccessTokenException()

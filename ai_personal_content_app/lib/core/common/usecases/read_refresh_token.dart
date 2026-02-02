@@ -1,12 +1,12 @@
-import 'package:ai_personal_content_app/core/common/services/jwt_token_storage_service.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class ReadRefreshToken {
-  final JwtTokenStorageService _jwtTokenStorageService;
+  final FirebaseAuth _firebaseAuth;
 
-  ReadRefreshToken({required JwtTokenStorageService jwtTokenStorageService})
-    : _jwtTokenStorageService = jwtTokenStorageService;
+  ReadRefreshToken({required FirebaseAuth firebaseAuth})
+    : _firebaseAuth = firebaseAuth;
 
   Future<String?> call() async {
-    return await _jwtTokenStorageService.readRefreshToken();
+    return await _firebaseAuth.currentUser!.getIdToken();
   }
 }
