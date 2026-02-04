@@ -1,33 +1,39 @@
 import boto3
-import logging
 from datetime import datetime, timedelta
 
 from botocore.exceptions import ClientError
 
 from src.core.constants import UserAccountStatus
-from src.core.logger import dynamodb_logger
+from src.core.logger import logger
 from src.models.user_model import UserProfileDataModel
 
 
 class UserAuthRepository:
     def __init__(self):
-        self.dynamodb = boto3.client("dynamodb")
+        self.dynamodb = boto3.resource("dynamodb", region_name="ap-south-2")
         self.users_table = self.dynamodb.Table("Vectora-App-Users")
 
     def create_user(self, user_data: UserProfileDataModel):
         try:
             response = self.users_table.put_item(Item=user_data.model_dump())
+            return response
         except ClientError as err:
-            dynamodb_logger.error(
+            logger.error(
                 "Failed to create new user.\n%s %s",
                 err.response["Error"]["Code"],
                 err.response["Error"]["Message"]
             )
-        else:
-            return response["Attributes"]
 
-    def get_user(self):
-        pass
+    def get_user(self, user_id: str, created_at: int):
+        try:
+            response = self.users_table.get_item(Key={"user_id": user_id, "created_at": created_at})
+            return response.get('Item')
+        except ClientError as err:
+            logger.error(
+                "Failed to get user.\n%s %s",
+                err.response["Error"]["Code"],
+                err.response["Error"]["Message"]
+            )
 
     def fetch_all_user(self):
         pass
@@ -44,14 +50,13 @@ class UserAuthRepository:
                 UpdateExpression="set account_status=:s, delete_after=:d",
                 ExpressionAttributeValues={":s": UserAccountStatus.pending_deletion, ":d": delete_after},
             )
+            return response
         except ClientError as err:
-            dynamodb_logger.error(
+            logger.error(
                 "Failed to set 'delete_after' to expiry timestamp.\n%s %s",
                 err.response["Error"]["Code"],
                 err.response["Error"]["Message"]
             )
-        else:
-            return response["Attributes"]
 
     def revive_deleted_account(self, user_data: UserProfileDataModel):
         try:
@@ -60,14 +65,13 @@ class UserAuthRepository:
                 UpdateExpression="REMOVE delete_after set account_status=:s",
                 ExpressionAttributeValues={":s": UserAccountStatus.active},
             )
+            return response
         except ClientError as err:
-            dynamodb_logger.error(
+            logger.error(
                 "Failed to remove 'delete_after' and revive account.\n%s %s",
                 err.response["Error"]["Code"],
                 err.response["Error"]["Message"]
             )
-        else:
-            return response["Attributes"]
 
     def is_user_deleted_recently(self) -> bool:
         """Returns True if user account is found in DeletedUsers table

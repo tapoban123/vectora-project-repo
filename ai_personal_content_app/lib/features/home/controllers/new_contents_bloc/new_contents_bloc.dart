@@ -214,6 +214,7 @@ class NewContentsBloc extends Bloc<NewContentsEvents, NewContentsStates> {
     late Either<ApiException, ContentEmbeddingResponseModel> embeddingsResp;
 
     if (content.fileType == ContentFileType.NOTE) {
+      int totalProgress = 0;
       final fileData = await content.file.readAsString();
       final doc = Document.fromJson(jsonDecode(fileData));
       final String plainText = doc.toPlainText();
@@ -224,6 +225,7 @@ class NewContentsBloc extends Bloc<NewContentsEvents, NewContentsStates> {
         onReceiveProgress: (count, total) {
           _onReceiveProgress(count, total, emit, content);
         },
+        onSendProgress: (count, total) {},
       );
     } else if (content.fileType == ContentFileType.IMAGE) {
       embeddingsResp = await _embeddingGenerationService
@@ -231,6 +233,7 @@ class NewContentsBloc extends Bloc<NewContentsEvents, NewContentsStates> {
             cid: content.cid,
             image: content.file,
             contentType: content.fileType.name,
+            onSendProgress: (count, total) {},
             onReceiveProgress: (count, total) {
               _onReceiveProgress(count, total, emit, content);
             },
@@ -244,6 +247,7 @@ class NewContentsBloc extends Bloc<NewContentsEvents, NewContentsStates> {
         },
       );
     } else if (content.fileType == ContentFileType.PDF) {
+      int totalProgress = 0;
       embeddingsResp = await _embeddingGenerationService.generatePdfEmbeddings(
         contentType: content.fileType.name,
         cid: content.cid,
@@ -251,6 +255,7 @@ class NewContentsBloc extends Bloc<NewContentsEvents, NewContentsStates> {
         onReceiveProgress: (count, total) {
           _onReceiveProgress(count, total, emit, content);
         },
+        onSendProgress: (count, total) {},
       );
     }
 

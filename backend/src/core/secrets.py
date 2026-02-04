@@ -3,7 +3,9 @@ import json
 
 import os
 
-# load_dotenv()
+from dotenv import load_dotenv
+
+load_dotenv()
 
 ssm = boto3.client("ssm")
 
@@ -26,5 +28,6 @@ JWT_SECRET_KEY = get_param("/vectora/jwt/JWT_SECRET_KEY")
 FIREBASE_PRIVATE_KEY = json.loads(get_param("/vectora/firebase/service-account"))
 
 # Constant Strings
-EXPIRE_MINUTES_ACCESS_TOKEN = os.environ.get("ACCESS_TOKEN_EXPIRE_MINUTES")
+# EXPIRE_MINUTES_ACCESS_TOKEN = os.environ.get("ACCESS_TOKEN_EXPIRE_MINUTES")
+EXPIRE_MINUTES_ACCESS_TOKEN = os.getenv("ACCESS_TOKEN_EXPIRE_MINUTES")
 JWT_HASH_ALGORITHM = "HS256"

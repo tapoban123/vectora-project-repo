@@ -1,12 +1,11 @@
 from datetime import timedelta, datetime, timezone
-import logging
 import jwt
 from jwt.exceptions import PyJWTError, ExpiredSignatureError
 import firebase_admin
 from firebase_admin import credentials
 from firebase_admin import auth
 
-from src.core.logger import auth_logger
+from src.core.logger import logger
 from src.core.secrets import (
     JWT_SECRET_KEY,
     JWT_HASH_ALGORITHM,
@@ -15,6 +14,8 @@ from src.core.secrets import (
 )
 from src.exceptions import InvalidIdTokenException, UserSignInException, \
     InvalidAccessTokenException, ExpiredAccessTokenException
+from src.models.user_model import UserProfileDataModel
+from src.repositories.user_auth_repository import UserAuthRepository
 from src.schemas.auth_schemas import UserProfileDetailsSchema
 
 cred = credentials.Certificate(FIREBASE_PRIVATE_KEY)
@@ -36,6 +37,14 @@ def sign_in_user_service(token: str):
         user_details: UserProfileDetailsSchema = (
             UserProfileDetailsSchema.model_validate(claims)
         )
+
+        auth_repo = UserAuthRepository()
+        user = auth_repo.get_user(user_id=user_details.user_id, created_at=user_details.created_at)
+
+        if not user:
+            new_user = UserProfileDataModel.model_validate(user_details.model_dump())
+            auth_repo.create_user(new_user)
+
         access_token = generate_jwt_token(
             user_details.internal_id,
             expires_delta=timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES),
@@ -43,10 +52,10 @@ def sign_in_user_service(token: str):
         return {"access_token": access_token}
 
     except auth.InvalidIdTokenError as e:
-        auth_logger.error("Token verification failed: %s", str(e))
+        logger.error("Token verification failed: %s", str(e))
         raise InvalidIdTokenException()
     except Exception as e:
-        auth_logger.error("Sign In Failed: %s", str(e))
+        logger.error("Sign In Failed: %s", str(e))
         raise UserSignInException()
 
 

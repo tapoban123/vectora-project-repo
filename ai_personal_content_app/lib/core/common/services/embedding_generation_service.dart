@@ -17,6 +17,7 @@ class EmbeddingGenerationService {
     String? cid,
     String? contentType,
     required File image,
+    required Function(int count, int total) onSendProgress,
     required Function(int count, int total) onReceiveProgress,
   }) async {
     try {
@@ -29,6 +30,7 @@ class EmbeddingGenerationService {
         ApiRoutes.generateImageEmbeddings,
         data: formData,
         onReceiveProgress: onReceiveProgress,
+        onSendProgress: onSendProgress,
       );
 
       if (response.statusCode == 200) {
@@ -67,6 +69,7 @@ class EmbeddingGenerationService {
     String? cid,
     String? contentType,
     required String text,
+    Function(int count, int total)? onSendProgress,
     Function(int count, int total)? onReceiveProgress,
   }) async {
     try {
@@ -78,6 +81,7 @@ class EmbeddingGenerationService {
           "text": text,
         }),
         onReceiveProgress: onReceiveProgress,
+        onSendProgress: onSendProgress,
       );
 
       if (response.statusCode == 200) {
@@ -116,7 +120,8 @@ class EmbeddingGenerationService {
     String? cid,
     String? contentType,
     required File pdf,
-    Function(int count, int total)? onReceiveProgress,
+    required Function(int count, int total) onReceiveProgress,
+    required Function(int count, int total) onSendProgress,
   }) async {
     try {
       final formData = FormData.fromMap({
@@ -128,6 +133,7 @@ class EmbeddingGenerationService {
         ApiRoutes.generatePdfEmbeddings,
         data: formData,
         onReceiveProgress: onReceiveProgress,
+        onSendProgress: onSendProgress,
       );
 
       if (response.statusCode == 200) {

@@ -1,4 +1,4 @@
 import logging
 
-dynamodb_logger = logging.getLogger("DYNAMODB")
-auth_logger = logging.getLogger("AUTH")
+logger = logging.getLogger()
+logger.setLevel(logging.DEBUG)
