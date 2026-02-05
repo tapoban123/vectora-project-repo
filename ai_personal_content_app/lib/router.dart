@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:developer';
 import 'dart:io';
 
+import 'package:ai_personal_content_app/core/common/screens/rewarded_ads_screen.dart';
 import 'package:ai_personal_content_app/core/utils/utils.dart';
 import 'package:ai_personal_content_app/features/auth/controllers/user_auth_bloc/user_auth_bloc.dart';
 import 'package:ai_personal_content_app/features/auth/controllers/user_auth_bloc/user_auth_states.dart';
@@ -43,6 +44,7 @@ abstract class RouteNames {
   static const String contentLibrary = "/content-library";
   static const String viewPhoto = "/view-photo";
   static const String viewPdf = "/view-pdf";
+  static const String showAd = "/show-ad";
 }
 
 GoRouter goRouter(UserAuthBloc authBloc) => GoRouter(
@@ -101,6 +103,12 @@ GoRouter goRouter(UserAuthBloc authBloc) => GoRouter(
       builder: (context, state) {
         final data = state.extra as Map;
         return PdfViewScreen(path: data["path"], name: data["name"]);
+      },
+    ),
+    GoRoute(
+      path: RouteNames.showAd,
+      builder: (context, state) {
+        return RewardedAdsScreen();
       },
     ),
   ],

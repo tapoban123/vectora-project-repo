@@ -66,6 +66,7 @@ dependencies:
   firebase_auth: ^6.1.4
   firebase_core: ^4.4.0
   flutter_dotenv: ^6.0.0
+  google_mobile_ads: ^7.0.0
 
 dev_dependencies:
   flutter_test:

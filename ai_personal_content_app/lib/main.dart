@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:ai_personal_content_app/core/configs/objectbox_config.dart';
 import 'package:ai_personal_content_app/core/theme/app_colors.dart';
 import 'package:ai_personal_content_app/core/theme/app_fonts.dart';
@@ -22,11 +24,13 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:go_router/go_router.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
 
 late final ObjectboxConfig objectBoxInstance;
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  unawaited(MobileAds.instance.initialize());
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   await dotenv.load(fileName: ".env");
   objectBoxInstance = await ObjectboxConfig.create();
