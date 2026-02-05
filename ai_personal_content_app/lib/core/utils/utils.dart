@@ -2,7 +2,7 @@ import 'dart:developer';
 import 'dart:io';
 
 import 'package:ai_personal_content_app/core/theme/app_colors.dart';
-import 'package:ai_personal_content_app/core/theme/app_fonts.dart';
+import 'dart:math' as math;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_pdfview/flutter_pdfview.dart';
@@ -327,6 +327,93 @@ class PdfViewScreen extends StatelessWidget {
               ),
             ),
           ],
+        ),
+      ),
+    );
+  }
+}
+
+void showCreditsDialog(BuildContext context) {
+  showDialog(context: context, builder: (context) => CreditsDialogContent());
+}
+
+class CreditsDialogContent extends StatefulWidget {
+  const CreditsDialogContent({super.key});
+
+  @override
+  State<CreditsDialogContent> createState() => _CreditsDialogContentState();
+}
+
+class _CreditsDialogContentState extends State<CreditsDialogContent> {
+  late final int _remainingCredits;
+  late final bool _isRemainingCredits;
+
+  @override
+  void initState() {
+    _remainingCredits = math.Random().nextInt(3);
+    _isRemainingCredits = _remainingCredits > 0;
+    super.initState();
+  }
+
+  ({IconData icon, Color color, String title, Widget body}) _getDialogContent(
+    bool isRemainingCredits,
+    int remainingCredits,
+  ) {
+    if (isRemainingCredits) {
+      return (
+        icon: Icons.workspace_premium,
+        color: AppColors.blueColor,
+        title: "Boost Your Credits",
+        body: RichText(
+          text: TextSpan(
+            text: "You have ",
+            style: TextStyle(fontSize: 14.sp, color: AppColors.blueGreyColor),
+            children: [
+              TextSpan(
+                text: _remainingCredits.toString(),
+                style: TextStyle(color: Colors.white),
+              ),
+              TextSpan(
+                text:
+                    " bonus ads available today. Watch a quick ad to instantly unlock ",
+              ),
+              TextSpan(
+                text: "+5 uploads",
+                style: TextStyle(color: Colors.white),
+              ),
+              TextSpan(text: " and "),
+              TextSpan(
+                text: "+10 semantic searches",
+                style: TextStyle(color: Colors.white),
+              ),
+            ],
+          ),
+        ),
+      );
+    }
+    return (
+      icon: Icons.timer_off,
+      color: Colors.orangeAccent,
+      title: "Daily Limit Reached",
+      body: Text(
+        "You have used all your bonus ads for today. Your daily quota will reset tomorrow. Or you can unlock umlimited access right now.",
+        style: TextStyle(fontSize: 14.sp, color: AppColors.blueGreyColor),
+      ),
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final dialogContent = _getDialogContent(
+      _isRemainingCredits,
+      _remainingCredits,
+    );
+    return Dialog(
+      child: Container(
+        padding: EdgeInsets.all(20.w),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [Container(child: Icon(dialogContent.icon))],
         ),
       ),
     );
