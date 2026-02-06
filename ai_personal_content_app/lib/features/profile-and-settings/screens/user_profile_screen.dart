@@ -254,7 +254,6 @@ class UserProfileScreen extends StatelessWidget {
                         ),
                         _aboutInfoListTile(
                           text: "App version",
-                          onTap: () {},
                           borderRadius: BorderRadius.vertical(
                             bottom: Radius.circular(12.r),
                             top: Radius.zero,
@@ -308,7 +307,7 @@ class UserProfileScreen extends StatelessWidget {
 
   Widget _aboutInfoListTile({
     required String text,
-    required VoidCallback onTap,
+    VoidCallback? onTap,
     Widget? icon,
     Widget? trailingIcon,
     BorderRadius? borderRadius,

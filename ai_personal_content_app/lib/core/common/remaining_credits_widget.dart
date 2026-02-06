@@ -25,7 +25,7 @@ class RemainingCreditsWidget extends StatelessWidget {
         spacing: 8,
         mainAxisSize: MainAxisSize.min,
         children: [
-          Icon(Icons.stars, color: Colors.yellow),
+          Icon(Icons.stars, color: AppColors.blueColor),
           Text(
             "1200",
             style: TextStyle(
