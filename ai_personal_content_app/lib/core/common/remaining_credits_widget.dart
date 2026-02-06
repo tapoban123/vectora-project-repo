@@ -1,9 +1,7 @@
 import 'package:ai_personal_content_app/core/theme/app_colors.dart';
 import 'package:ai_personal_content_app/core/utils/utils.dart';
-import 'package:ai_personal_content_app/router.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:go_router/go_router.dart';
 
 class RemainingCreditsWidget extends StatelessWidget {
   const RemainingCreditsWidget({super.key});
@@ -12,7 +10,6 @@ class RemainingCreditsWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return ElevatedButton(
       onPressed: () {
-        // context.push(RouteNames.showAd);
         showCreditsDialog(context);
       },
       style: ElevatedButton.styleFrom(

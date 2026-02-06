@@ -2,6 +2,8 @@ import 'dart:developer';
 import 'dart:io';
 
 import 'package:ai_personal_content_app/core/theme/app_colors.dart';
+import 'package:ai_personal_content_app/core/theme/app_fonts.dart';
+import 'package:ai_personal_content_app/router.dart';
 import 'dart:math' as math;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -365,27 +367,34 @@ class _CreditsDialogContentState extends State<CreditsDialogContent> {
         color: AppColors.blueColor,
         title: "Boost Your Credits",
         body: RichText(
+          textAlign: TextAlign.center,
           text: TextSpan(
             text: "You have ",
-            style: TextStyle(fontSize: 14.sp, color: AppColors.blueGreyColor),
+            style: TextStyle(
+              fontSize: 15.sp,
+              color: AppColors.inactiveColor,
+              fontVariations: [FontVariation.weight(500)],
+              fontFamily: APP_FONT_FAMILY,
+            ),
             children: [
               TextSpan(
                 text: _remainingCredits.toString(),
-                style: TextStyle(color: Colors.white),
+                style: TextStyle(
+                  color: Colors.white,
+                  fontVariations: [FontVariation.weight(600)],
+                ),
               ),
               TextSpan(
-                text:
-                    " bonus ads available today. Watch a quick ad to instantly unlock ",
+                text: " bonus ads available today. Watch a short ad to unlock ",
               ),
               TextSpan(
-                text: "+5 uploads",
-                style: TextStyle(color: Colors.white),
+                text: "+15 credits",
+                style: TextStyle(
+                  color: Colors.white,
+                  fontVariations: [FontVariation.weight(600)],
+                ),
               ),
-              TextSpan(text: " and "),
-              TextSpan(
-                text: "+10 semantic searches",
-                style: TextStyle(color: Colors.white),
-              ),
+              TextSpan(text: ", which you can use for uploads or searches. "),
             ],
           ),
         ),
@@ -393,11 +402,16 @@ class _CreditsDialogContentState extends State<CreditsDialogContent> {
     }
     return (
       icon: Icons.timer_off,
-      color: Colors.orangeAccent,
+      color: AppColors.yellowOchreColor,
       title: "Daily Limit Reached",
       body: Text(
         "You have used all your bonus ads for today. Your daily quota will reset tomorrow. Or you can unlock umlimited access right now.",
-        style: TextStyle(fontSize: 14.sp, color: AppColors.blueGreyColor),
+        style: TextStyle(
+          fontSize: 15.sp,
+          color: AppColors.inactiveColor,
+          fontVariations: [FontVariation.weight(500)],
+        ),
+        textAlign: TextAlign.center,
       ),
     );
   }
@@ -410,12 +424,135 @@ class _CreditsDialogContentState extends State<CreditsDialogContent> {
     );
     return Dialog(
       child: Container(
-        padding: EdgeInsets.all(20.w),
+        padding: EdgeInsets.all(30.w),
+        decoration: BoxDecoration(
+          color: AppColors.navyBlueColor,
+          borderRadius: BorderRadius.circular(24.r),
+        ),
         child: Column(
           mainAxisSize: MainAxisSize.min,
-          children: [Container(child: Icon(dialogContent.icon))],
+          children: [
+            Container(
+              padding: EdgeInsets.all(20.w),
+              decoration: BoxDecoration(
+                color: dialogContent.color.withValues(alpha: 0.1),
+                borderRadius: BorderRadius.circular(16.r),
+              ),
+              child: Icon(
+                dialogContent.icon,
+                color: dialogContent.color,
+                size: 32.w,
+              ),
+            ),
+            24.verticalSpace,
+            Text(
+              dialogContent.title,
+              style: TextStyle(
+                fontSize: 20.sp,
+                fontVariations: [FontVariation.weight(700)],
+                color: Colors.white,
+              ),
+            ),
+            13.verticalSpace,
+            dialogContent.body,
+            34.verticalSpace,
+            _dialogButtton(
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                spacing: 10.w,
+                children: [
+                  if (_isRemainingCredits)
+                    Icon(Icons.play_circle, color: Colors.white, size: 20.w),
+                  Text(
+                    _isRemainingCredits ? "Watch an Ad" : "Go Premium",
+                    style: TextStyle(
+                      fontSize: 16.sp,
+                      color: Colors.white,
+                      fontVariations: [FontVariation.weight(700)],
+                    ),
+                  ),
+                ],
+              ),
+              bgColor: AppColors.blueColor,
+              onTap: () {
+                if (_isRemainingCredits) {
+                  context.push(RouteNames.showAd);
+                } else {
+                  // Navigate to premium pricing page.
+                }
+              },
+            ),
+            12.verticalSpace,
+            _dialogButtton(
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                spacing: 10.w,
+                children: [
+                  if (!_isRemainingCredits)
+                    Icon(Icons.play_circle, color: Colors.white24, size: 20.w),
+                  Text(
+                    !_isRemainingCredits ? "Watch an Ad" : "Go Premium",
+                    style: TextStyle(
+                      fontSize: 16.sp,
+                      fontVariations: [FontVariation.weight(700)],
+                      color: !_isRemainingCredits
+                          ? Colors.white24
+                          : Colors.white,
+                    ),
+                  ),
+                ],
+              ),
+              bgColor: AppColors.blueGreyLighterColor,
+              onTap: () {
+                if (!_isRemainingCredits) {
+                  // Navigate to premium pricing page.
+                }
+              },
+            ),
+            12.verticalSpace,
+            TextButton(
+              onPressed: () {
+                context.pop();
+              },
+              style: TextButton.styleFrom(
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(16.r),
+                ),
+                tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                overlayColor: AppColors.inactiveColor,
+                minimumSize: Size(double.infinity, kTextHeightNone),
+                splashFactory: NoSplash.splashFactory,
+              ),
+              child: Text(
+                "Maybe later",
+                style: TextStyle(
+                  fontSize: 14.sp,
+                  fontVariations: [FontVariation.weight(600)],
+                  color: AppColors.inactiveColor,
+                ),
+              ),
+            ),
+          ],
         ),
       ),
+    );
+  }
+
+  Widget _dialogButtton({
+    required Widget child,
+    required Color bgColor,
+    required VoidCallback onTap,
+  }) {
+    return ElevatedButton(
+      onPressed: onTap,
+      style: ElevatedButton.styleFrom(
+        backgroundColor: bgColor,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(16.r),
+        ),
+        minimumSize: Size(double.infinity, 56.h),
+      ),
+      child: child,
     );
   }
 }

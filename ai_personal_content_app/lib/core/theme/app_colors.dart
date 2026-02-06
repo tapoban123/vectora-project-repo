@@ -19,5 +19,8 @@ class AppColors {
   static const Color redColor = Color(0xFFF87171);
   static const Color deepRedColor = Color(0xFFFF453A);
   static const Color violetColor = Color(0xFFc084fc);
+  static const Color blueGreyLighterColor = Color(0xFF2E3A51);
+  static const Color navyBlueColor = Color(0xFF232F48);
+  static const Color yellowOchreColor = Color(0xFF948233);
   static Color borderColor = Colors.white.withValues(alpha: 0.1);
 }
