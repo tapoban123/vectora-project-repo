@@ -13,6 +13,14 @@ SvgPicture googleLogoSvg() {
   );
 }
 
+SvgPicture githubLogoSvg() {
+  return SvgPicture.asset(
+    "assets/images/svgs/github_logo.svg",
+    height: 20.w,
+    width: 20.w,
+  );
+}
+
 SvgPicture appIconSvg() {
   return SvgPicture.asset("assets/images/svgs/app-icon.svg");
 }
