@@ -23,5 +23,6 @@ class AppColors {
   static const Color navyBlueColor = Color(0xFF232F48);
   static const Color yellowOchreColor = Color(0xFF948233);
   static const Color blueDarkColor = Color(0xFF161D2B);
+  static const Color greenColor = Color(0xFF34D399);
   static Color borderColor = Colors.white.withValues(alpha: 0.1);
 }

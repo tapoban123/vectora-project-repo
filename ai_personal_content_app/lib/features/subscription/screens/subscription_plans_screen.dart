@@ -1,5 +1,7 @@
 import 'package:ai_personal_content_app/core/common/widgets/custom_appbar.dart';
 import 'package:ai_personal_content_app/core/theme/app_colors.dart';
+import 'package:ai_personal_content_app/core/theme/app_fonts.dart';
+import 'package:ai_personal_content_app/core/theme/app_svgs.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
@@ -46,6 +48,7 @@ class SubscriptionPlansScreen extends StatelessWidget {
                   ),
                 ),
                 child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -54,10 +57,63 @@ class SubscriptionPlansScreen extends StatelessWidget {
                           "Free",
                           style: TextStyle(
                             fontSize: 20.sp,
-                            fontVariations: [FontVariation.weight(600)],
+                            fontVariations: [FontVariation.weight(700)],
                           ),
                         ),
+                        Icon(
+                          Icons.card_giftcard,
+                          color: AppColors.inactiveColor,
+                        ),
                       ],
+                    ),
+                    Text(
+                      "₹ 0",
+                      style: TextStyle(
+                        fontFamily: APP_FONT_FAMILY,
+                        fontSize: 30.sp,
+                        fontVariations: [FontVariation.weight(800)],
+                        color: Colors.white,
+                        height: 1.5,
+                      ),
+                    ),
+                    24.verticalSpace,
+                    Column(
+                      mainAxisSize: MainAxisSize.min,
+                      spacing: 12.h,
+                      children: [
+                        _planFeatureWidget("Local-only storage"),
+                        _planFeatureWidget("Upload PDFs, images & notes."),
+                        _planFeatureWidget("Semantic Search"),
+                        _planFeatureWidget("Unlimited chat with contents."),
+                        _planFeatureWidget("Recents, pin, sort & filter"),
+                      ],
+                    ),
+                    24.verticalSpace,
+                    Container(
+                      width: double.infinity,
+                      padding: EdgeInsets.all(18.w),
+                      decoration: BoxDecoration(
+                        color: AppColors.blueDarkColor,
+                        borderRadius: BorderRadius.circular(16.r),
+                      ),
+                      child: Column(
+                        children: [
+                          Row(
+                            spacing: 10.w,
+                            children: [
+                              databaseIconSvg(color: AppColors.lightGreyColor),
+                              Text(
+                                "PROCESSING CREDITS",
+                                style: TextStyle(
+                                  fontSize: 12.sp,
+                                  color: AppColors.lightGreyColor,
+                                  fontVariations: [FontVariation.weight(700)],
+                                ),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
                     ),
                   ],
                 ),
@@ -66,6 +122,23 @@ class SubscriptionPlansScreen extends StatelessWidget {
           ),
         ),
       ),
+    );
+  }
+
+  Widget _planFeatureWidget(String feature) {
+    return Row(
+      spacing: 12.w,
+      children: [
+        Icon(Icons.check_circle_outline_outlined, color: AppColors.greenColor),
+        Text(
+          feature,
+          style: TextStyle(
+            fontSize: 14.sp,
+            fontVariations: [FontVariation.weight(400)],
+            color: AppColors.inactiveColor,
+          ),
+        ),
+      ],
     );
   }
 }
