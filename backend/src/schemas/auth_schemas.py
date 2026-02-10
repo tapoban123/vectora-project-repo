@@ -8,7 +8,7 @@ class UserProfileDetailsSchema(BaseModel):
     user_id: str = Field(..., validation_alias="user_id")
     name: str = Field(...)
     profile_picture: str = Field(..., validation_alias="picture")
-    created_at: int = Field(..., validation_alias="auth_time")
+    creation_time: int = Field(..., validation_alias="auth_time")
     email: str = Field(...)
 
 

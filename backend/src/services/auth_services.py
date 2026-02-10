@@ -4,7 +4,6 @@ from jwt.exceptions import PyJWTError, ExpiredSignatureError
 import firebase_admin
 from firebase_admin import credentials
 from firebase_admin import auth
-from torch.distributed.elastic.utils.logging import get_logger
 
 from src.core.logger import logger
 from src.core.secrets import (
@@ -19,6 +18,8 @@ from src.models.user_model import UserProfileDataModel
 from src.repositories.user_auth_repository import UserAuthRepository
 from src.schemas.auth_schemas import UserProfileDetailsSchema
 import logging
+
+from src.services.user_credits_and_quotas_services import create_new_credits_profile
 
 cred = credentials.Certificate(FIREBASE_PRIVATE_KEY)
 firebase_admin.initialize_app(cred)
@@ -49,6 +50,7 @@ def sign_in_user_service(token: str):
         if not user:
             new_user = UserProfileDataModel.model_validate(user_details.model_dump())
             auth_repo.create_user(new_user)
+            create_new_credits_profile(new_user.user_id)
 
         access_token = generate_jwt_token(
             user_details.user_id,

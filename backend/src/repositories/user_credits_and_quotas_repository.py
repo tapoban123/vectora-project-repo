@@ -5,7 +5,6 @@ from src.core.constants import AWS_DYNAMODB, AWS_REGION
 from src.core.logger import logger
 from src.core.utils import get_current_time_milliseconds_epoch
 from src.models.credits_and_quota_model import CreditsAndQuotaModel
-from src.services.user_credits_and_quotas_services import fetch_remaining_credits
 
 
 class UserCreditsAndQuotasRepository:
@@ -67,7 +66,7 @@ class UserCreditsAndQuotasRepository:
                 err.response["Error"]["Message"]
             )
 
-    def renew_daily_ad_quota(self):
+    def renew_daily_ads_quota(self):
         try:
             response = self.credits_table.scan()
             updated_count = 0

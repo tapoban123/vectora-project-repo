@@ -10,7 +10,7 @@ class UserProfileDataModel(BaseModel):
     user_id: str = Field(...)
     name: str = Field(...)
     profile_picture: str = Field(...)
-    created_at: int = Field(...)
+    creation_time: int = Field(...)
     email: str = Field(...)
     ADMIN_GSI_PK: str = Field(default="USER")
     last_login: int = Field(default_factory=lambda: get_current_time_milliseconds_epoch())
