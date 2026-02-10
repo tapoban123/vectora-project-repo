@@ -5,6 +5,10 @@ IMAGE_EMBEDDING_MODEL = "voyage-multimodal-3.5"
 TEXT_EMBEDDING_MODEL = "embed-v4.0"
 GEMINI_EMBEDDING_MODEL = "gemini-embedding-001"
 
+# AWS
+AWS_DYNAMODB: str = "dynamodb"
+AWS_REGION: str = "ap-south-2"
+
 
 # CHAT_DOCUMENT_EMBEDDING_MODEL = "gemini-embedding-001"
 #

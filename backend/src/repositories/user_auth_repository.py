@@ -3,14 +3,14 @@ from datetime import datetime, timedelta
 
 from botocore.exceptions import ClientError
 
-from src.core.constants import UserAccountStatus
+from src.core.constants import UserAccountStatus, AWS_REGION, AWS_DYNAMODB
 from src.core.logger import logger
 from src.models.user_model import UserProfileDataModel
 
 
 class UserAuthRepository:
     def __init__(self):
-        self.dynamodb = boto3.resource("dynamodb", region_name="ap-south-2")
+        self.dynamodb = boto3.resource(AWS_DYNAMODB, region_name=AWS_REGION)
         self.users_table = self.dynamodb.Table("Vectora-App-Users")
 
     def create_user(self, user_data: UserProfileDataModel):
