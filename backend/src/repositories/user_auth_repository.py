@@ -43,7 +43,8 @@ class UserAuthRepository:
         current Time + 30 days. After 30 days the user is automatically deleted."""
 
         # Calculate the expireAt time (30 days from now) in epoch second format
-        delete_after = int((datetime.now() + timedelta(days=30)).timestamp())
+        # delete_after = int((datetime.now() + timedelta(days=30)).timestamp())
+        delete_after = int((datetime.now() + timedelta(minutes=1)).timestamp())
         try:
             response = self.users_table.update_item(
                 Key={"user_id": user_id},
