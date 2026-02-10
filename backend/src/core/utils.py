@@ -11,6 +11,7 @@ import time
 #     img.save(buffer, format="JPEG")
 #     return base64.b64decode(buffer.getvalue()).decode("utf-8")
 
+
 def get_current_time_milliseconds_epoch():
     return int(time.time() * 1000)
 

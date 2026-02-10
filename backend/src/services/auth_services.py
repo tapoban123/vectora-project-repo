@@ -12,8 +12,13 @@ from src.core.secrets import (
     EXPIRE_MINUTES_ACCESS_TOKEN,
     FIREBASE_PRIVATE_KEY,
 )
-from src.exceptions import InvalidIdTokenException, UserSignInException, \
-    InvalidAccessTokenException, ExpiredAccessTokenException, UserDeletionException
+from src.exceptions import (
+    InvalidIdTokenException,
+    UserSignInException,
+    InvalidAccessTokenException,
+    ExpiredAccessTokenException,
+    UserDeletionException,
+)
 from src.models.user_model import UserProfileDataModel
 from src.repositories.user_auth_repository import UserAuthRepository
 from src.schemas.auth_schemas import UserProfileDetailsSchema
@@ -87,13 +92,17 @@ def generate_jwt_token(user_id: str, expires_delta: timedelta):
 
 def validate_id_token_and_generate_access_key(token: str):
     """Validates the client id token
-     If id token is valid, generates and returns new access token.
-     Else, raises 401 error."""
+    If id token is valid, generates and returns new access token.
+    Else, raises 401 error."""
     try:
         claims = auth.verify_id_token(id_token=token, clock_skew_seconds=5)
-        user_details: UserProfileDetailsSchema = UserProfileDetailsSchema.model_validate(claims)
-        access_token: str = generate_jwt_token(user_details.user_id,
-                                               expires_delta=timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES))
+        user_details: UserProfileDetailsSchema = (
+            UserProfileDetailsSchema.model_validate(claims)
+        )
+        access_token: str = generate_jwt_token(
+            user_details.user_id,
+            expires_delta=timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES),
+        )
         return access_token
     except auth.InvalidIdTokenError:
         raise InvalidIdTokenException()

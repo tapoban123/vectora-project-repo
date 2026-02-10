@@ -3,6 +3,7 @@ from fastapi import HTTPException, status
 
 class AuthExceptions(HTTPException):
     """Base Exception for Authentication errors."""
+
     pass
 
 
@@ -44,6 +45,7 @@ class UserDeletionException(AuthExceptions):
 
 class UserCreditsAndQuotaExceptions(HTTPException):
     """Base Exception for handling user credits and daily quotas errors."""
+
     pass
 
 

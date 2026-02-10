@@ -10,7 +10,11 @@ class SubscriberModel(BaseModel):
     user_id: str = Field(...)  # Partition Key
     plan: str = Field(...)
     amount_paid: float = Field(...)
-    start_time: int = Field(default_factory=lambda: get_current_time_milliseconds_epoch())
+    start_time: int = Field(
+        default_factory=lambda: get_current_time_milliseconds_epoch()
+    )
     expiry_time: int = Field(...)
-    renewed_time: int = Field(default=None)  # Updates when user renews current plan before expiry.
+    renewed_time: int = Field(
+        default=None
+    )  # Updates when user renews current plan before expiry.
     ADMIN_GSI_PK: str = Field(default="SUBSCRIPTION")

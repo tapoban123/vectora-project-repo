@@ -13,5 +13,7 @@ class UserProfileDataModel(BaseModel):
     creation_time: int = Field(...)
     email: str = Field(...)
     ADMIN_GSI_PK: str = Field(default="USER")
-    last_login: int = Field(default_factory=lambda: get_current_time_milliseconds_epoch())
+    last_login: int = Field(
+        default_factory=lambda: get_current_time_milliseconds_epoch()
+    )
     account_status: str = Field(default="ACTIVE")

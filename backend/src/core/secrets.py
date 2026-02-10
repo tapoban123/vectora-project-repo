@@ -11,10 +11,7 @@ ssm = boto3.client("ssm")
 
 
 def get_param(name: str):
-    return ssm.get_parameter(
-        Name=name,
-        WithDecryption=True
-    )["Parameter"]["Value"]
+    return ssm.get_parameter(Name=name, WithDecryption=True)["Parameter"]["Value"]
 
 
 # API Secrets

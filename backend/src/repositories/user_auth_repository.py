@@ -21,18 +21,18 @@ class UserAuthRepository:
             logger.error(
                 "Failed to create new user.\n%s %s",
                 err.response["Error"]["Code"],
-                err.response["Error"]["Message"]
+                err.response["Error"]["Message"],
             )
 
     def get_user(self, user_id: str):
         try:
             response = self.users_table.get_item(Key={"user_id": user_id})
-            return response.get('Item')
+            return response.get("Item")
         except ClientError as err:
             logger.error(
                 "Failed to get user.\n%s %s",
                 err.response["Error"]["Code"],
-                err.response["Error"]["Message"]
+                err.response["Error"]["Message"],
             )
 
     def fetch_all_user(self):
@@ -49,14 +49,17 @@ class UserAuthRepository:
             response = self.users_table.update_item(
                 Key={"user_id": user_id},
                 UpdateExpression="set account_status=:s, delete_after=:d",
-                ExpressionAttributeValues={":s": UserAccountStatus.pending_deletion, ":d": delete_after},
+                ExpressionAttributeValues={
+                    ":s": UserAccountStatus.pending_deletion,
+                    ":d": delete_after,
+                },
             )
             return response
         except ClientError as err:
             logger.error(
                 "Failed to set 'delete_after' to expiry timestamp.\n%s %s",
                 err.response["Error"]["Code"],
-                err.response["Error"]["Message"]
+                err.response["Error"]["Message"],
             )
 
     def revive_deleted_account(self, user_data: UserProfileDataModel):
@@ -71,7 +74,7 @@ class UserAuthRepository:
             logger.error(
                 "Failed to remove 'delete_after' and revive account.\n%s %s",
                 err.response["Error"]["Code"],
-                err.response["Error"]["Message"]
+                err.response["Error"]["Message"],
             )
 
     def is_user_deleted_recently(self) -> bool:

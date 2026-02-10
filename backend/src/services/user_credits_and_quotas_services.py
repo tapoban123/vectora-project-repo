@@ -1,7 +1,14 @@
-from src.exceptions import NewCreditsProfileCreationFailedException, FetchRemainingCreditsException, \
-    FetchRemainingAdsQuotaException, RenewDailyAdsQuotaException, DeductRemainingAdsPerUsageException
+from src.exceptions import (
+    NewCreditsProfileCreationFailedException,
+    FetchRemainingCreditsException,
+    FetchRemainingAdsQuotaException,
+    RenewDailyAdsQuotaException,
+    DeductRemainingAdsPerUsageException,
+)
 from src.models.credits_and_quota_model import CreditsAndQuotaModel
-from src.repositories.user_credits_and_quotas_repository import UserCreditsAndQuotasRepository
+from src.repositories.user_credits_and_quotas_repository import (
+    UserCreditsAndQuotasRepository,
+)
 
 
 def create_new_credits_profile(user_id: str):
@@ -44,6 +51,8 @@ def update_daily_ads_quota():
 def deduct_remaining_credits_per_usage(user_id: str, remaining_credits: float):
     credits_repo = UserCreditsAndQuotasRepository()
     try:
-        return credits_repo.deduct_user_credits_on_usage(user_id, remaining_credits=remaining_credits)
+        return credits_repo.deduct_user_credits_on_usage(
+            user_id, remaining_credits=remaining_credits
+        )
     except:
         raise DeductRemainingAdsPerUsageException()
