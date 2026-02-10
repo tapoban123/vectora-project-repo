@@ -4,6 +4,7 @@ from jwt.exceptions import PyJWTError, ExpiredSignatureError
 import firebase_admin
 from firebase_admin import credentials
 from firebase_admin import auth
+from torch.distributed.elastic.utils.logging import get_logger
 
 from src.core.logger import logger
 from src.core.secrets import (
@@ -13,10 +14,11 @@ from src.core.secrets import (
     FIREBASE_PRIVATE_KEY,
 )
 from src.exceptions import InvalidIdTokenException, UserSignInException, \
-    InvalidAccessTokenException, ExpiredAccessTokenException
+    InvalidAccessTokenException, ExpiredAccessTokenException, UserDeletionException
 from src.models.user_model import UserProfileDataModel
 from src.repositories.user_auth_repository import UserAuthRepository
 from src.schemas.auth_schemas import UserProfileDetailsSchema
+import logging
 
 cred = credentials.Certificate(FIREBASE_PRIVATE_KEY)
 firebase_admin.initialize_app(cred)
@@ -24,6 +26,8 @@ firebase_admin.initialize_app(cred)
 SECRET_KEY = JWT_SECRET_KEY
 ALGORITHM = JWT_HASH_ALGORITHM
 ACCESS_TOKEN_EXPIRE_MINUTES = int(EXPIRE_MINUTES_ACCESS_TOKEN)
+auth_logger = logging.getLogger()
+auth_logger.setLevel(logging.DEBUG)
 
 
 def sign_in_user_service(token: str):
@@ -39,14 +43,15 @@ def sign_in_user_service(token: str):
         )
 
         auth_repo = UserAuthRepository()
-        user = auth_repo.get_user(user_id=user_details.user_id, created_at=user_details.created_at)
+        user = auth_repo.get_user(user_id=user_details.user_id)
 
+        auth_logger.info(user)
         if not user:
             new_user = UserProfileDataModel.model_validate(user_details.model_dump())
             auth_repo.create_user(new_user)
 
         access_token = generate_jwt_token(
-            user_details.internal_id,
+            user_details.user_id,
             expires_delta=timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES),
         )
         return {"access_token": access_token}
@@ -59,9 +64,18 @@ def sign_in_user_service(token: str):
         raise UserSignInException()
 
 
-def generate_jwt_token(internal_uid: str, expires_delta: timedelta):
+def start_deletion_user(user_id: str):
+    auth_repo = UserAuthRepository()
+    try:
+        auth_repo.delete_user(user_id)
+    except:
+        raise UserDeletionException()
+    return {"details": "success"}
+
+
+def generate_jwt_token(user_id: str, expires_delta: timedelta):
     """Generates and return a JWT token with uid, issued_at and expiration as payload."""
-    payload: dict = {"uid": internal_uid}
+    payload: dict = {"uid": user_id}
     issued_at = datetime.now(tz=timezone.utc)
     expire = issued_at + expires_delta
     payload.update({"iat": issued_at, "exp": expire})
@@ -76,7 +90,7 @@ def validate_id_token_and_generate_access_key(token: str):
     try:
         claims = auth.verify_id_token(id_token=token, clock_skew_seconds=5)
         user_details: UserProfileDetailsSchema = UserProfileDetailsSchema.model_validate(claims)
-        access_token: str = generate_jwt_token(internal_uid=user_details.internal_id,
+        access_token: str = generate_jwt_token(user_details.user_id,
                                                expires_delta=timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES))
         return access_token
     except auth.InvalidIdTokenError:

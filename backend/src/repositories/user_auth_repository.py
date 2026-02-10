@@ -24,9 +24,9 @@ class UserAuthRepository:
                 err.response["Error"]["Message"]
             )
 
-    def get_user(self, user_id: str, created_at: int):
+    def get_user(self, user_id: str):
         try:
-            response = self.users_table.get_item(Key={"user_id": user_id, "created_at": created_at})
+            response = self.users_table.get_item(Key={"user_id": user_id})
             return response.get('Item')
         except ClientError as err:
             logger.error(
@@ -38,7 +38,7 @@ class UserAuthRepository:
     def fetch_all_user(self):
         pass
 
-    def delete_user(self, user_data: UserProfileDataModel):
+    def delete_user(self, user_id: str):
         """Updates the particular user with delete_after field with value of
         current Time + 30 days. After 30 days the user is automatically deleted."""
 
@@ -46,7 +46,7 @@ class UserAuthRepository:
         delete_after = int((datetime.now() + timedelta(days=30)).timestamp())
         try:
             response = self.users_table.update_item(
-                Key={"user_id": user_data.user_id, "created_at": user_data.creation_time},
+                Key={"user_id": user_id},
                 UpdateExpression="set account_status=:s, delete_after=:d",
                 ExpressionAttributeValues={":s": UserAccountStatus.pending_deletion, ":d": delete_after},
             )
@@ -61,7 +61,7 @@ class UserAuthRepository:
     def revive_deleted_account(self, user_data: UserProfileDataModel):
         try:
             response = self.users_table.update_item(
-                Key={"user_id": user_data.user_id, "created_at": user_data.creation_time},
+                Key={"user_id": user_data.user_id},
                 UpdateExpression="REMOVE delete_after set account_status=:s",
                 ExpressionAttributeValues={":s": UserAccountStatus.active},
             )
