@@ -11,7 +11,7 @@ public_router = APIRouter()
 
 @public_router.get("/")
 def home():
-    return "Welcome to AI Personal Content App backend."
+    return "Welcome to Vectora App backend."
 
 
 app.include_router(public_router)

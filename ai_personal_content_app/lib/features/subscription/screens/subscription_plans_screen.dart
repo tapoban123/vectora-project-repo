@@ -165,6 +165,7 @@ class _PremiumPlanWidget extends StatelessWidget {
                         fontVariations: [FontVariation.weight(500)],
                       ),
                     ),
+                    5.verticalSpace,
                     SizedBox(
                       width: getScreenWidth(context) * 0.6,
                       child: Text(
@@ -190,7 +191,7 @@ class _PremiumPlanWidget extends StatelessWidget {
                     borderRadius: BorderRadius.circular(16.r),
                   ),
                   splashFactory: InkSplash.splashFactory,
-                  overlayColor: AppColors.lightGreyColor,
+                  overlayColor: AppColors.greyColor,
                 ),
                 child: Text(
                   "Upgrade to Premium",
