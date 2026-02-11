@@ -1,6 +1,6 @@
 from typing import Annotated
 
-from fastapi import APIRouter
+from fastapi import APIRouter, Depends
 
 from src.core.security import get_user_dep
 from src.schemas.credits_and_quotas_schema import CreditsAndQuotasSchema
@@ -12,5 +12,5 @@ user_credits_and_quotas_router = APIRouter(
 
 
 @user_credits_and_quotas_router.get("/user", response_model=CreditsAndQuotasSchema)
-def fetch_credits_and_quotas_of_user(user_id: Annotated[str, get_user_dep]):
+def fetch_credits_and_quotas_of_user(user_id: Annotated[str, Depends(get_user_dep)]):
     return fetch_remaining_credits(user_id)
