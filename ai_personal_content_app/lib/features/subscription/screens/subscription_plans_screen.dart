@@ -3,7 +3,6 @@ import 'package:ai_personal_content_app/core/theme/app_colors.dart';
 import 'package:ai_personal_content_app/core/theme/app_fonts.dart';
 import 'package:ai_personal_content_app/core/theme/app_svgs.dart';
 import 'package:ai_personal_content_app/core/utils/utils.dart';
-import 'package:ai_personal_content_app/objectbox.g.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
@@ -158,7 +157,7 @@ class _PremiumPlanWidget extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      "MONTHLY POWER",
+                      "MONTHLY QUOTA",
                       style: TextStyle(
                         fontSize: 13.sp,
                         color: Colors.white,

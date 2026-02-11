@@ -8,6 +8,7 @@ import 'package:ai_personal_content_app/features/auth/controllers/user_auth_bloc
 import 'package:ai_personal_content_app/features/auth/controllers/user_auth_bloc/user_auth_events.dart';
 import 'package:ai_personal_content_app/features/auth/controllers/user_auth_bloc/user_auth_states.dart';
 import 'package:ai_personal_content_app/features/auth/models/user_profile_details.dart';
+import 'package:ai_personal_content_app/main.dart';
 import 'package:ai_personal_content_app/router.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -259,7 +260,7 @@ class UserProfileScreen extends StatelessWidget {
                             top: Radius.zero,
                           ),
                           trailingIcon: Text(
-                            "1.0.0 (1)",
+                            "${packageInfo.version} (${packageInfo.buildNumber})",
                             style: TextStyle(
                               fontSize: 12.sp,
                               fontVariations: [FontVariation.weight(500)],
