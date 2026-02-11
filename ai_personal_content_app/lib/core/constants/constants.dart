@@ -1,0 +1,1 @@
+enum CreditsUsageType { UPLOAD, SEARCH }

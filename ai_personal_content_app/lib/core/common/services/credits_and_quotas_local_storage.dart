@@ -10,7 +10,7 @@ class CreditsAndQuotasLocalStorage {
   CreditsAndQuotasLocalStorage({required SharedPreferences sharedPreferences})
     : _sharedPreferences = sharedPreferences;
 
-  void saveCreditsAndQuotasData(UserCreditsAndQuotasModel data) async{
+  void saveCreditsAndQuotasData(UserCreditsAndQuotasModel data) async {
     await _sharedPreferences.setString(_key, jsonEncode(data.toJson()));
   }
 
@@ -20,5 +20,9 @@ class CreditsAndQuotasLocalStorage {
       return UserCreditsAndQuotasModel.fromJson(jsonDecode(res));
     }
     return null;
+  }
+
+  void clearStorage() {
+    _sharedPreferences.remove(_key);
   }
 }

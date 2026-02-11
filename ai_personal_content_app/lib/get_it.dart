@@ -95,6 +95,7 @@ void init() {
     () => UserAuthBloc(
       userAuthenticationServices: getIt(),
       jwtTokenStorageService: getIt(),
+      sharedPreferences: getIt(),
     ),
   );
   getIt.registerFactory<NewContentsBloc>(

@@ -1,4 +1,3 @@
-import 'package:ai_personal_content_app/core/api/api_exceptions.dart';
 import 'package:ai_personal_content_app/core/common/services/jwt_token_storage_service.dart';
 import 'package:ai_personal_content_app/features/auth/services/user_authentication_services.dart';
 

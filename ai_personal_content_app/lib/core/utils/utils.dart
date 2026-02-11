@@ -1,12 +1,14 @@
 import 'dart:developer';
 import 'dart:io';
 
+import 'package:ai_personal_content_app/core/common/cubits/credits_and_quotas_cubit.dart';
 import 'package:ai_personal_content_app/core/theme/app_colors.dart';
 import 'package:ai_personal_content_app/core/theme/app_fonts.dart';
 import 'package:ai_personal_content_app/router.dart';
 import 'dart:math' as math;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_pdfview/flutter_pdfview.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -99,6 +101,7 @@ void showToastMessage(String message) {
 }
 
 enum DialogType { INFO, ERROR }
+
 
 void showAppDialog(
   BuildContext context, {
@@ -352,7 +355,7 @@ class _CreditsDialogContentState extends State<CreditsDialogContent> {
 
   @override
   void initState() {
-    _remainingCredits = math.Random().nextInt(3);
+    _remainingCredits = context.read<CreditsAndQuotasCubit>().state!.remainingAdsQuotaForToday;
     _isRemainingCredits = _remainingCredits > 0;
     super.initState();
   }
