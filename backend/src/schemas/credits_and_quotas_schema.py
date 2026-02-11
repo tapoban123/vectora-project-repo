@@ -16,3 +16,11 @@ class CreditsAndQuotasSchema(BaseModel):
     lastCreditUseTime: Optional[int] = Field(
         default=None, validation_alias="last_credit_use_time"
     )
+
+
+class DeductCreditsSchema(BaseModel):
+    remaining_credits: float = Field(...)
+
+
+class GrantRewardSchema(DeductCreditsSchema):
+    remaining_ads_quota: int

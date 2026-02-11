@@ -4,6 +4,7 @@ from src.exceptions import (
     FetchRemainingAdsQuotaException,
     RenewDailyAdsQuotaException,
     DeductRemainingAdsPerUsageException,
+    GrantRewardOnAdWatchException,
 )
 from src.models.credits_and_quota_model import CreditsAndQuotaModel
 from src.repositories.user_credits_and_quotas_repository import (
@@ -56,3 +57,17 @@ def deduct_remaining_credits_per_usage(user_id: str, remaining_credits: float):
         )
     except:
         raise DeductRemainingAdsPerUsageException()
+
+
+def grant_reward_on_ad_watch(
+    user_id: str, remaining_credits: float, remaining_ads_quota: int
+):
+    credits_repo = UserCreditsAndQuotasRepository()
+    try:
+        return credits_repo.grant_ad_reward(
+            user_id=user_id,
+            remaining_credits=remaining_credits,
+            remaining_ads_quota=remaining_ads_quota,
+        )
+    except:
+        raise GrantRewardOnAdWatchException()

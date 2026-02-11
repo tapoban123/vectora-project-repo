@@ -77,3 +77,9 @@ class DeductRemainingAdsPerUsageException(UserCreditsAndQuotaExceptions):
     def __init__(self):
         message = "Failed to deduct remaining ads per usage."
         super().__init__(status_code=status.HTTP_409_CONFLICT, detail=message)
+
+
+class GrantRewardOnAdWatchException(UserCreditsAndQuotaExceptions):
+    def __init__(self):
+        message = "Failed to grant reward on ad watch."
+        super().__init__(status_code=status.HTTP_409_CONFLICT, detail=message)
