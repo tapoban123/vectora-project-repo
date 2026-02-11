@@ -86,6 +86,7 @@ def generate_jwt_token(user_id: str, expires_delta: timedelta):
     issued_at = datetime.now(tz=timezone.utc)
     expire = issued_at + expires_delta
     payload.update({"iat": issued_at, "exp": expire})
+    logger.error(payload)
     encoded_jwt = jwt.encode(algorithm=ALGORITHM, payload=payload, key=SECRET_KEY)
     return encoded_jwt
 
