@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:ai_personal_content_app/core/common/cubits/credits_and_quotas_cubit.dart';
 import 'package:ai_personal_content_app/core/configs/objectbox_config.dart';
 import 'package:ai_personal_content_app/core/theme/app_colors.dart';
 import 'package:ai_personal_content_app/core/theme/app_fonts.dart';
@@ -70,6 +71,7 @@ class MyApp extends StatelessWidget {
           BlocProvider(create: (context) => getIt<SearchContentsBloc>()),
           BlocProvider(create: (context) => getIt<RecentItemsCubit>()),
           BlocProvider(create: (context) => getIt<PinItemsCubit>()),
+          BlocProvider(create: (context) => getIt<CreditsAndQuotasCubit>()),
           BlocProvider(
             create: (context) => getIt<FilterAndSortPreferencesCubit>(),
           ),

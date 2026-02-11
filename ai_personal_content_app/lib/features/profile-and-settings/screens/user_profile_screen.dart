@@ -1,4 +1,6 @@
 import 'package:ai_personal_content_app/core/common/constants.dart';
+import 'package:ai_personal_content_app/core/common/cubits/credits_and_quotas_cubit.dart';
+import 'package:ai_personal_content_app/core/common/models/user_credits_and_quotas_model.dart';
 import 'package:ai_personal_content_app/core/common/widgets/custom_appbar.dart';
 import 'package:ai_personal_content_app/core/theme/app_colors.dart';
 import 'package:ai_personal_content_app/core/theme/app_fonts.dart';
@@ -16,8 +18,19 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-class UserProfileScreen extends StatelessWidget {
+class UserProfileScreen extends StatefulWidget {
   const UserProfileScreen({super.key});
+
+  @override
+  State<UserProfileScreen> createState() => _UserProfileScreenState();
+}
+
+class _UserProfileScreenState extends State<UserProfileScreen> {
+  @override
+  void initState() {
+    context.read<CreditsAndQuotasCubit>().fetchCreditsAndQuotas();
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -82,12 +95,19 @@ class UserProfileScreen extends StatelessWidget {
                               crossAxisAlignment: CrossAxisAlignment.end,
                               spacing: 6.w,
                               children: [
-                                Text(
-                                  "64 credits",
-                                  style: TextStyle(
-                                    fontVariations: [FontVariation.weight(600)],
-                                    fontSize: 18.sp,
-                                    color: Colors.white,
+                                BlocBuilder<
+                                  CreditsAndQuotasCubit,
+                                  UserCreditsAndQuotasModel?
+                                >(
+                                  builder: (context, state) => Text(
+                                    "${state?.remainingCredits ?? 0} credits",
+                                    style: TextStyle(
+                                      fontVariations: [
+                                        FontVariation.weight(600),
+                                      ],
+                                      fontSize: 18.sp,
+                                      color: Colors.white,
+                                    ),
                                   ),
                                 ),
                                 Text(

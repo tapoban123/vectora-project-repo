@@ -65,10 +65,10 @@ class AppLoggerInterceptor extends Interceptor {
   }
 }
 
-void logNetworkError(String title, String err, StackTrace stk) {
+void logNetworkError(String title, String errMsg, StackTrace stk) {
   if (!kDebugMode) return;
 
   log("-" * 15);
-  log("[title] $err $stk");
+  log(errMsg, name: title, stackTrace: stk);
   log("-" * 15);
 }

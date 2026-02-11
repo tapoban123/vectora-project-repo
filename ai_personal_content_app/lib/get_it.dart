@@ -1,7 +1,11 @@
+import 'package:ai_personal_content_app/core/common/cubits/credits_and_quotas_cubit.dart';
+import 'package:ai_personal_content_app/core/common/services/credits_and_quotas_local_storage.dart';
+import 'package:ai_personal_content_app/core/common/services/credits_and_quotas_services.dart';
 import 'package:ai_personal_content_app/core/common/services/embedding_generation_service.dart';
 import 'package:ai_personal_content_app/core/common/services/embeddings_storage_service.dart';
 import 'package:ai_personal_content_app/core/common/services/jwt_token_storage_service.dart';
 import 'package:ai_personal_content_app/core/common/usecases/read_refresh_token.dart';
+import 'package:ai_personal_content_app/core/common/usecases/regenerate_access_token.dart';
 import 'package:ai_personal_content_app/features/auth/controllers/user_auth_bloc/user_auth_bloc.dart';
 import 'package:ai_personal_content_app/features/auth/services/user_authentication_services.dart';
 import 'package:ai_personal_content_app/core/common/usecases/read_access_token.dart';
@@ -51,6 +55,15 @@ void init() {
   getIt.registerLazySingleton<ContentsLocalStorageService>(
     () => ContentsLocalStorageService(),
   );
+  getIt.registerLazySingleton<CreditsAndQuotasLocalStorage>(
+    () => CreditsAndQuotasLocalStorage(sharedPreferences: getIt()),
+  );
+  getIt.registerLazySingleton<CreditsAndQuotasServices>(
+    () => CreditsAndQuotasServices(
+      readAccessToken: getIt(),
+      regenerateAccessToken: getIt(),
+    ),
+  );
   getIt
       .registerSingletonWithDependencies<ContentLibraryUserPrefsLocalDbService>(
         () => ContentLibraryUserPrefsLocalDbService(prefs: getIt()),
@@ -70,6 +83,12 @@ void init() {
   );
   getIt.registerLazySingleton<ReadRefreshToken>(
     () => ReadRefreshToken(firebaseAuth: getIt()),
+  );
+  getIt.registerLazySingleton<RegenerateAccessToken>(
+    () => RegenerateAccessToken(
+      userAuthenticationServices: getIt(),
+      jwtTokenStorageService: getIt(),
+    ),
   );
 
   getIt.registerFactory<UserAuthBloc>(
@@ -110,6 +129,12 @@ void init() {
   getIt.registerFactory<FilterAndSortPreferencesCubit>(
     () => FilterAndSortPreferencesCubit(
       filterAndSortPrefsLocaldbService: getIt(),
+    ),
+  );
+  getIt.registerFactory<CreditsAndQuotasCubit>(
+    () => CreditsAndQuotasCubit(
+      creditsAndQuotasLocalStorage: getIt(),
+      creditsAndQuotasServices: getIt(),
     ),
   );
 }
