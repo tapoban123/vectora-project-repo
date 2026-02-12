@@ -84,7 +84,7 @@ class CreditsAndQuotasServices {
   }) async {
     try {
       final String? accessToken = await _readAccessToken.call();
-      final response = await _dio.get(
+      final response = await _dio.put(
         ApiRoutes.updateRemainingCreditsOnUsage,
         options: Options(
           headers: {HttpHeaders.authorizationHeader: "Bearer $accessToken"},
@@ -99,7 +99,10 @@ class CreditsAndQuotasServices {
       if (response.statusCode == HttpStatus.unauthorized && !isRetry) {
         final isAccessTokenRenewed = await _regenerateAccessToken();
         if (isAccessTokenRenewed) {
-          return fetchUserCreditsAndQuotas(isRetry: true);
+          return updateRemainingCreditsOnUsage(
+            isRetry: true,
+            remainingCredits: remainingCredits,
+          );
         }
         return Left(
           CustomApiException(
@@ -144,7 +147,7 @@ class CreditsAndQuotasServices {
   }) async {
     try {
       final String? accessToken = await _readAccessToken.call();
-      final response = await _dio.get(
+      final response = await _dio.put(
         ApiRoutes.grantCreditsOnAdWatch,
         options: Options(
           headers: {HttpHeaders.authorizationHeader: "Bearer $accessToken"},
@@ -162,7 +165,11 @@ class CreditsAndQuotasServices {
       if (response.statusCode == HttpStatus.unauthorized && !isRetry) {
         final isAccessTokenRenewed = await _regenerateAccessToken();
         if (isAccessTokenRenewed) {
-          return fetchUserCreditsAndQuotas(isRetry: true);
+          return grantRewardOnAdWatch(
+            isRetry: true,
+            remainingCredits: remainingCredits,
+            remainingAdsQuota: remainingAdsQuota,
+          );
         }
         return Left(
           CustomApiException(

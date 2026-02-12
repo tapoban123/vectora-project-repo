@@ -9,6 +9,7 @@ class CustomAppButton extends StatelessWidget {
   final double? fontSize;
   final Size? minimumSize;
   final VoidCallback onTap;
+  final Color? bgColor;
 
   const CustomAppButton({
     super.key,
@@ -17,6 +18,7 @@ class CustomAppButton extends StatelessWidget {
     this.height,
     this.fontSize,
     this.minimumSize,
+    this.bgColor,
   });
 
   @override
@@ -24,7 +26,7 @@ class CustomAppButton extends StatelessWidget {
     return ElevatedButton(
       onPressed: onTap,
       style: ElevatedButton.styleFrom(
-        backgroundColor: AppColors.blueColor,
+        backgroundColor: bgColor ?? AppColors.blueColor,
         fixedSize: minimumSize != null
             ? Size(getScreenWidth(context) * 0.85, height ?? 50.h)
             : null,

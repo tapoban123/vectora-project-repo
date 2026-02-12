@@ -1,4 +1,7 @@
+import 'dart:developer';
+
 import 'package:ai_personal_content_app/core/common/constants.dart';
+import 'package:ai_personal_content_app/core/common/cubits/credits_and_quotas_cubit.dart';
 import 'package:ai_personal_content_app/core/common/functions.dart';
 import 'package:ai_personal_content_app/core/common/widgets/custom_appbar.dart';
 import 'package:ai_personal_content_app/core/common/widgets/custom_button.dart';
@@ -113,6 +116,13 @@ class AddNewContentScreen extends StatelessWidget {
                       orElse: () => [],
                       newContents: (contents) => contents,
                     );
+                    final double totalCreditsUsed = contents.length * 2;
+                    final double availableCredits = context
+                        .read<CreditsAndQuotasCubit>()
+                        .state!
+                        .remainingCredits;
+                    final bool isUploadAllowed =
+                        availableCredits > totalCreditsUsed;
 
                     if (contents.isEmpty) {
                       return SizedBox();
@@ -129,13 +139,25 @@ class AddNewContentScreen extends StatelessWidget {
                           },
                         ),
                         Positioned(
-                          bottom: 0,
+                          bottom: 10.h,
                           child: CustomAppButton(
                             buttonText: "Add to library",
+                            bgColor: isUploadAllowed
+                                ? null
+                                : AppColors.greyColor,
                             onTap: () {
+                              if (!isUploadAllowed) {
+                                showCreditsDialog(context);
+                                return;
+                              }
                               addNewContentRef.add(
                                 GenerateEmbeddingsForAllEvent(),
                               );
+                              context
+                                  .read<CreditsAndQuotasCubit>()
+                                  .deductCreditsOnUsage(
+                                    creditsToDeduct: totalCreditsUsed,
+                                  );
                             },
                           ),
                         ),

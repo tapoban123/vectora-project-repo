@@ -13,7 +13,9 @@ class CreditsAndQuotasCubit extends Cubit<UserCreditsAndQuotasModel?> {
     required CreditsAndQuotasLocalStorage creditsAndQuotasLocalStorage,
   }) : _creditsAndQuotasLocalStorage = creditsAndQuotasLocalStorage,
        _creditsAndQuotasServices = creditsAndQuotasServices,
-       super(null);
+       super(null) {
+    fetchCreditsAndQuotas();
+  }
 
   void fetchCreditsAndQuotas() async {
     UserCreditsAndQuotasModel? creditsData = _creditsAndQuotasLocalStorage
@@ -29,9 +31,17 @@ class CreditsAndQuotasCubit extends Cubit<UserCreditsAndQuotasModel?> {
   }
 
   void deductCreditsOnUsage({
-    required CreditsUsageType usage,
-    required int creditsToDeduct,
-  }) {}
+    // required CreditsUsageType usage,
+    required double creditsToDeduct,
+  }) async {
+    final updatedCredits = state!.copyWith(
+      remainingCredits: state!.remainingCredits - creditsToDeduct,
+    );
+    await _creditsAndQuotasServices.updateRemainingCreditsOnUsage(
+      remainingCredits: updatedCredits.remainingCredits,
+    );
+    emit(updatedCredits);
+  }
 
   void grantRewardOnAdWatch() async {
     final UserCreditsAndQuotasModel updatedCreditsData = state!.copyWith(

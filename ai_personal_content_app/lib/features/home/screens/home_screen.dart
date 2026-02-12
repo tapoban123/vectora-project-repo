@@ -1,6 +1,6 @@
 import 'package:ai_personal_content_app/core/common/constants.dart';
 import 'package:ai_personal_content_app/core/common/cubits/credits_and_quotas_cubit.dart';
-import 'package:ai_personal_content_app/core/common/remaining_credits_widget.dart';
+import 'package:ai_personal_content_app/core/common/widgets/remaining_credits_widget.dart';
 import 'package:ai_personal_content_app/core/common/widgets/custom_appbar.dart';
 import 'package:ai_personal_content_app/core/theme/app_colors.dart';
 import 'package:ai_personal_content_app/core/utils/utils.dart';
@@ -30,7 +30,6 @@ class _HomeScreenState extends State<HomeScreen> {
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       context.read<RecentItemsCubit>().fetchRecentItems();
       context.read<PinItemsCubit>().fetchPinnedContents();
-      context.read<CreditsAndQuotasCubit>().fetchCreditsAndQuotas();
     });
     super.initState();
   }
