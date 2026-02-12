@@ -49,7 +49,7 @@ def update_daily_ads_quota():
         raise RenewDailyAdsQuotaException()
 
 
-def deduct_remaining_credits_per_usage(user_id: str, remaining_credits: float):
+def update_remaining_credits_per_usage(user_id: str, remaining_credits: float):
     credits_repo = UserCreditsAndQuotasRepository()
     try:
         return credits_repo.deduct_user_credits_on_usage(

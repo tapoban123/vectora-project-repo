@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$UserCreditsAndQuotasModel {
 
- String get id; String get userId; int get remainingAdsQuotaForToday; int get remainingCredits; int? get lastAdWatchTime; int? get lastCreditUseTime;
+ String get id; String get userId; int get remainingAdsQuotaForToday; double get remainingCredits; int? get lastAdWatchTime; int? get lastCreditUseTime;
 /// Create a copy of UserCreditsAndQuotasModel
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -48,7 +48,7 @@ abstract mixin class $UserCreditsAndQuotasModelCopyWith<$Res>  {
   factory $UserCreditsAndQuotasModelCopyWith(UserCreditsAndQuotasModel value, $Res Function(UserCreditsAndQuotasModel) _then) = _$UserCreditsAndQuotasModelCopyWithImpl;
 @useResult
 $Res call({
- String id, String userId, int remainingAdsQuotaForToday, int remainingCredits, int? lastAdWatchTime, int? lastCreditUseTime
+ String id, String userId, int remainingAdsQuotaForToday, double remainingCredits, int? lastAdWatchTime, int? lastCreditUseTime
 });
 
 
@@ -71,7 +71,7 @@ id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,userId: null == userId ? _self.userId : userId // ignore: cast_nullable_to_non_nullable
 as String,remainingAdsQuotaForToday: null == remainingAdsQuotaForToday ? _self.remainingAdsQuotaForToday : remainingAdsQuotaForToday // ignore: cast_nullable_to_non_nullable
 as int,remainingCredits: null == remainingCredits ? _self.remainingCredits : remainingCredits // ignore: cast_nullable_to_non_nullable
-as int,lastAdWatchTime: freezed == lastAdWatchTime ? _self.lastAdWatchTime : lastAdWatchTime // ignore: cast_nullable_to_non_nullable
+as double,lastAdWatchTime: freezed == lastAdWatchTime ? _self.lastAdWatchTime : lastAdWatchTime // ignore: cast_nullable_to_non_nullable
 as int?,lastCreditUseTime: freezed == lastCreditUseTime ? _self.lastCreditUseTime : lastCreditUseTime // ignore: cast_nullable_to_non_nullable
 as int?,
   ));
@@ -158,7 +158,7 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String id,  String userId,  int remainingAdsQuotaForToday,  int remainingCredits,  int? lastAdWatchTime,  int? lastCreditUseTime)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String id,  String userId,  int remainingAdsQuotaForToday,  double remainingCredits,  int? lastAdWatchTime,  int? lastCreditUseTime)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _UserCreditsAndQuotasModel() when $default != null:
 return $default(_that.id,_that.userId,_that.remainingAdsQuotaForToday,_that.remainingCredits,_that.lastAdWatchTime,_that.lastCreditUseTime);case _:
@@ -179,7 +179,7 @@ return $default(_that.id,_that.userId,_that.remainingAdsQuotaForToday,_that.rema
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String id,  String userId,  int remainingAdsQuotaForToday,  int remainingCredits,  int? lastAdWatchTime,  int? lastCreditUseTime)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String id,  String userId,  int remainingAdsQuotaForToday,  double remainingCredits,  int? lastAdWatchTime,  int? lastCreditUseTime)  $default,) {final _that = this;
 switch (_that) {
 case _UserCreditsAndQuotasModel():
 return $default(_that.id,_that.userId,_that.remainingAdsQuotaForToday,_that.remainingCredits,_that.lastAdWatchTime,_that.lastCreditUseTime);case _:
@@ -199,7 +199,7 @@ return $default(_that.id,_that.userId,_that.remainingAdsQuotaForToday,_that.rema
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String id,  String userId,  int remainingAdsQuotaForToday,  int remainingCredits,  int? lastAdWatchTime,  int? lastCreditUseTime)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String id,  String userId,  int remainingAdsQuotaForToday,  double remainingCredits,  int? lastAdWatchTime,  int? lastCreditUseTime)?  $default,) {final _that = this;
 switch (_that) {
 case _UserCreditsAndQuotasModel() when $default != null:
 return $default(_that.id,_that.userId,_that.remainingAdsQuotaForToday,_that.remainingCredits,_that.lastAdWatchTime,_that.lastCreditUseTime);case _:
@@ -220,7 +220,7 @@ class _UserCreditsAndQuotasModel implements UserCreditsAndQuotasModel {
 @override final  String id;
 @override final  String userId;
 @override final  int remainingAdsQuotaForToday;
-@override final  int remainingCredits;
+@override final  double remainingCredits;
 @override final  int? lastAdWatchTime;
 @override final  int? lastCreditUseTime;
 
@@ -257,7 +257,7 @@ abstract mixin class _$UserCreditsAndQuotasModelCopyWith<$Res> implements $UserC
   factory _$UserCreditsAndQuotasModelCopyWith(_UserCreditsAndQuotasModel value, $Res Function(_UserCreditsAndQuotasModel) _then) = __$UserCreditsAndQuotasModelCopyWithImpl;
 @override @useResult
 $Res call({
- String id, String userId, int remainingAdsQuotaForToday, int remainingCredits, int? lastAdWatchTime, int? lastCreditUseTime
+ String id, String userId, int remainingAdsQuotaForToday, double remainingCredits, int? lastAdWatchTime, int? lastCreditUseTime
 });
 
 
@@ -280,7 +280,7 @@ id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,userId: null == userId ? _self.userId : userId // ignore: cast_nullable_to_non_nullable
 as String,remainingAdsQuotaForToday: null == remainingAdsQuotaForToday ? _self.remainingAdsQuotaForToday : remainingAdsQuotaForToday // ignore: cast_nullable_to_non_nullable
 as int,remainingCredits: null == remainingCredits ? _self.remainingCredits : remainingCredits // ignore: cast_nullable_to_non_nullable
-as int,lastAdWatchTime: freezed == lastAdWatchTime ? _self.lastAdWatchTime : lastAdWatchTime // ignore: cast_nullable_to_non_nullable
+as double,lastAdWatchTime: freezed == lastAdWatchTime ? _self.lastAdWatchTime : lastAdWatchTime // ignore: cast_nullable_to_non_nullable
 as int?,lastCreditUseTime: freezed == lastCreditUseTime ? _self.lastCreditUseTime : lastCreditUseTime // ignore: cast_nullable_to_non_nullable
 as int?,
   ));

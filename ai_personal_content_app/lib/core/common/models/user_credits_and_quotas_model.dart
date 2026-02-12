@@ -10,7 +10,7 @@ abstract class UserCreditsAndQuotasModel with _$UserCreditsAndQuotasModel {
     required String id,
     required String userId,
     required int remainingAdsQuotaForToday,
-    required int remainingCredits,
+    required double remainingCredits,
     int? lastAdWatchTime,
     int? lastCreditUseTime,
   }) = _UserCreditsAndQuotasModel;

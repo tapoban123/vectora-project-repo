@@ -11,7 +11,7 @@ from src.schemas.credits_and_quotas_schema import (
 from src.services.user_credits_and_quotas_services import (
     fetch_remaining_credits,
     update_daily_ads_quota,
-    deduct_remaining_credits_per_usage,
+    update_remaining_credits_per_usage,
     grant_reward_on_ad_watch,
 )
 
@@ -30,12 +30,12 @@ def update_user_daily_ads_quota():
     return update_daily_ads_quota()
 
 
-@user_credits_and_quotas_router.put("/user-credits")
-def deduct_user_credits(
+@user_credits_and_quotas_router.put("/use-credits")
+def update_remaining_credits(
     user_id: Annotated[str, Depends(get_user_dep)],
     remaining_credits: DeductCreditsSchema,
 ):
-    return deduct_remaining_credits_per_usage(
+    return update_remaining_credits_per_usage(
         user_id, remaining_credits=remaining_credits.remaining_credits
     )
 

@@ -12,7 +12,7 @@ _UserCreditsAndQuotasModel _$UserCreditsAndQuotasModelFromJson(
   id: json['id'] as String,
   userId: json['userId'] as String,
   remainingAdsQuotaForToday: (json['remainingAdsQuotaForToday'] as num).toInt(),
-  remainingCredits: (json['remainingCredits'] as num).toInt(),
+  remainingCredits: (json['remainingCredits'] as num).toDouble(),
   lastAdWatchTime: (json['lastAdWatchTime'] as num?)?.toInt(),
   lastCreditUseTime: (json['lastCreditUseTime'] as num?)?.toInt(),
 );

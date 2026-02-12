@@ -12,4 +12,8 @@ abstract class ApiRoutes {
 
   static const String userCreditsAndQuotas = "/credits-and-quotas";
   static const String fetchUserCreditsAndQuotas = "$userCreditsAndQuotas/user";
+  static const String updateRemainingCreditsOnUsage =
+      "$userCreditsAndQuotas/use-credits";
+  static const String grantCreditsOnAdWatch =
+      "$userCreditsAndQuotas/grant-reward";
 }

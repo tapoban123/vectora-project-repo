@@ -38,7 +38,10 @@ class CreditsAndQuotasCubit extends Cubit<UserCreditsAndQuotasModel?> {
       remainingCredits: state!.remainingCredits + 15,
       remainingAdsQuotaForToday: state!.remainingAdsQuotaForToday - 1,
     );
-    await _creditsAndQuotasServices.grantRewardOnAdWatch();
+    await _creditsAndQuotasServices.grantRewardOnAdWatch(
+      remainingCredits: updatedCreditsData.remainingCredits,
+      remainingAdsQuota: updatedCreditsData.remainingAdsQuotaForToday,
+    );
     emit(updatedCreditsData);
   }
 }
