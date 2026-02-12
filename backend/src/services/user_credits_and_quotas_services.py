@@ -1,3 +1,4 @@
+from src.core.logger import logger
 from src.exceptions import (
     NewCreditsProfileCreationFailedException,
     FetchRemainingCreditsException,
@@ -21,7 +22,8 @@ def create_new_credits_profile(user_id: str):
     )
     try:
         return credits_repo.create_new_credits_profile(new_credits_profile)
-    except:
+    except Exception as e:
+        logger.error(e)
         raise NewCreditsProfileCreationFailedException()
 
 
@@ -29,7 +31,8 @@ def fetch_remaining_credits(user_id: str):
     credits_repo = UserCreditsAndQuotasRepository()
     try:
         return credits_repo.fetch_remaining_credits(user_id)
-    except:
+    except Exception as e:
+        logger.error(e)
         raise FetchRemainingCreditsException()
 
 
@@ -37,7 +40,8 @@ def fetch_remaining_ads_quota(user_id: str):
     credits_repo = UserCreditsAndQuotasRepository()
     try:
         return credits_repo.fetch_remaining_credits(user_id)
-    except:
+    except Exception as e:
+        logger.error(e)
         raise FetchRemainingAdsQuotaException()
 
 
@@ -45,7 +49,8 @@ def update_daily_ads_quota():
     credits_repo = UserCreditsAndQuotasRepository()
     try:
         return credits_repo.renew_daily_ads_quota()
-    except:
+    except Exception as e:
+        logger.error(e)
         raise RenewDailyAdsQuotaException()
 
 
@@ -55,7 +60,8 @@ def update_remaining_credits_per_usage(user_id: str, remaining_credits: float):
         return credits_repo.deduct_user_credits_on_usage(
             user_id, remaining_credits=remaining_credits
         )
-    except:
+    except Exception as e:
+        logger.error(e)
         raise DeductRemainingAdsPerUsageException()
 
 
@@ -69,5 +75,6 @@ def grant_reward_on_ad_watch(
             remaining_credits=remaining_credits,
             remaining_ads_quota=remaining_ads_quota,
         )
-    except:
+    except Exception as e:
+        logger.error(e)
         raise GrantRewardOnAdWatchException()

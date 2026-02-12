@@ -1,6 +1,6 @@
 import re
 import time
-
+from decimal import Decimal
 
 # def normalise_image_to_jpg(image_bytes: bytes) -> str:
 #     img = Image.open(BytesIO(image_bytes))
@@ -14,6 +14,9 @@ import time
 
 def get_current_time_milliseconds_epoch():
     return int(time.time() * 1000)
+
+def convert_to_decimal(value):
+    return Decimal(value)
 
 
 def clean_content_text(text: str) -> str:

@@ -3,7 +3,7 @@ from botocore.exceptions import ClientError
 
 from src.core.constants import AWS_DYNAMODB, AWS_REGION
 from src.core.logger import logger
-from src.core.utils import get_current_time_milliseconds_epoch
+from src.core.utils import get_current_time_milliseconds_epoch, convert_to_decimal
 from src.models.credits_and_quota_model import CreditsAndQuotaModel
 
 
@@ -42,11 +42,11 @@ class UserCreditsAndQuotasRepository:
         try:
             response = self.credits_table.update_item(
                 Key={"user_id": user_id},
-                UpdateExpression="set remaining_credits=:c remaining_ads_quota_for_today=:a last_ad_watch_time=:t",
+                UpdateExpression="set remaining_credits=:credits, remaining_ads_quota_for_today=:quota, last_ad_watch_time=:time",
                 ExpressionAttributeValues={
-                    ":a": remaining_credits,
-                    ":c": remaining_ads_quota,
-                    ":t": get_current_time_milliseconds_epoch(),
+                    ":credits": convert_to_decimal(remaining_credits),
+                    ":quota": remaining_ads_quota,
+                    ":time": get_current_time_milliseconds_epoch(),
                 },
             )
             return response
@@ -62,14 +62,15 @@ class UserCreditsAndQuotasRepository:
         try:
             response = self.credits_table.update_item(
                 Key={"user_id": user_id},
-                UpdateExpression="set remaining_credits=:c last_credit_use_time=:t",
+                UpdateExpression="set remaining_credits=:credits, last_credit_use_time=:time",
                 ExpressionAttributeValues={
-                    ":a": remaining_credits,
-                    ":t": get_current_time_milliseconds_epoch(),
+                    ":credits": convert_to_decimal(remaining_credits),
+                    ":time": get_current_time_milliseconds_epoch(),
                 },
             )
             return response
         except ClientError as err:
+            print(err)
             logger.error(
                 "Failed to deduct user credits.\n%s %s",
                 err.response["Error"]["Code"],
