@@ -1,7 +1,8 @@
+import 'dart:developer';
+
 import 'package:ai_personal_content_app/core/common/models/user_credits_and_quotas_model.dart';
 import 'package:ai_personal_content_app/core/common/services/credits_and_quotas_local_storage.dart';
 import 'package:ai_personal_content_app/core/common/services/credits_and_quotas_services.dart';
-import 'package:ai_personal_content_app/core/constants/constants.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class CreditsAndQuotasCubit extends Cubit<UserCreditsAndQuotasModel?> {
@@ -27,11 +28,11 @@ class CreditsAndQuotasCubit extends Cubit<UserCreditsAndQuotasModel?> {
         creditsData = r;
       });
     }
+    log("Fetched credits", name: "CREDITS");
     emit(creditsData!);
   }
 
   void deductCreditsOnUsage({
-    // required CreditsUsageType usage,
     required double creditsToDeduct,
   }) async {
     final updatedCredits = state!.copyWith(
@@ -40,6 +41,7 @@ class CreditsAndQuotasCubit extends Cubit<UserCreditsAndQuotasModel?> {
     await _creditsAndQuotasServices.updateRemainingCreditsOnUsage(
       remainingCredits: updatedCredits.remainingCredits,
     );
+    _creditsAndQuotasLocalStorage.saveCreditsAndQuotasData(updatedCredits);
     emit(updatedCredits);
   }
 
@@ -52,6 +54,7 @@ class CreditsAndQuotasCubit extends Cubit<UserCreditsAndQuotasModel?> {
       remainingCredits: updatedCreditsData.remainingCredits,
       remainingAdsQuota: updatedCreditsData.remainingAdsQuotaForToday,
     );
+    _creditsAndQuotasLocalStorage.saveCreditsAndQuotasData(updatedCreditsData);
     emit(updatedCreditsData);
   }
 }

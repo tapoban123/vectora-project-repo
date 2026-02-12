@@ -2,6 +2,7 @@ import 'dart:developer';
 import 'dart:io';
 
 import 'package:ai_personal_content_app/core/common/constants.dart';
+import 'package:ai_personal_content_app/core/common/cubits/credits_and_quotas_cubit.dart';
 import 'package:ai_personal_content_app/core/common/widgets/custom_appbar.dart';
 import 'package:ai_personal_content_app/core/theme/app_colors.dart';
 import 'package:ai_personal_content_app/core/utils/utils.dart';
@@ -33,10 +34,6 @@ class _SearchContentsScreenState extends State<SearchContentsScreen> {
   final ValueNotifier<_SearchContentFilters> _selectedFilter = ValueNotifier(
     _SearchContentFilters.ALL,
   );
-
-  // List _documents = List.generate(8, (index) => index);
-  // List _images = List.generate(7, (index) => index);
-  // List _notes = List.generate(8, (index) => index);
 
   @override
   void initState() {
@@ -141,6 +138,9 @@ class _SearchContentsScreenState extends State<SearchContentsScreen> {
                           query: _searchController.text.trim(),
                         ),
                       );
+                      context
+                          .read<CreditsAndQuotasCubit>()
+                          .deductCreditsOnUsage(creditsToDeduct: 0.5);
                     }
                   },
                 ),

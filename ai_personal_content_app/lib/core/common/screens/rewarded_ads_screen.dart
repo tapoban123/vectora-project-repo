@@ -1,7 +1,9 @@
+import 'package:ai_personal_content_app/core/common/cubits/credits_and_quotas_cubit.dart';
 import 'package:ai_personal_content_app/core/constants/env_values.dart';
 import 'package:ai_personal_content_app/core/theme/app_colors.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 
@@ -54,6 +56,7 @@ class _RewardedAdsScreenState extends State<RewardedAdsScreen> {
           debugPrint('Ad failed to show full screen content with error: $err');
           // Dispose the ad here to free resources.
           ad.dispose();
+          context.pop();
         },
         onAdDismissedFullScreenContent: (ad) {
           // Called when the ad dismissed full screen content.
@@ -75,6 +78,7 @@ class _RewardedAdsScreenState extends State<RewardedAdsScreen> {
       _rewardedAd!.show(
         onUserEarnedReward: (AdWithoutView ad, RewardItem rewardItem) {
           debugPrint('Reward amount: ${rewardItem.amount}');
+          context.read<CreditsAndQuotasCubit>().grantRewardOnAdWatch();
         },
       );
     }

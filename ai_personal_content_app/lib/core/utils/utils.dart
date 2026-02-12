@@ -102,7 +102,6 @@ void showToastMessage(String message) {
 
 enum DialogType { INFO, ERROR }
 
-
 void showAppDialog(
   BuildContext context, {
   required String title,
@@ -350,19 +349,12 @@ class CreditsDialogContent extends StatefulWidget {
 }
 
 class _CreditsDialogContentState extends State<CreditsDialogContent> {
-  late final int _remainingCredits;
-  late final bool _isRemainingCredits;
-
-  @override
-  void initState() {
-    _remainingCredits = context.read<CreditsAndQuotasCubit>().state!.remainingAdsQuotaForToday;
-    _isRemainingCredits = _remainingCredits > 0;
-    super.initState();
-  }
+  late bool _isRemainingCredits;
+  late int _remainingAdsQuota;
 
   ({IconData icon, Color color, String title, Widget body}) _getDialogContent(
     bool isRemainingCredits,
-    int remainingCredits,
+    int remainingAdsQuota,
   ) {
     if (isRemainingCredits) {
       return (
@@ -381,7 +373,7 @@ class _CreditsDialogContentState extends State<CreditsDialogContent> {
             ),
             children: [
               TextSpan(
-                text: _remainingCredits.toString(),
+                text: remainingAdsQuota.toString(),
                 style: TextStyle(
                   color: Colors.white,
                   fontVariations: [FontVariation.weight(600)],
@@ -397,7 +389,7 @@ class _CreditsDialogContentState extends State<CreditsDialogContent> {
                   fontVariations: [FontVariation.weight(600)],
                 ),
               ),
-              TextSpan(text: ", which you can use for uploads or searches. "),
+              TextSpan(text: ", which you can use for uploads or searches."),
             ],
           ),
         ),
@@ -408,7 +400,7 @@ class _CreditsDialogContentState extends State<CreditsDialogContent> {
       color: AppColors.yellowOchreColor,
       title: "Daily Limit Reached",
       body: Text(
-        "You have used all your bonus ads for today. Your daily quota will reset tomorrow. Or you can unlock umlimited access right now.",
+        "You have used all your bonus ads for today. Your daily quota will reset tomorrow. Or you can unlock unlimited access right now.",
         style: TextStyle(
           fontSize: 15.sp,
           color: AppColors.inactiveColor,
@@ -421,10 +413,15 @@ class _CreditsDialogContentState extends State<CreditsDialogContent> {
 
   @override
   Widget build(BuildContext context) {
+    final creditsState = context.watch<CreditsAndQuotasCubit>().state!;
+    _remainingAdsQuota = creditsState.remainingAdsQuotaForToday;
+    _isRemainingCredits = creditsState.remainingAdsQuotaForToday > 0;
+
     final dialogContent = _getDialogContent(
       _isRemainingCredits,
-      _remainingCredits,
+      _remainingAdsQuota,
     );
+
     return Dialog(
       child: Container(
         padding: EdgeInsets.all(30.w),
@@ -481,7 +478,7 @@ class _CreditsDialogContentState extends State<CreditsDialogContent> {
                 if (_isRemainingCredits) {
                   context.push(RouteNames.showAd);
                 } else {
-                  // Navigate to premium pricing page.
+                  context.push(RouteNames.subscriptionPlans);
                 }
               },
             ),
@@ -507,8 +504,12 @@ class _CreditsDialogContentState extends State<CreditsDialogContent> {
               ),
               bgColor: AppColors.blueGreyLighterColor,
               onTap: () {
-                if (!_isRemainingCredits) {
-                  // Navigate to premium pricing page.
+                if (_isRemainingCredits) {
+                  context.push(RouteNames.subscriptionPlans);
+                } else {
+                  showToastMessage(
+                    "Your daily ads quota has depleted for today.",
+                  );
                 }
               },
             ),
