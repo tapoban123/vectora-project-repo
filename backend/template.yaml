@@ -64,7 +64,7 @@ Resources:
       ScheduleExpression: "cron(0 0 * * ? *)"
       ScheduleExpressionTimezone: "Asia/Kolkata"
       FlexibleTimeWindow:
-        Mode: OFF
+        Mode: "OFF"
       Target:
         Arn: !GetAtt VectoraBackendLambda.Arn
         RoleArn: arn:aws:iam::636052469132:role/EventbridgeSchedulerLambdaInvokeRole
