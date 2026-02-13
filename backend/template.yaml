@@ -41,15 +41,25 @@ Resources:
           OPEN_ROUTER_API_KEY: ""
           COHERE_API_KEY: ""
       Events:
+        # Root path
         Root:
           Type: Api
           Properties:
             RestApiId: !Ref VectoraProjectApi
             Path: /
             Method: ANY
+        # Proxy for all other routes
         Proxy:
           Type: Api
           Properties:
             RestApiId: !Ref VectoraProjectApi
             Path: /{proxy+}
             Method: ANY
+        # Daily Ads Quota Reset (12:00 AM IST)
+        DailyQuotaReset:
+          Type: Schedule
+          Properties:
+            Schedule: cron(30 18 * * ? *)
+            Name: VectoraDailyAdsQuotaReset
+            Description: "Reset daily ads quota for all users at 12:00 AM IST"
+            Enabled: true

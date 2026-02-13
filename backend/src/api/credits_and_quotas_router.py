@@ -10,7 +10,6 @@ from src.schemas.credits_and_quotas_schema import (
 )
 from src.services.user_credits_and_quotas_services import (
     fetch_remaining_credits,
-    update_daily_ads_quota,
     update_remaining_credits_per_usage,
     grant_reward_on_ad_watch,
 )
@@ -25,15 +24,10 @@ def fetch_credits_and_quotas_of_user(user_id: Annotated[str, Depends(get_user_de
     return fetch_remaining_credits(user_id)
 
 
-@user_credits_and_quotas_router.put("/update-daily-ads-quota")
-def update_user_daily_ads_quota():
-    return update_daily_ads_quota()
-
-
 @user_credits_and_quotas_router.put("/use-credits")
 def update_remaining_credits(
-    user_id: Annotated[str, Depends(get_user_dep)],
-    remaining_credits: DeductCreditsSchema,
+        user_id: Annotated[str, Depends(get_user_dep)],
+        remaining_credits: DeductCreditsSchema,
 ):
     return update_remaining_credits_per_usage(
         user_id, remaining_credits=remaining_credits.remaining_credits
@@ -42,7 +36,7 @@ def update_remaining_credits(
 
 @user_credits_and_quotas_router.put("/grant-reward")
 def grant_ad_watch_reward(
-    user_id: Annotated[str, Depends(get_user_dep)], updated_credits: GrantRewardSchema
+        user_id: Annotated[str, Depends(get_user_dep)], updated_credits: GrantRewardSchema
 ):
     return grant_reward_on_ad_watch(
         user_id,

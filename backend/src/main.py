@@ -4,10 +4,19 @@ from mangum import Mangum
 from src.api.auth_router import auth_router
 from src.api.content_operations_router import content_router
 from src.api.credits_and_quotas_router import user_credits_and_quotas_router
+from src.services.user_credits_and_quotas_services import update_daily_ads_quota
 
 app = FastAPI()
-handler = Mangum(app=app)
+asgi_handler = Mangum(app=app)
 public_router = APIRouter()
+
+
+def handler(event, context):
+    if event.get("source") == "aws.events":
+        update_daily_ads_quota()
+        return {"status": "daily ads quota for all users updated."}
+
+    return asgi_handler(event, context)
 
 
 @public_router.get("/")
