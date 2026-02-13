@@ -12,7 +12,10 @@ public_router = APIRouter()
 
 
 def handler(event, context):
+    print("FULL EVENT:", event)
+
     if event.get("source") in ["aws.events", "aws.scheduler"]:
+        print("Scheduler triggered")
         update_daily_ads_quota()
         return {"status": "daily ads quota for all users renewed."}
 
