@@ -1,8 +1,19 @@
 # AI Personal Content Universe App (Front-end)
 
 ### Objectbox models based on services:
+
 - Items: ChatModels
-- Search: ContentsModel, ContentVectorsModel 
+- Search: ContentsModel, ContentVectorsModel
+
+### Commands:
+
+```bash
+flutter build apk --release --obfuscate --split-debug-info=build/symbols/1.0.0
+```
+
+```bash
+flutter build appbundle --release --obfuscate --split-debug-info=build/symbols/1.0.0
+```
 
 ### Resources
 

@@ -38,6 +38,12 @@ android {
             // TODO: Add your own signing config for the release build.
             // Signing with the debug keys for now, so `flutter run --release` works.
             signingConfig = signingConfigs.getByName("debug")
+            isMinifyEnabled = true
+            isShrinkResources = true
+            proguardFiles(
+                getDefaultProguardFile("proguard-android-optimize.txt"),
+                "proguard-rules.pro"
+            )
         }
     }
 }
@@ -46,7 +52,7 @@ flutter {
     source = "../.."
 }
 
-dependencies{
+dependencies {
     implementation("com.google.mlkit:text-recognition-chinese:16.0.0")
     implementation("com.google.mlkit:text-recognition-devanagari:16.0.0")
     implementation("com.google.mlkit:text-recognition-japanese:16.0.0")
@@ -63,4 +69,10 @@ dependencies{
     implementation("androidx.credentials:credentials:1.3.0")
     implementation("androidx.credentials:credentials-play-services-auth:1.3.0")
     implementation("com.google.android.libraries.identity.googleid:googleid:1.1.1")
+
+    // Google Play Core library classes (required by Flutter for R8)
+    implementation("com.google.android.play:app-update:2.1.0")
+    implementation("com.google.android.play:feature-delivery:2.1.0")
+    implementation("com.google.android.play:review:2.0.1")
+    implementation("com.google.android.gms:play-services-tasks:18.2.0")
 }
