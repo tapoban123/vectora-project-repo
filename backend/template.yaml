@@ -55,11 +55,17 @@ Resources:
             RestApiId: !Ref VectoraProjectApi
             Path: /{proxy+}
             Method: ANY
-        # Daily Ads Quota Reset (12:00 AM IST)
-        DailyQuotaReset:
-          Type: Schedule
-          Properties:
-            Schedule: cron(30 18 * * ? *)
-            Name: VectoraDailyAdsQuotaReset
-            Description: "Reset daily ads quota for all users at 12:00 AM IST"
-            Enabled: true
+  # Daily Ads Quota Reset (12:00 AM IST)
+  VectoraDailyQuotaScheduler:
+    Type: AWS::Scheduler::Schedule
+    Properties:
+      Name: VectoraDailyAdsQuotaReset
+      Description: "Reset daily ads quota for all users at 12:00 AM IST"
+      ScheduleExpression: "cron(0 0 * * ? *)"
+      ScheduleExpressionTimezone: "Asia/Kolkata"
+      FlexibleTimeWindow:
+        Mode: OFF
+      Target:
+        Arn: !GetAtt VectoraBackendLambda.Arn
+        RoleArn: arn:aws:iam::636052469132:role/EventbridgeSchedulerLambdaInvokeRole
+        Input: "{}"
