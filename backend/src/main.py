@@ -14,7 +14,7 @@ public_router = APIRouter()
 def handler(event, context):
     if event.get("source") == "aws.events":
         update_daily_ads_quota()
-        return {"status": "daily ads quota for all users updated."}
+        return {"status": "daily ads quota for all users renewed."}
 
     return asgi_handler(event, context)
 
