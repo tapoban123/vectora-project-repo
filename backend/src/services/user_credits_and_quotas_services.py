@@ -12,9 +12,10 @@ from src.repositories.user_credits_and_quotas_repository import (
     UserCreditsAndQuotasRepository,
 )
 
+credits_repo = UserCreditsAndQuotasRepository()
+
 
 def create_new_credits_profile(user_id: str):
-    credits_repo = UserCreditsAndQuotasRepository()
     new_credits_profile = CreditsAndQuotaModel(
         user_id=user_id,
         remaining_ads_quota_for_today=3,
@@ -28,7 +29,6 @@ def create_new_credits_profile(user_id: str):
 
 
 def fetch_remaining_credits(user_id: str):
-    credits_repo = UserCreditsAndQuotasRepository()
     try:
         return credits_repo.fetch_remaining_credits(user_id)
     except Exception as e:
@@ -37,7 +37,6 @@ def fetch_remaining_credits(user_id: str):
 
 
 def fetch_remaining_ads_quota(user_id: str):
-    credits_repo = UserCreditsAndQuotasRepository()
     try:
         return credits_repo.fetch_remaining_credits(user_id)
     except Exception as e:
@@ -46,7 +45,6 @@ def fetch_remaining_ads_quota(user_id: str):
 
 
 def update_daily_ads_quota():
-    credits_repo = UserCreditsAndQuotasRepository()
     try:
         return credits_repo.renew_daily_ads_quota()
     except Exception as e:
@@ -55,7 +53,6 @@ def update_daily_ads_quota():
 
 
 def update_remaining_credits_per_usage(user_id: str, remaining_credits: float):
-    credits_repo = UserCreditsAndQuotasRepository()
     try:
         return credits_repo.deduct_user_credits_on_usage(
             user_id, remaining_credits=remaining_credits
@@ -66,9 +63,8 @@ def update_remaining_credits_per_usage(user_id: str, remaining_credits: float):
 
 
 def grant_reward_on_ad_watch(
-    user_id: str, remaining_credits: float, remaining_ads_quota: int
+        user_id: str, remaining_credits: float, remaining_ads_quota: int
 ):
-    credits_repo = UserCreditsAndQuotasRepository()
     try:
         return credits_repo.grant_ad_reward(
             user_id=user_id,

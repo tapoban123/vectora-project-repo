@@ -35,6 +35,8 @@ ACCESS_TOKEN_EXPIRE_MINUTES = int(EXPIRE_MINUTES_ACCESS_TOKEN)
 auth_logger = logging.getLogger()
 auth_logger.setLevel(logging.DEBUG)
 
+auth_repo = UserAuthRepository()
+
 
 def sign_in_user_service(token: str):
     """Verifies firebase id token received from client.
@@ -48,7 +50,6 @@ def sign_in_user_service(token: str):
             UserProfileDetailsSchema.model_validate(claims)
         )
 
-        auth_repo = UserAuthRepository()
         user = auth_repo.get_user(user_id=user_details.user_id)
 
         auth_logger.info(user)
@@ -72,7 +73,6 @@ def sign_in_user_service(token: str):
 
 
 def start_deletion_user(user_id: str):
-    auth_repo = UserAuthRepository()
     try:
         auth_repo.delete_user(user_id)
     except:

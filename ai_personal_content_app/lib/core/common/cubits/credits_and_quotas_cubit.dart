@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:ai_personal_content_app/core/common/models/user_credits_and_quotas_model.dart';
 import 'package:ai_personal_content_app/core/common/services/credits_and_quotas_local_storage.dart';
 import 'package:ai_personal_content_app/core/common/services/credits_and_quotas_services.dart';
@@ -28,7 +26,6 @@ class CreditsAndQuotasCubit extends Cubit<UserCreditsAndQuotasModel?> {
         creditsData = r;
       });
     }
-    log("Fetched credits", name: "CREDITS");
     emit(creditsData!);
   }
 
