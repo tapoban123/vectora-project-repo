@@ -15,7 +15,8 @@ def handler(event, context):
     print("FULL EVENT:", event)
 
     if event.get("source") in ["aws.events", "aws.scheduler"]:
-        print("Scheduler triggered")
+        print("Scheduler to reset users' daily ads quota triggered")
+        
         update_daily_ads_quota()
         return {"status": "daily ads quota for all users renewed."}
 
