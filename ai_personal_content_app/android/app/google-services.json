@@ -14,6 +14,22 @@
       },
       "oauth_client": [
         {
+          "client_id": "576532236412-a55fd42sfuocrcjsrb4c90m1u73fiopn.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.tapobanray.vectora",
+            "certificate_hash": "b32458309a69ee20370bceed37919ed697b6227e"
+          }
+        },
+        {
+          "client_id": "576532236412-ipsklondkd7vnc6ipijdggrlov91cbn0.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.tapobanray.vectora",
+            "certificate_hash": "300493447b9c800acba88331fe2933f31461ba66"
+          }
+        },
+        {
           "client_id": "576532236412-juh5nt6ogut3m467kio0oq7h6rtko07n.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
