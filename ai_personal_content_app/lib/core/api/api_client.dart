@@ -1,6 +1,7 @@
 import 'package:ai_personal_content_app/core/api/logger.dart';
 import 'package:ai_personal_content_app/core/constants/env_values.dart';
 import 'package:dio/dio.dart';
+import 'package:flutter/foundation.dart';
 
 class ApiClient {
   static final ApiClient _instance = ApiClient._internal();
@@ -22,6 +23,8 @@ class ApiClient {
       ),
     );
 
-    dio.interceptors.addAll([AppLoggerInterceptor()]);
+    if (kDebugMode) {
+      dio.interceptors.addAll([AppLoggerInterceptor()]);
+    }
   }
 }

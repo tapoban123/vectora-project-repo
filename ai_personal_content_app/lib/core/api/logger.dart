@@ -2,13 +2,10 @@ import 'dart:convert';
 import 'dart:developer';
 
 import 'package:dio/dio.dart';
-import 'package:flutter/foundation.dart';
 
 class AppLoggerInterceptor extends Interceptor {
   @override
   void onRequest(RequestOptions options, RequestInterceptorHandler handler) {
-    if (!kDebugMode) return;
-
     log("┌──────────────────────── REQUEST ────────────────────────");
     log("│ URL: ${options.uri}");
     log("│ METHOD: ${options.method}");
@@ -29,8 +26,6 @@ class AppLoggerInterceptor extends Interceptor {
     Response<dynamic> response,
     ResponseInterceptorHandler handler,
   ) {
-    if (!kDebugMode) return;
-
     log("┌──────────────────────── RESPONSE ────────────────────────");
     log("│ URL: ${response.requestOptions.uri}");
     log("│ STATUS: ${response.statusCode}");
@@ -42,8 +37,6 @@ class AppLoggerInterceptor extends Interceptor {
 
   @override
   void onError(DioException err, ErrorInterceptorHandler handler) {
-    if (!kDebugMode) return;
-
     log("┌──────────────────────── ERROR ───────────────────────────");
     log("│ URL: ${err.requestOptions.uri}");
     log("│ TYPE: ${err.type}");
@@ -66,8 +59,6 @@ class AppLoggerInterceptor extends Interceptor {
 }
 
 void logNetworkError(String title, String errMsg, StackTrace stk) {
-  if (!kDebugMode) return;
-
   log("-" * 15);
   log(errMsg, name: title, stackTrace: stk);
   log("-" * 15);
