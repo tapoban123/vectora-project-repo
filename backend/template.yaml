@@ -68,4 +68,3 @@ Resources:
       Target:
         Arn: !GetAtt VectoraBackendLambda.Arn
         RoleArn: arn:aws:iam::636052469132:role/EventbridgeSchedulerLambdaInvokeRole
-        Input: "{}"
