@@ -129,7 +129,8 @@ class _OnboardingScreenState extends State<OnboardingScreen>
                                 }
                               });
                             },
-                            error: (exception) => showToastMessage(exception.message),
+                            error: (exception) =>
+                                showToastMessage(exception.message),
                           );
                         },
                         builder: (context, state) => state.maybeWhen(
@@ -149,13 +150,7 @@ class _OnboardingScreenState extends State<OnboardingScreen>
                               ),
                             ],
                           ),
-                          loading: () => SizedBox.square(
-                            dimension: 32.w,
-                            child: CircularProgressIndicator(
-                              color: Colors.black,
-                              strokeWidth: 2.8.w,
-                            ),
-                          ),
+                          loading: () => appCircularProgressIndicator(),
                         ),
                       ),
                     ),

@@ -267,7 +267,13 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                         ),
                         _aboutInfoListTile(
                           text: "Privacy Policy",
-                          onTap: () {},
+                          onTap: () async {
+                            final url = Uri.parse(PRIVACY_POLICY_URL);
+                            await launchUrl(
+                              url,
+                              mode: LaunchMode.externalApplication,
+                            );
+                          },
                         ),
                         _aboutInfoListTile(
                           text: "Terms of service",

@@ -4,6 +4,7 @@ import 'dart:io';
 
 import 'package:ai_personal_content_app/core/api/api_exceptions.dart';
 import 'package:ai_personal_content_app/core/common/constants.dart';
+import 'package:ai_personal_content_app/core/common/cubits/credits_and_quotas_cubit.dart';
 import 'package:ai_personal_content_app/core/common/services/embedding_generation_service.dart';
 import 'package:ai_personal_content_app/core/common/services/embeddings_storage_service.dart';
 import 'package:ai_personal_content_app/features/home/controllers/new_contents_bloc/new_contents_events.dart';
@@ -13,6 +14,7 @@ import 'package:ai_personal_content_app/features/home/models/preview_file_model.
 import 'package:ai_personal_content_app/features/search/entities/content_embeddings_entity.dart';
 import 'package:ai_personal_content_app/features/search/entities/contents_entity.dart';
 import 'package:ai_personal_content_app/features/search/services/contents_local_storage_service.dart';
+import 'package:ai_personal_content_app/get_it.dart';
 import 'package:cunning_document_scanner/cunning_document_scanner.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -259,7 +261,10 @@ class NewContentsBloc extends Bloc<NewContentsEvents, NewContentsStates> {
       );
     }
 
-    embeddingsResp.fold((l) => throw l, (r) => embeddings = r);
+    embeddingsResp.fold((l) => throw l, (r) {
+      getIt<CreditsAndQuotasCubit>().deductCreditsOnUsage(creditsToDeduct: 2);
+      return embeddings = r;
+    });
     return embeddings;
   }
 

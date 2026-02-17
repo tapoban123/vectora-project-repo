@@ -40,6 +40,7 @@ The system is built with performance, scalability, and cost-awareness in mind.
 - Flutter
 - ObjectBox (vector storage)
 - Pinecone (Chat context temporary storage)
+- Dynamodb (Users data, payments data and others permanent storage)
 - Firebase Authentication
 - Firebase Analytics
 - Google AdMob

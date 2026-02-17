@@ -560,3 +560,13 @@ class _CreditsDialogContentState extends State<CreditsDialogContent> {
     );
   }
 }
+
+Widget appCircularProgressIndicator({Color? color}) {
+  return SizedBox.square(
+    dimension: 32.w,
+    child: CircularProgressIndicator(
+      color: color ?? Colors.black,
+      strokeWidth: 2.8.w,
+    ),
+  );
+}

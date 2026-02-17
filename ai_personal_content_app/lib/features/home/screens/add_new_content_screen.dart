@@ -85,6 +85,7 @@ class AddNewContentScreen extends StatelessWidget {
                   buildWhen: (previous, current) => current.maybeWhen(
                     orElse: () => false,
                     newContents: (contents) => true,
+                    loading: (content) => true,
                   ),
                   listenWhen: (previous, current) =>
                       previous.maybeWhen(
@@ -140,12 +141,8 @@ class AddNewContentScreen extends StatelessWidget {
                         ),
                         Positioned(
                           bottom: 10.h,
-                          child: CustomAppButton(
-                            buttonText: "Add to library",
-                            bgColor: isUploadAllowed
-                                ? null
-                                : AppColors.greyColor,
-                            onTap: () {
+                          child: ElevatedButton(
+                            onPressed: () {
                               if (!isUploadAllowed) {
                                 showCreditsDialog(context);
                                 return;
@@ -153,12 +150,31 @@ class AddNewContentScreen extends StatelessWidget {
                               addNewContentRef.add(
                                 GenerateEmbeddingsForAllEvent(),
                               );
-                              context
-                                  .read<CreditsAndQuotasCubit>()
-                                  .deductCreditsOnUsage(
-                                    creditsToDeduct: totalCreditsUsed,
-                                  );
                             },
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: isUploadAllowed
+                                  ? AppColors.blueColor
+                                  : AppColors.greyColor,
+                              minimumSize: Size(
+                                getScreenWidth(context) * 0.9,
+                                50.h,
+                              ),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(12.r),
+                              ),
+                            ),
+                            child: state.maybeWhen(
+                              orElse: () => Text(
+                                "Add to library",
+                                style: TextStyle(
+                                  fontSize: 16.sp,
+                                  color: Colors.white,
+                                  fontVariations: [FontVariation.weight(700)],
+                                ),
+                              ),
+                              loading: (content) =>
+                                  appCircularProgressIndicator(),
+                            ),
                           ),
                         ),
                       ],

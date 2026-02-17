@@ -14,8 +14,8 @@ class ApiClient {
       BaseOptions(
         // baseUrl: "http://10.0.2.2:8000",
         baseUrl: API_BASE_URL,
-        connectTimeout: Duration(seconds: 10),
-        receiveTimeout: Duration(seconds: 10),
+        connectTimeout: Duration(seconds: 30),
+        receiveTimeout: Duration(seconds: 30),
         headers: {Headers.acceptHeader: Headers.jsonContentType},
         responseType: ResponseType.json,
         validateStatus: (status) =>
