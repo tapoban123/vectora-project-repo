@@ -3,8 +3,10 @@ import 'package:ai_personal_content_app/core/theme/app_colors.dart';
 import 'package:ai_personal_content_app/core/theme/app_fonts.dart';
 import 'package:ai_personal_content_app/core/theme/app_svgs.dart';
 import 'package:ai_personal_content_app/core/utils/utils.dart';
+import 'package:ai_personal_content_app/router.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:go_router/go_router.dart';
 
 class SubscriptionPlansScreen extends StatelessWidget {
   const SubscriptionPlansScreen({super.key});
@@ -182,7 +184,9 @@ class _PremiumPlanWidget extends StatelessWidget {
               ),
               32.verticalSpace,
               ElevatedButton(
-                onPressed: () {},
+                onPressed: () {
+                  context.push(RouteNames.checkout);
+                },
                 style: ElevatedButton.styleFrom(
                   backgroundColor: AppColors.blueColor,
                   minimumSize: Size(double.infinity, 56.h),

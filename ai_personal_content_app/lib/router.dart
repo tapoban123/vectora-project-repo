@@ -14,6 +14,7 @@ import 'package:ai_personal_content_app/features/items/screens/view_item_screen.
 import 'package:ai_personal_content_app/features/profile-and-settings/screens/user_profile_screen.dart';
 import 'package:ai_personal_content_app/features/search/screens/content_library_screen.dart';
 import 'package:ai_personal_content_app/features/search/screens/search_contents_screen.dart';
+import 'package:ai_personal_content_app/features/subscription/screens/checkout_screen.dart';
 import 'package:ai_personal_content_app/features/subscription/screens/subscription_plans_screen.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:go_router/go_router.dart';
@@ -47,6 +48,7 @@ abstract class RouteNames {
   static const String viewPdf = "/view-pdf";
   static const String showAd = "/show-ad";
   static const String subscriptionPlans = "/subscription-plans";
+  static const String checkout = "/checkout";
 }
 
 GoRouter goRouter(UserAuthBloc authBloc) => GoRouter(
@@ -117,6 +119,12 @@ GoRouter goRouter(UserAuthBloc authBloc) => GoRouter(
       path: RouteNames.subscriptionPlans,
       builder: (context, state) {
         return SubscriptionPlansScreen();
+      },
+    ),
+    GoRoute(
+      path: RouteNames.checkout,
+      builder: (context, state) {
+        return CheckoutScreen();
       },
     ),
   ],
