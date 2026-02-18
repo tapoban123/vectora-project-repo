@@ -8,8 +8,34 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 
-class SubscriptionPlansScreen extends StatelessWidget {
+class SubscriptionPlansScreen extends StatefulWidget {
   const SubscriptionPlansScreen({super.key});
+
+  @override
+  State<SubscriptionPlansScreen> createState() =>
+      _SubscriptionPlansScreenState();
+}
+
+class _SubscriptionPlansScreenState extends State<SubscriptionPlansScreen> {
+  final GlobalKey _premiumPlanWidgetKey = GlobalKey();
+
+  @override
+  void initState() {
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      Scrollable.ensureVisible(
+        _premiumPlanWidgetKey.currentContext!,
+        duration: Duration(seconds: 1),
+        curve: Curves.fastEaseInToSlowEaseOut,
+      );
+    });
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    _premiumPlanWidgetKey.currentState?.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -43,7 +69,7 @@ class SubscriptionPlansScreen extends StatelessWidget {
               40.verticalSpace,
               _FreePlanWidget(),
               24.verticalSpace,
-              _PremiumPlanWidget(),
+              _PremiumPlanWidget(key: _premiumPlanWidgetKey),
               20.verticalSpace,
             ],
           ),
