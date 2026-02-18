@@ -42,6 +42,11 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
 
   void _handlePaymentSuccess(PaymentSuccessResponse response) {
     // Do something when payment succeeds
+    log(response.data.toString());
+    log(response.orderId.toString());
+    log(response.paymentId.toString());
+    log(response.signature.toString());
+
     context.go(RouteNames.home);
   }
 
@@ -443,7 +448,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                     ),
                   ),
                   child: Text(
-                    "Pay ₹ 149",
+                    "Pay ₹149",
                     style: TextStyle(
                       color: Colors.white,
                       fontSize: 16.sp,
