@@ -28,3 +28,7 @@ FIREBASE_PRIVATE_KEY = json.loads(get_param("/vectora/firebase/service-account")
 EXPIRE_MINUTES_ACCESS_TOKEN = os.environ.get("ACCESS_TOKEN_EXPIRE_MINUTES")
 # EXPIRE_MINUTES_ACCESS_TOKEN = os.getenv("ACCESS_TOKEN_EXPIRE_MINUTES")
 JWT_HASH_ALGORITHM = "HS256"
+
+# Razorpay secrets
+RAZORPAY_API_TEST_KEY = get_param("/vectora/api_keys/razorpay-api-test-key")
+RAZORPAY_API_TEST_SECRET = get_param("/vectora/api_keys/razorpay-api-test-secret")

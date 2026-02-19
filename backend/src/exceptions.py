@@ -83,3 +83,14 @@ class GrantRewardOnAdWatchException(UserCreditsAndQuotaExceptions):
     def __init__(self):
         message = "Failed to grant reward on ad watch."
         super().__init__(status_code=status.HTTP_409_CONFLICT, detail=message)
+
+
+class PaymentExceptions(HTTPException):
+    """Base exception for all errors raised during access of payment services."""
+    pass
+
+
+class OrderIdGenerationException(PaymentExceptions):
+    def __init__(self):
+        message = "Failed to generate order id for the current payment."
+        super().__init__(status_code=status.HTTP_417_EXPECTATION_FAILED, detail=message)
