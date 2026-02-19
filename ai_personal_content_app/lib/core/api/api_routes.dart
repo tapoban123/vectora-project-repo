@@ -16,4 +16,6 @@ abstract class ApiRoutes {
       "$userCreditsAndQuotas/use-credits";
   static const String grantCreditsOnAdWatch =
       "$userCreditsAndQuotas/grant-reward";
+
+  static const String generatePaymentOrderId = "/order-id/generate";
 }
