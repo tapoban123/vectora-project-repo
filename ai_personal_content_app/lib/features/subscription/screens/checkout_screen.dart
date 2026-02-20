@@ -406,7 +406,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                       paymentInitiated: () =>
                           appCircularProgressIndicator(color: Colors.white),
                       orElse: () => Text(
-                        "Pay ₹149",
+                        "Proceed to pay",
                         style: TextStyle(
                           color: Colors.white,
                           fontSize: 16.sp,

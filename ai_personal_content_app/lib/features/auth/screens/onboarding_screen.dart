@@ -1,5 +1,6 @@
 import 'dart:developer';
 
+import 'package:ai_personal_content_app/core/common/constants.dart';
 import 'package:ai_personal_content_app/core/theme/app_assets.dart';
 import 'package:ai_personal_content_app/core/theme/app_colors.dart';
 import 'package:ai_personal_content_app/core/theme/app_fonts.dart';
@@ -17,6 +18,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import 'package:lottie/lottie.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class OnboardingScreen extends StatefulWidget {
   const OnboardingScreen({super.key});
@@ -61,16 +63,17 @@ class _OnboardingScreenState extends State<OnboardingScreen>
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Container(
+                        width: 60.w,
+                        height: 60.h,
                         decoration: BoxDecoration(
-                          color: AppColors.metalColor,
+                          color: Colors.black,
                           borderRadius: BorderRadius.circular(16.r),
                           border: Border.all(
-                            color: Colors.white.withValues(alpha: 0.1),
+                            color: Colors.white.withValues(alpha: 0.2),
                           ),
-                        ),
-                        child: Padding(
-                          padding: EdgeInsets.all(14.w),
-                          child: appIconSvg(),
+                          image: DecorationImage(
+                            image: AssetImage("assets/images/icon.png"),
+                          ),
                         ),
                       ),
                       30.verticalSpace,
@@ -177,7 +180,16 @@ class _OnboardingScreenState extends State<OnboardingScreen>
                           TextSpan(text: " & "),
                           TextSpan(
                             text: "PRIVACY",
-                            recognizer: TapGestureRecognizer()..onTap = () {},
+                            recognizer: TapGestureRecognizer()
+                              ..onTap = () {
+                                final Uri privacyPolicyUrl = Uri.parse(
+                                  PRIVACY_POLICY_URL,
+                                );
+                                launchUrl(
+                                  privacyPolicyUrl,
+                                  mode: LaunchMode.externalApplication,
+                                );
+                              },
                             style: TextStyle(
                               decoration: TextDecoration.underline,
                               decorationColor: AppColors.inactiveColor,
