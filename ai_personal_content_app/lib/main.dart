@@ -13,6 +13,7 @@ import 'package:ai_personal_content_app/features/items/controllers/cubits/pinned
 import 'package:ai_personal_content_app/features/search/controllers/contents_manager_bloc/contents_manager_bloc.dart';
 import 'package:ai_personal_content_app/features/search/controllers/filter_and_sort_preferences_cubit.dart';
 import 'package:ai_personal_content_app/features/search/controllers/search_contents_bloc/search_contents_bloc.dart';
+import 'package:ai_personal_content_app/features/subscription/controllers/payments_bloc/user_payments_bloc.dart';
 import 'package:ai_personal_content_app/firebase_options.dart';
 import 'package:ai_personal_content_app/get_it.dart';
 import 'package:ai_personal_content_app/router.dart';
@@ -72,6 +73,7 @@ class MyApp extends StatelessWidget {
           BlocProvider(create: (context) => getIt<RecentItemsCubit>()),
           BlocProvider(create: (context) => getIt<PinItemsCubit>()),
           BlocProvider(create: (context) => getIt<CreditsAndQuotasCubit>()),
+          BlocProvider(create: (context) => getIt<UserPaymentsBloc>()),
           BlocProvider(
             create: (context) => getIt<FilterAndSortPreferencesCubit>(),
           ),

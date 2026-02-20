@@ -55,16 +55,16 @@ extension UserPaymentsStatesPatterns on UserPaymentsStates {
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeMap<TResult extends Object?>({TResult Function( _Initial value)?  initial,TResult Function( _LoadingUserPayments value)?  loadingUserPayments,TResult Function( _Success value)?  success,TResult Function( _GeneratingOrderId value)?  generatingOrderId,TResult Function( _GeneratedOrderId value)?  orderIdGenerated,TResult Function( _AllUserPayments value)?  allUserPayments,required TResult orElse(),}){
+@optionalTypeArgs TResult maybeMap<TResult extends Object?>({TResult Function( _Initial value)?  initial,TResult Function( _LoadingUserPayments value)?  loadingUserPayments,TResult Function( _PaymentStarted value)?  paymentStarted,TResult Function( _PaymentInitiated value)?  paymentInitiated,TResult Function( _AllUserPayments value)?  allUserPayments,TResult Function( _Error value)?  error,required TResult orElse(),}){
 final _that = this;
 switch (_that) {
 case _Initial() when initial != null:
 return initial(_that);case _LoadingUserPayments() when loadingUserPayments != null:
-return loadingUserPayments(_that);case _Success() when success != null:
-return success(_that);case _GeneratingOrderId() when generatingOrderId != null:
-return generatingOrderId(_that);case _GeneratedOrderId() when orderIdGenerated != null:
-return orderIdGenerated(_that);case _AllUserPayments() when allUserPayments != null:
-return allUserPayments(_that);case _:
+return loadingUserPayments(_that);case _PaymentStarted() when paymentStarted != null:
+return paymentStarted(_that);case _PaymentInitiated() when paymentInitiated != null:
+return paymentInitiated(_that);case _AllUserPayments() when allUserPayments != null:
+return allUserPayments(_that);case _Error() when error != null:
+return error(_that);case _:
   return orElse();
 
 }
@@ -82,16 +82,16 @@ return allUserPayments(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult map<TResult extends Object?>({required TResult Function( _Initial value)  initial,required TResult Function( _LoadingUserPayments value)  loadingUserPayments,required TResult Function( _Success value)  success,required TResult Function( _GeneratingOrderId value)  generatingOrderId,required TResult Function( _GeneratedOrderId value)  orderIdGenerated,required TResult Function( _AllUserPayments value)  allUserPayments,}){
+@optionalTypeArgs TResult map<TResult extends Object?>({required TResult Function( _Initial value)  initial,required TResult Function( _LoadingUserPayments value)  loadingUserPayments,required TResult Function( _PaymentStarted value)  paymentStarted,required TResult Function( _PaymentInitiated value)  paymentInitiated,required TResult Function( _AllUserPayments value)  allUserPayments,required TResult Function( _Error value)  error,}){
 final _that = this;
 switch (_that) {
 case _Initial():
 return initial(_that);case _LoadingUserPayments():
-return loadingUserPayments(_that);case _Success():
-return success(_that);case _GeneratingOrderId():
-return generatingOrderId(_that);case _GeneratedOrderId():
-return orderIdGenerated(_that);case _AllUserPayments():
-return allUserPayments(_that);case _:
+return loadingUserPayments(_that);case _PaymentStarted():
+return paymentStarted(_that);case _PaymentInitiated():
+return paymentInitiated(_that);case _AllUserPayments():
+return allUserPayments(_that);case _Error():
+return error(_that);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -108,16 +108,16 @@ return allUserPayments(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>({TResult? Function( _Initial value)?  initial,TResult? Function( _LoadingUserPayments value)?  loadingUserPayments,TResult? Function( _Success value)?  success,TResult? Function( _GeneratingOrderId value)?  generatingOrderId,TResult? Function( _GeneratedOrderId value)?  orderIdGenerated,TResult? Function( _AllUserPayments value)?  allUserPayments,}){
+@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>({TResult? Function( _Initial value)?  initial,TResult? Function( _LoadingUserPayments value)?  loadingUserPayments,TResult? Function( _PaymentStarted value)?  paymentStarted,TResult? Function( _PaymentInitiated value)?  paymentInitiated,TResult? Function( _AllUserPayments value)?  allUserPayments,TResult? Function( _Error value)?  error,}){
 final _that = this;
 switch (_that) {
 case _Initial() when initial != null:
 return initial(_that);case _LoadingUserPayments() when loadingUserPayments != null:
-return loadingUserPayments(_that);case _Success() when success != null:
-return success(_that);case _GeneratingOrderId() when generatingOrderId != null:
-return generatingOrderId(_that);case _GeneratedOrderId() when orderIdGenerated != null:
-return orderIdGenerated(_that);case _AllUserPayments() when allUserPayments != null:
-return allUserPayments(_that);case _:
+return loadingUserPayments(_that);case _PaymentStarted() when paymentStarted != null:
+return paymentStarted(_that);case _PaymentInitiated() when paymentInitiated != null:
+return paymentInitiated(_that);case _AllUserPayments() when allUserPayments != null:
+return allUserPayments(_that);case _Error() when error != null:
+return error(_that);case _:
   return null;
 
 }
@@ -134,15 +134,15 @@ return allUserPayments(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>({TResult Function()?  initial,TResult Function()?  loadingUserPayments,TResult Function()?  success,TResult Function()?  generatingOrderId,TResult Function( PaymentOrderIdModel orderIdResponse)?  orderIdGenerated,TResult Function()?  allUserPayments,required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>({TResult Function()?  initial,TResult Function()?  loadingUserPayments,TResult Function()?  paymentStarted,TResult Function()?  paymentInitiated,TResult Function()?  allUserPayments,TResult Function( ApiException exception)?  error,required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _Initial() when initial != null:
 return initial();case _LoadingUserPayments() when loadingUserPayments != null:
-return loadingUserPayments();case _Success() when success != null:
-return success();case _GeneratingOrderId() when generatingOrderId != null:
-return generatingOrderId();case _GeneratedOrderId() when orderIdGenerated != null:
-return orderIdGenerated(_that.orderIdResponse);case _AllUserPayments() when allUserPayments != null:
-return allUserPayments();case _:
+return loadingUserPayments();case _PaymentStarted() when paymentStarted != null:
+return paymentStarted();case _PaymentInitiated() when paymentInitiated != null:
+return paymentInitiated();case _AllUserPayments() when allUserPayments != null:
+return allUserPayments();case _Error() when error != null:
+return error(_that.exception);case _:
   return orElse();
 
 }
@@ -160,15 +160,15 @@ return allUserPayments();case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>({required TResult Function()  initial,required TResult Function()  loadingUserPayments,required TResult Function()  success,required TResult Function()  generatingOrderId,required TResult Function( PaymentOrderIdModel orderIdResponse)  orderIdGenerated,required TResult Function()  allUserPayments,}) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>({required TResult Function()  initial,required TResult Function()  loadingUserPayments,required TResult Function()  paymentStarted,required TResult Function()  paymentInitiated,required TResult Function()  allUserPayments,required TResult Function( ApiException exception)  error,}) {final _that = this;
 switch (_that) {
 case _Initial():
 return initial();case _LoadingUserPayments():
-return loadingUserPayments();case _Success():
-return success();case _GeneratingOrderId():
-return generatingOrderId();case _GeneratedOrderId():
-return orderIdGenerated(_that.orderIdResponse);case _AllUserPayments():
-return allUserPayments();case _:
+return loadingUserPayments();case _PaymentStarted():
+return paymentStarted();case _PaymentInitiated():
+return paymentInitiated();case _AllUserPayments():
+return allUserPayments();case _Error():
+return error(_that.exception);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -185,15 +185,15 @@ return allUserPayments();case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>({TResult? Function()?  initial,TResult? Function()?  loadingUserPayments,TResult? Function()?  success,TResult? Function()?  generatingOrderId,TResult? Function( PaymentOrderIdModel orderIdResponse)?  orderIdGenerated,TResult? Function()?  allUserPayments,}) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>({TResult? Function()?  initial,TResult? Function()?  loadingUserPayments,TResult? Function()?  paymentStarted,TResult? Function()?  paymentInitiated,TResult? Function()?  allUserPayments,TResult? Function( ApiException exception)?  error,}) {final _that = this;
 switch (_that) {
 case _Initial() when initial != null:
 return initial();case _LoadingUserPayments() when loadingUserPayments != null:
-return loadingUserPayments();case _Success() when success != null:
-return success();case _GeneratingOrderId() when generatingOrderId != null:
-return generatingOrderId();case _GeneratedOrderId() when orderIdGenerated != null:
-return orderIdGenerated(_that.orderIdResponse);case _AllUserPayments() when allUserPayments != null:
-return allUserPayments();case _:
+return loadingUserPayments();case _PaymentStarted() when paymentStarted != null:
+return paymentStarted();case _PaymentInitiated() when paymentInitiated != null:
+return paymentInitiated();case _AllUserPayments() when allUserPayments != null:
+return allUserPayments();case _Error() when error != null:
+return error(_that.exception);case _:
   return null;
 
 }
@@ -268,8 +268,8 @@ String toString() {
 /// @nodoc
 
 
-class _Success implements UserPaymentsStates {
-   _Success();
+class _PaymentStarted implements UserPaymentsStates {
+   _PaymentStarted();
   
 
 
@@ -279,7 +279,7 @@ class _Success implements UserPaymentsStates {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _Success);
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _PaymentStarted);
 }
 
 
@@ -288,7 +288,7 @@ int get hashCode => runtimeType.hashCode;
 
 @override
 String toString() {
-  return 'UserPaymentsStates.success()';
+  return 'UserPaymentsStates.paymentStarted()';
 }
 
 
@@ -300,8 +300,8 @@ String toString() {
 /// @nodoc
 
 
-class _GeneratingOrderId implements UserPaymentsStates {
-   _GeneratingOrderId();
+class _PaymentInitiated implements UserPaymentsStates {
+   _PaymentInitiated();
   
 
 
@@ -311,7 +311,7 @@ class _GeneratingOrderId implements UserPaymentsStates {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _GeneratingOrderId);
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _PaymentInitiated);
 }
 
 
@@ -320,7 +320,7 @@ int get hashCode => runtimeType.hashCode;
 
 @override
 String toString() {
-  return 'UserPaymentsStates.generatingOrderId()';
+  return 'UserPaymentsStates.paymentInitiated()';
 }
 
 
@@ -328,81 +328,6 @@ String toString() {
 
 
 
-
-/// @nodoc
-
-
-class _GeneratedOrderId implements UserPaymentsStates {
-   _GeneratedOrderId({required this.orderIdResponse});
-  
-
- final  PaymentOrderIdModel orderIdResponse;
-
-/// Create a copy of UserPaymentsStates
-/// with the given fields replaced by the non-null parameter values.
-@JsonKey(includeFromJson: false, includeToJson: false)
-@pragma('vm:prefer-inline')
-_$GeneratedOrderIdCopyWith<_GeneratedOrderId> get copyWith => __$GeneratedOrderIdCopyWithImpl<_GeneratedOrderId>(this, _$identity);
-
-
-
-@override
-bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _GeneratedOrderId&&(identical(other.orderIdResponse, orderIdResponse) || other.orderIdResponse == orderIdResponse));
-}
-
-
-@override
-int get hashCode => Object.hash(runtimeType,orderIdResponse);
-
-@override
-String toString() {
-  return 'UserPaymentsStates.orderIdGenerated(orderIdResponse: $orderIdResponse)';
-}
-
-
-}
-
-/// @nodoc
-abstract mixin class _$GeneratedOrderIdCopyWith<$Res> implements $UserPaymentsStatesCopyWith<$Res> {
-  factory _$GeneratedOrderIdCopyWith(_GeneratedOrderId value, $Res Function(_GeneratedOrderId) _then) = __$GeneratedOrderIdCopyWithImpl;
-@useResult
-$Res call({
- PaymentOrderIdModel orderIdResponse
-});
-
-
-$PaymentOrderIdModelCopyWith<$Res> get orderIdResponse;
-
-}
-/// @nodoc
-class __$GeneratedOrderIdCopyWithImpl<$Res>
-    implements _$GeneratedOrderIdCopyWith<$Res> {
-  __$GeneratedOrderIdCopyWithImpl(this._self, this._then);
-
-  final _GeneratedOrderId _self;
-  final $Res Function(_GeneratedOrderId) _then;
-
-/// Create a copy of UserPaymentsStates
-/// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') $Res call({Object? orderIdResponse = null,}) {
-  return _then(_GeneratedOrderId(
-orderIdResponse: null == orderIdResponse ? _self.orderIdResponse : orderIdResponse // ignore: cast_nullable_to_non_nullable
-as PaymentOrderIdModel,
-  ));
-}
-
-/// Create a copy of UserPaymentsStates
-/// with the given fields replaced by the non-null parameter values.
-@override
-@pragma('vm:prefer-inline')
-$PaymentOrderIdModelCopyWith<$Res> get orderIdResponse {
-  
-  return $PaymentOrderIdModelCopyWith<$Res>(_self.orderIdResponse, (value) {
-    return _then(_self.copyWith(orderIdResponse: value));
-  });
-}
-}
 
 /// @nodoc
 
@@ -435,5 +360,71 @@ String toString() {
 
 
 
+
+/// @nodoc
+
+
+class _Error implements UserPaymentsStates {
+   _Error({required this.exception});
+  
+
+ final  ApiException exception;
+
+/// Create a copy of UserPaymentsStates
+/// with the given fields replaced by the non-null parameter values.
+@JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+_$ErrorCopyWith<_Error> get copyWith => __$ErrorCopyWithImpl<_Error>(this, _$identity);
+
+
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _Error&&(identical(other.exception, exception) || other.exception == exception));
+}
+
+
+@override
+int get hashCode => Object.hash(runtimeType,exception);
+
+@override
+String toString() {
+  return 'UserPaymentsStates.error(exception: $exception)';
+}
+
+
+}
+
+/// @nodoc
+abstract mixin class _$ErrorCopyWith<$Res> implements $UserPaymentsStatesCopyWith<$Res> {
+  factory _$ErrorCopyWith(_Error value, $Res Function(_Error) _then) = __$ErrorCopyWithImpl;
+@useResult
+$Res call({
+ ApiException exception
+});
+
+
+
+
+}
+/// @nodoc
+class __$ErrorCopyWithImpl<$Res>
+    implements _$ErrorCopyWith<$Res> {
+  __$ErrorCopyWithImpl(this._self, this._then);
+
+  final _Error _self;
+  final $Res Function(_Error) _then;
+
+/// Create a copy of UserPaymentsStates
+/// with the given fields replaced by the non-null parameter values.
+@pragma('vm:prefer-inline') $Res call({Object? exception = null,}) {
+  return _then(_Error(
+exception: null == exception ? _self.exception : exception // ignore: cast_nullable_to_non_nullable
+as ApiException,
+  ));
+}
+
+
+}
 
 // dart format on

@@ -55,12 +55,12 @@ extension UserPaymentsEventsPatterns on UserPaymentsEvents {
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeMap<TResult extends Object?>({TResult Function( CreatePayment value)?  createPayment,TResult Function( GenerateOrderId value)?  generateOrderId,TResult Function( FetchAllUserPayments value)?  fetchAllUserPayments,TResult Function( ResetPaymentsBloc value)?  resetState,required TResult orElse(),}){
+@optionalTypeArgs TResult maybeMap<TResult extends Object?>({TResult Function( CreatePayment value)?  createPayment,TResult Function( StartPayment value)?  startPayment,TResult Function( FetchAllUserPayments value)?  fetchAllUserPayments,TResult Function( ResetPaymentsBloc value)?  resetState,required TResult orElse(),}){
 final _that = this;
 switch (_that) {
 case CreatePayment() when createPayment != null:
-return createPayment(_that);case GenerateOrderId() when generateOrderId != null:
-return generateOrderId(_that);case FetchAllUserPayments() when fetchAllUserPayments != null:
+return createPayment(_that);case StartPayment() when startPayment != null:
+return startPayment(_that);case FetchAllUserPayments() when fetchAllUserPayments != null:
 return fetchAllUserPayments(_that);case ResetPaymentsBloc() when resetState != null:
 return resetState(_that);case _:
   return orElse();
@@ -80,12 +80,12 @@ return resetState(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult map<TResult extends Object?>({required TResult Function( CreatePayment value)  createPayment,required TResult Function( GenerateOrderId value)  generateOrderId,required TResult Function( FetchAllUserPayments value)  fetchAllUserPayments,required TResult Function( ResetPaymentsBloc value)  resetState,}){
+@optionalTypeArgs TResult map<TResult extends Object?>({required TResult Function( CreatePayment value)  createPayment,required TResult Function( StartPayment value)  startPayment,required TResult Function( FetchAllUserPayments value)  fetchAllUserPayments,required TResult Function( ResetPaymentsBloc value)  resetState,}){
 final _that = this;
 switch (_that) {
 case CreatePayment():
-return createPayment(_that);case GenerateOrderId():
-return generateOrderId(_that);case FetchAllUserPayments():
+return createPayment(_that);case StartPayment():
+return startPayment(_that);case FetchAllUserPayments():
 return fetchAllUserPayments(_that);case ResetPaymentsBloc():
 return resetState(_that);case _:
   throw StateError('Unexpected subclass');
@@ -104,12 +104,12 @@ return resetState(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>({TResult? Function( CreatePayment value)?  createPayment,TResult? Function( GenerateOrderId value)?  generateOrderId,TResult? Function( FetchAllUserPayments value)?  fetchAllUserPayments,TResult? Function( ResetPaymentsBloc value)?  resetState,}){
+@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>({TResult? Function( CreatePayment value)?  createPayment,TResult? Function( StartPayment value)?  startPayment,TResult? Function( FetchAllUserPayments value)?  fetchAllUserPayments,TResult? Function( ResetPaymentsBloc value)?  resetState,}){
 final _that = this;
 switch (_that) {
 case CreatePayment() when createPayment != null:
-return createPayment(_that);case GenerateOrderId() when generateOrderId != null:
-return generateOrderId(_that);case FetchAllUserPayments() when fetchAllUserPayments != null:
+return createPayment(_that);case StartPayment() when startPayment != null:
+return startPayment(_that);case FetchAllUserPayments() when fetchAllUserPayments != null:
 return fetchAllUserPayments(_that);case ResetPaymentsBloc() when resetState != null:
 return resetState(_that);case _:
   return null;
@@ -128,11 +128,11 @@ return resetState(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>({TResult Function()?  createPayment,TResult Function()?  generateOrderId,TResult Function()?  fetchAllUserPayments,TResult Function()?  resetState,required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>({TResult Function()?  createPayment,TResult Function( Razorpay razorpay)?  startPayment,TResult Function()?  fetchAllUserPayments,TResult Function()?  resetState,required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case CreatePayment() when createPayment != null:
-return createPayment();case GenerateOrderId() when generateOrderId != null:
-return generateOrderId();case FetchAllUserPayments() when fetchAllUserPayments != null:
+return createPayment();case StartPayment() when startPayment != null:
+return startPayment(_that.razorpay);case FetchAllUserPayments() when fetchAllUserPayments != null:
 return fetchAllUserPayments();case ResetPaymentsBloc() when resetState != null:
 return resetState();case _:
   return orElse();
@@ -152,11 +152,11 @@ return resetState();case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>({required TResult Function()  createPayment,required TResult Function()  generateOrderId,required TResult Function()  fetchAllUserPayments,required TResult Function()  resetState,}) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>({required TResult Function()  createPayment,required TResult Function( Razorpay razorpay)  startPayment,required TResult Function()  fetchAllUserPayments,required TResult Function()  resetState,}) {final _that = this;
 switch (_that) {
 case CreatePayment():
-return createPayment();case GenerateOrderId():
-return generateOrderId();case FetchAllUserPayments():
+return createPayment();case StartPayment():
+return startPayment(_that.razorpay);case FetchAllUserPayments():
 return fetchAllUserPayments();case ResetPaymentsBloc():
 return resetState();case _:
   throw StateError('Unexpected subclass');
@@ -175,11 +175,11 @@ return resetState();case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>({TResult? Function()?  createPayment,TResult? Function()?  generateOrderId,TResult? Function()?  fetchAllUserPayments,TResult? Function()?  resetState,}) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>({TResult? Function()?  createPayment,TResult? Function( Razorpay razorpay)?  startPayment,TResult? Function()?  fetchAllUserPayments,TResult? Function()?  resetState,}) {final _that = this;
 switch (_that) {
 case CreatePayment() when createPayment != null:
-return createPayment();case GenerateOrderId() when generateOrderId != null:
-return generateOrderId();case FetchAllUserPayments() when fetchAllUserPayments != null:
+return createPayment();case StartPayment() when startPayment != null:
+return startPayment(_that.razorpay);case FetchAllUserPayments() when fetchAllUserPayments != null:
 return fetchAllUserPayments();case ResetPaymentsBloc() when resetState != null:
 return resetState();case _:
   return null;
@@ -224,34 +224,68 @@ String toString() {
 /// @nodoc
 
 
-class GenerateOrderId implements UserPaymentsEvents {
-   GenerateOrderId();
+class StartPayment implements UserPaymentsEvents {
+   StartPayment({required this.razorpay});
   
 
+ final  Razorpay razorpay;
 
-
+/// Create a copy of UserPaymentsEvents
+/// with the given fields replaced by the non-null parameter values.
+@JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+$StartPaymentCopyWith<StartPayment> get copyWith => _$StartPaymentCopyWithImpl<StartPayment>(this, _$identity);
 
 
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is GenerateOrderId);
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is StartPayment&&(identical(other.razorpay, razorpay) || other.razorpay == razorpay));
 }
 
 
 @override
-int get hashCode => runtimeType.hashCode;
+int get hashCode => Object.hash(runtimeType,razorpay);
 
 @override
 String toString() {
-  return 'UserPaymentsEvents.generateOrderId()';
+  return 'UserPaymentsEvents.startPayment(razorpay: $razorpay)';
 }
 
 
 }
 
+/// @nodoc
+abstract mixin class $StartPaymentCopyWith<$Res> implements $UserPaymentsEventsCopyWith<$Res> {
+  factory $StartPaymentCopyWith(StartPayment value, $Res Function(StartPayment) _then) = _$StartPaymentCopyWithImpl;
+@useResult
+$Res call({
+ Razorpay razorpay
+});
 
 
+
+
+}
+/// @nodoc
+class _$StartPaymentCopyWithImpl<$Res>
+    implements $StartPaymentCopyWith<$Res> {
+  _$StartPaymentCopyWithImpl(this._self, this._then);
+
+  final StartPayment _self;
+  final $Res Function(StartPayment) _then;
+
+/// Create a copy of UserPaymentsEvents
+/// with the given fields replaced by the non-null parameter values.
+@pragma('vm:prefer-inline') $Res call({Object? razorpay = null,}) {
+  return _then(StartPayment(
+razorpay: null == razorpay ? _self.razorpay : razorpay // ignore: cast_nullable_to_non_nullable
+as Razorpay,
+  ));
+}
+
+
+}
 
 /// @nodoc
 

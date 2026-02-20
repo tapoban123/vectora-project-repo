@@ -22,6 +22,8 @@ import 'package:ai_personal_content_app/features/search/services/content_library
 import 'package:ai_personal_content_app/features/search/usecases/get_content_layout_pref.dart';
 import 'package:ai_personal_content_app/features/search/usecases/is_pinned_content_exists.dart';
 import 'package:ai_personal_content_app/features/search/usecases/set_contents_layout_pref.dart';
+import 'package:ai_personal_content_app/features/subscription/controllers/payments_bloc/user_payments_bloc.dart';
+import 'package:ai_personal_content_app/features/subscription/services/payment_services.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -51,6 +53,12 @@ void init() {
   );
   getIt.registerLazySingleton<EmbeddingsLocalStorageService>(
     () => EmbeddingsLocalStorageService(),
+  );
+  getIt.registerLazySingleton<PaymentServices>(
+    () => PaymentServices(
+      readAccessToken: getIt(),
+      regenerateAccessToken: getIt(),
+    ),
   );
   getIt.registerLazySingleton<ContentsLocalStorageService>(
     () => ContentsLocalStorageService(),
@@ -117,6 +125,9 @@ void init() {
       contentsLocalStorageService: getIt(),
       embeddingsLocalStorageService: getIt(),
     ),
+  );
+  getIt.registerFactory<UserPaymentsBloc>(
+    () => UserPaymentsBloc(paymentServices: getIt()),
   );
   getIt.registerFactory<RecentItemsCubit>(
     () => RecentItemsCubit(

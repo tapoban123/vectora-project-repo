@@ -17,5 +17,6 @@ abstract class ApiRoutes {
   static const String grantCreditsOnAdWatch =
       "$userCreditsAndQuotas/grant-reward";
 
-  static const String generatePaymentOrderId = "/order-id/generate";
+  static const String payments = "/payments";
+  static const String generatePaymentOrderId = "$payments/order-id/generate";
 }
