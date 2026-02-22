@@ -42,7 +42,10 @@ void init() {
     dependsOn: [SharedPreferences],
   );
   getIt.registerLazySingleton<EmbeddingGenerationService>(
-    () => EmbeddingGenerationService(),
+    () => EmbeddingGenerationService(
+      readAccessToken: getIt(),
+      regenerateAccessToken: getIt(),
+    ),
   );
   getIt.registerLazySingleton<FirebaseAuth>(() => FirebaseAuth.instance);
   getIt.registerLazySingleton<UserAuthenticationServices>(

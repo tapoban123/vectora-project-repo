@@ -200,7 +200,7 @@ class NewContentsBloc extends Bloc<NewContentsEvents, NewContentsStates> {
       }
 
       _contentsLocalStorageService.insertContents(contents);
-      emit(NewContentsStates.success());
+      // emit(NewContentsStates.success());
     } catch (e, stk) {
       log("[EMBEDDING GENERATION BLOC ERROR] $e\n$stk");
       emit(NewContentsStates.error(message: e.toString()));
