@@ -94,3 +94,31 @@ class OrderIdGenerationException(PaymentExceptions):
     def __init__(self):
         message = "Failed to generate order id for the current payment."
         super().__init__(status_code=status.HTTP_417_EXPECTATION_FAILED, detail=message)
+
+
+class ChatContentExceptions(HTTPException):
+    """Base exception for all errors raised on chat with contents operations."""
+    pass
+
+
+class ChatContextNotFound(ChatContentExceptions):
+    def __init__(self):
+        message = "No context found as for the provided context id."
+        super().__init__(status_code=status.HTTP_404_NOT_FOUND, detail=message)
+
+
+class GeminiApiErrors(Exception):
+    """Base exception for all errors raised by Gemini Api."""
+    pass
+
+
+class GeminiApiEmbeddingModelException(GeminiApiErrors):
+    def __init__(self, msg: str):
+        self.message = msg
+        super().__init__(self.message)
+
+
+class GeminiApiChatModelException(GeminiApiErrors):
+    def __init__(self, msg: str):
+        self.message = msg
+        super().__init__(self.message)

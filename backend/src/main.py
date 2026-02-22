@@ -2,6 +2,7 @@ from fastapi import FastAPI, APIRouter
 from mangum import Mangum
 
 from src.api.auth_router import auth_router
+from src.api.content_chat_router import content_chat_router
 from src.api.content_operations_router import content_router
 from src.api.credits_and_quotas_router import user_credits_and_quotas_router
 from src.api.payments_router import payments_router
@@ -34,3 +35,4 @@ app.include_router(auth_router)
 app.include_router(content_router)
 app.include_router(user_credits_and_quotas_router)
 app.include_router(payments_router)
+app.include_router(content_chat_router)
